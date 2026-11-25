@@ -1,0 +1,416 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  --color-secondary: #0F172A;
+  --color-background: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-muted: #64748B;
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-error: #DC2626;
+  --color-info: #0891B2;
+
+  --radius-card: 12px;
+  --radius-button: 8px;
+}
+
+:root {
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  --color-secondary: #1d242d;
+  --color-background: #f4f7f9;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-muted: #5b6471;
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-error: #DC2626;
+  --color-info: #0891B2;
+
+  /* Exact Marklet.so visual environment & glass tokens */
+  --color-emerald-400: #00d492;
+  --color-emerald-600: #009767;
+  --brand-primary: var(--color-emerald-400);
+  --energy: var(--brand-primary);
+  --energy-core: var(--brand-primary);
+  --energy-dark: var(--color-emerald-600);
+  --bg-base: #f4f7f9;
+  --ambient-light-1: #fff;
+  --ambient-light-2: #e0ebf5;
+  --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.2) 100%);
+  --glass-border-light: rgba(255, 255, 255, 0.9);
+  --glass-border-dark: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 24px 48px -12px rgba(16, 24, 40, 0.08);
+  --text-main: #1d242d;
+  --text-muted: #8da0b3;
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg-base: #070b14;
+  --ambient-light-1: rgba(37, 99, 235, 0.18);
+  --ambient-light-2: rgba(0, 212, 146, 0.12);
+  --glass-bg: linear-gradient(145deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.52) 100%);
+  --glass-border-light: rgba(148, 163, 184, 0.2);
+  --glass-border-dark: rgba(15, 23, 42, 0.72);
+  --glass-shadow: 0 24px 48px -12px rgba(2, 6, 23, 0.65);
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+}
+
+html {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: transparent;
+  color: var(--text-main);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  transition: background-color 0.25s ease, color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+#root {
+  isolation: isolate;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.font-mono-custom {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Exact Marklet.so ambient light + 3D perspective grid floor */
+.bg-environment {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 10%, var(--ambient-light-1) 0%, transparent 60%),
+    radial-gradient(circle at 80% 60%, var(--ambient-light-2) 0%, transparent 60%);
+  transition: background 0.3s ease;
+}
+
+.grid-floor {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(141, 160, 179, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(141, 160, 179, 0.15) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transform: perspective(1000px) rotateX(60deg) translateY(-100px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 10%, rgba(0, 0, 0, 0.9) 35%, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 10%, rgba(0, 0, 0, 0.9) 35%, black 100%);
+}
+
+html.dark .grid-floor {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+}
+
+.glass,
+.glass-panel {
+  border: 1px solid var(--glass-border-light);
+  border-right-color: var(--glass-border-dark);
+  border-bottom-color: var(--glass-border-dark);
+  background: var(--glass-bg);
+  box-shadow: var(--glass-shadow), inset 0 2px 3px #fff, inset 0 -1px 2px #0000000d;
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
+}
+
+html.dark .glass,
+html.dark .glass-panel {
+  box-shadow: var(--glass-shadow), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  border: 1px solid var(--glass-border-light);
+  border-right-color: var(--glass-border-dark);
+  border-bottom-color: var(--glass-border-dark);
+  background: var(--glass-bg);
+  box-shadow: var(--glass-shadow), inset 0 1px 1px #fff;
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  transition: all 0.3s;
+}
+
+html.dark .glass-card {
+  box-shadow: var(--glass-shadow), inset 0 1px 1px rgba(255, 255, 255, 0.07);
+}
+
+.glass-card:hover {
+  border-color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 32px 64px -12px rgba(60, 218, 107, 0.1), inset 0 1px 1px #fff;
+}
+
+html.dark .glass-card:hover {
+  border-color: rgba(148, 163, 184, 0.38);
+  box-shadow: 0 32px 64px -12px rgba(37, 99, 235, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Global dark mode surface & typography compatibility across PUB-01 to PUB-09 */
+html.dark .text-\[\#0F172A\],
+html.dark .text-gray-900 {
+  color: #f1f5f9;
+}
+
+html.dark .text-\[\#475569\],
+html.dark .text-gray-600 {
+  color: #cbd5e1;
+}
+
+html.dark .text-\[\#64748B\],
+html.dark .text-gray-500 {
+  color: #94a3b8;
+}
+
+html.dark .bg-white {
+  background-color: #0f172a;
+}
+
+html.dark .bg-white\/95,
+html.dark .bg-white\/90,
+html.dark .bg-white\/85,
+html.dark .bg-white\/80 {
+  background-color: rgba(15, 23, 42, 0.88);
+}
+
+html.dark .bg-\[\#F8FAFC\] {
+  background-color: #111c32;
+}
+
+html.dark .border-\[\#E2E8F0\],
+html.dark .border-\[\#E2E8F0\]\/80 {
+  border-color: rgba(148, 163, 184, 0.22);
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  color: #f1f5f9;
+}
+
+.btn-magic {
+  appearance: none;
+  cursor: pointer;
+  background: rgba(20, 25, 30, 0.05);
+  border: none;
+  border-radius: 16px;
+  outline: none;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  padding: 0 2rem;
+  transition: transform 0.1s;
+  display: inline-flex;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.btn-magic:active {
+  transform: scale(0.98);
+}
+
+.btn-magic-core {
+  opacity: 0.2;
+  background: radial-gradient(circle at center, var(--energy-core) 0%, var(--energy-dark) 100%);
+  filter: blur(4px);
+  border-radius: 12px;
+  transition: opacity 0.4s, filter 0.4s;
+  position: absolute;
+  inset: 4px;
+}
+
+.btn-magic:hover .btn-magic-core,
+.group:focus-within .btn-magic-core {
+  opacity: 0.8;
+  filter: blur(6px);
+}
+
+.btn-magic-cap {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.3));
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[lang="km"] {
+  font-family: 'Noto Sans Khmer', 'Inter', system-ui, sans-serif;
+  line-height: 1.72;
+}
+
+html[lang="km"] body {
+  line-height: 1.72;
+}
+
+/* Typography scale from Section 2.2 */
+.text-display {
+  font-size: 34px;
+  line-height: 1.18;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .text-display {
+    font-size: 48px;
+    line-height: 1.14;
+  }
+}
+
+html[lang="km"] .text-display {
+  line-height: 1.38;
+  letter-spacing: 0;
+}
+
+.text-h1 {
+  font-size: 28px;
+  line-height: 1.24;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+@media (min-width: 768px) {
+  .text-h1 {
+    font-size: 36px;
+    line-height: 1.2;
+  }
+}
+
+html[lang="km"] .text-h1 {
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+.text-h2 {
+  font-size: 24px;
+  line-height: 1.28;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .text-h2 {
+    font-size: 28px;
+    line-height: 1.26;
+  }
+}
+
+html[lang="km"] .text-h2 {
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.text-h3 {
+  font-size: 20px;
+  line-height: 1.32;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .text-h3 {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+}
+
+html[lang="km"] .text-h3 {
+  line-height: 1.55;
+}
+
+.text-body {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  .text-body {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+}
+
+html[lang="km"] .text-body {
+  line-height: 1.75;
+}
+
+.text-small {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .text-small {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+html[lang="km"] .text-small {
+  line-height: 1.7;
+}
+
+.text-caption {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+html[lang="km"] .text-caption {
+  line-height: 1.65;
+}
+
+/* Layout container matching Section 2.3 gutters: 16px mobile, 24px tablet, 32px desktop, max 1280px */
+.container-page {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 768px) {
+  .container-page {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* Hide scrollbars cleanly for horizontal carousels on mobile while keeping accessibility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

@@ -1,0 +1,489 @@
+/* Daytake landing — scoped; Marklet grid/ambient stays visible underneath */
+
+.daytake {
+  font-family: "Manrope Variable", system-ui, sans-serif;
+  font-synthesis: none;
+  color-scheme: light;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  width: 100%;
+  margin: 0;
+  background: transparent;
+  border-radius: 0;
+  overflow-x: clip;
+  box-shadow: none;
+  --page: transparent;
+  --outer: transparent;
+  --ink: #1b2139;
+  --muted: #666578;
+  --line: rgba(229, 226, 239, 0.65);
+  --surface: rgba(244, 242, 250, 0.72);
+  --accent: #2563EB;
+  --accent-ink: #fff;
+  --focus: #2563EB;
+  --blue: #2563EB;
+  --about: rgba(244, 240, 252, 0.55);
+  --feature-blue: #4f7aee;
+  --feature-violet: #8c63da;
+  --feature-cyan: #39baca;
+  scrollbar-gutter: stable;
+}
+
+.daytake[data-theme="dark"],
+:root[data-theme="dark"] .daytake {
+  color-scheme: dark;
+  --page: transparent;
+  --outer: transparent;
+  --ink: #f6f3ff;
+  --muted: #b5b0c6;
+  --line: rgba(52, 48, 68, 0.7);
+  --surface: rgba(36, 34, 51, 0.72);
+  --accent: #60a5fa;
+  --accent-ink: #0f172a;
+  --focus: #93c5fd;
+  --blue: #93c5fd;
+  --about: rgba(36, 32, 50, 0.55);
+}
+
+.daytake *,
+.daytake *::before,
+.daytake *::after { box-sizing: border-box; }
+.daytake img { display: block; max-inline-size: 100%; }
+.daytake button,
+.daytake input { font: inherit; }
+.daytake button { color: inherit; cursor: pointer; }
+.daytake button:disabled { cursor: default; }
+.daytake a { color: inherit; text-decoration: none; }
+.daytake :where(a, button, input):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
+.daytake .preview-icon-button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: 44px;
+  block-size: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(255, 254, 253, 0.72);
+  backdrop-filter: blur(12px);
+}
+.daytake .preview-icon-button:hover:enabled { background: var(--surface); }
+.daytake .preview-icon-button:disabled { opacity: .4; }
+.daytake .preview-icon-button svg { inline-size: 18px; block-size: 18px; }
+
+.daytake .preview-dialog {
+  color: var(--ink);
+  background: #fffefd;
+  border: 1px solid var(--line);
+  padding: 0;
+  width: min(760px, calc(100% - 28px));
+  max-height: calc(100% - 28px);
+  overscroll-behavior: contain;
+  border-radius: 16px;
+}
+.daytake[data-theme="dark"] .preview-dialog { background: #151521; }
+.daytake .preview-dialog::backdrop { background: rgb(12 12 12 / .72); }
+.daytake .preview-dialog-inner { position: relative; }
+.daytake .preview-close { position: absolute; z-index: 1; top: 12px; right: 12px; }
+
+.daytake .preview-skip {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 30;
+  transform: translateY(-150%);
+  color: var(--ink);
+  background: rgba(255, 254, 253, 0.9);
+  padding: 12px 16px;
+}
+.daytake .preview-skip:focus { transform: none; }
+
+.daytake .preview-visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.daytake-wrap { width: calc(100% - clamp(36px, 8vw, 128px)); max-width: 1180px; margin-inline: auto; }
+.daytake-window-bar {
+  height: 34px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+  padding-inline: 18px; font-size: 10px; color: var(--muted);
+  background: transparent;
+}
+.daytake-window-bar > span:first-child { display: flex; gap: 6px; }
+.daytake-window-bar i { width: 7px; height: 7px; background: #ddd9e9; border-radius: 50%; display: block; }
+.daytake-window-bar i:first-child { background: #edafa5; }
+.daytake-window-bar svg { width: 11px; height: 11px; opacity: .5; }
+.daytake-header {
+  position: relative; z-index: 5; min-height: 82px;
+  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+}
+.daytake-logo { display: inline-flex; gap: 8px; align-items: center; font-size: 1.4rem; font-weight: 850; letter-spacing: -.04em; }
+.daytake-logo svg { width: 29px; height: 29px; color: var(--accent); stroke-width: 2.3; }
+.daytake-lang {
+  display: inline-flex; align-items: center; gap: 4px; padding: 4px;
+  border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.55); backdrop-filter: blur(10px);
+}
+.daytake-lang button {
+  min-height: 36px; min-width: 44px; padding: 0 12px; border: 0; border-radius: 999px;
+  background: transparent; font-size: .72rem; font-weight: 700; color: var(--muted);
+}
+.daytake-lang button.is-active { background: #fff; color: var(--blue); box-shadow: 0 1px 2px rgb(15 23 42 / .06); }
+.daytake-header nav { display: flex; align-items: center; gap: 32px; font-size: .78rem; font-weight: 700; }
+.daytake-header nav a { min-height: 44px; display: grid; align-items: center; }
+.daytake-header nav a:hover, .daytake-footer nav a:hover { color: var(--blue); }
+.daytake-header .preview-icon-button { width: 36px; height: 36px; min-height: 44px; min-width: 44px; border: 0; background: transparent; }
+.daytake-hero {
+  position: relative; isolation: isolate; display: flex; align-items: center;
+  min-height: 100vh; overflow: clip; background: transparent;
+}
+.daytake-hero-content { position: relative; z-index: 2; padding: 30px 0 100px; pointer-events: none; }
+.daytake-hero-content a { pointer-events: auto; }
+.daytake h1, .daytake h2 { margin: 0; font-weight: 800; letter-spacing: -.04em; text-wrap: balance; }
+.daytake h1 { font-size: clamp(3rem, 5.6vw, 5.25rem); line-height: 1.05; }
+.daytake h1 span, .daytake h2 span { color: var(--blue); }
+.daytake h2 { font-size: clamp(2rem, 3.1vw, 3.1rem); line-height: 1.14; }
+.daytake-hero p { max-width: 32ch; margin: 23px 0 29px; font-size: clamp(.96rem, 1.3vw, 1.13rem); line-height: 1.65; color: var(--muted); }
+.daytake-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 15px;
+  min-height: 48px; padding: 12px 24px; border: 0; border-radius: 99px;
+  background: var(--accent); color: var(--accent-ink); font-size: .82rem; font-weight: 750;
+  transition: box-shadow .2s, translate .2s;
+}
+.daytake-primary:hover { box-shadow: 0 6px 18px rgb(37 99 235 / .22); translate: 0 -1px; }
+.daytake-primary svg { width: 15px; height: 15px; }
+.daytake-counter { display: flex; align-items: center; gap: 12px; margin-top: 34px; }
+.daytake-counter-icon { width: 39px; height: 39px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.55); backdrop-filter: blur(8px); }
+.daytake-counter-icon svg { width: 17px; height: 17px; color: var(--muted); }
+.daytake-counter small { display: block; font-size: .66rem; color: var(--muted); margin-bottom: 3px; }
+.daytake-counter strong { font-size: 1.1rem; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.daytake-hero-foot { position: absolute; z-index: 3; left: 0; right: 0; bottom: 20px; display: flex; align-items: center; justify-content: space-between; font-size: .68rem; color: var(--muted); }
+.daytake-hero-foot a { min-height: 44px; display: flex; align-items: center; gap: 10px; }
+.daytake-hero-foot svg { width: 12px; height: 12px; }
+.daytake-mosaic {
+  --mosaic-gap: clamp(10px, 1.35vw, 20px);
+  position: absolute; inset: 0 -9% 0 43%;
+  display: flex; align-items: center; perspective: 1000px; pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent, #000 17%, #000 90%, transparent), linear-gradient(180deg, transparent, #000 19%, #000 80%, transparent);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+.daytake-mosaic-grid {
+  flex: none; width: 110%; height: 860px; display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--mosaic-gap);
+  transform-style: preserve-3d; transform: rotateX(18deg) rotateY(-24deg) rotateZ(-12deg) translateZ(-150px);
+  transform-origin: 50% 50%;
+}
+.daytake-mosaic-column { min-width: 0; overflow: visible; }
+.daytake-mosaic-track { will-change: transform; }
+.daytake-mosaic-set { display: grid; gap: var(--mosaic-gap); padding-bottom: var(--mosaic-gap); }
+.daytake-mosaic-tile { width: 100%; aspect-ratio: .87; height: auto; border-radius: 13px; overflow: hidden; background: var(--surface); border: 1px solid rgba(226,232,240,.8); }
+.daytake-tile-face {
+  width: 100%; height: 100%; min-height: 100%; display: flex; flex-direction: column; justify-content: space-between;
+  padding: 12px; box-sizing: border-box; border: 1px solid rgba(226,232,240,.65);
+}
+.daytake-tile-chip {
+  display: inline-flex; align-items: center; gap: 6px; width: fit-content; max-width: 100%;
+  padding: 5px 8px; border-radius: 8px; background: rgba(255,255,255,.9); border: 1px solid rgba(226,232,240,.9);
+  color: #0f172a; font-size: .62rem; font-weight: 700; letter-spacing: .01em;
+}
+.daytake-tile-chip svg { width: 12px; height: 12px; color: var(--blue); flex: none; }
+.daytake-tile-copy { display: grid; gap: 4px; }
+.daytake-tile-copy strong {
+  font-size: clamp(.72rem, 1.1vw, .92rem); line-height: 1.25; letter-spacing: -.02em; color: #0f172a;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.daytake-tile-copy small { color: #64748b; font-size: .62rem; font-weight: 600; }
+.daytake-photo .daytake-tile-face { position: absolute; inset: 0; border: 0; }
+.daytake-mini-thumb { width: 100%; aspect-ratio: 1.85; border-radius: 6px; border: 1px solid rgba(226,232,240,.8); }
+.daytake-creator-initials {
+  display: grid; place-items: center; color: #fff; font-size: clamp(.7rem, 1vw, .9rem); font-weight: 800; letter-spacing: .02em;
+}
+.daytake-dialog-tile { display: flex; align-items: stretch; justify-content: stretch; padding: 0; }
+.daytake-dialog-tile .daytake-tile-face { min-height: 280px; }
+.daytake-business .daytake-primary:hover { box-shadow: 0 6px 18px rgb(37 99 235 / .22); }
+.daytake-mosaic::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 16%; backdrop-filter: blur(8px); mask-image: linear-gradient(90deg, #000, transparent); }
+.daytake-features { padding-block: clamp(54px, 6.5vw, 94px); }
+.daytake-feature-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 5.8vw, 90px); }
+.daytake-feature { --feature: var(--feature-blue); }
+.daytake-feature:nth-child(2) { --feature: var(--feature-violet); }
+.daytake-feature:nth-child(3) { --feature: var(--feature-cyan); }
+.daytake-feature-icon {
+  width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; margin-bottom: 23px;
+  background: var(--feature); color: #fff; box-shadow: 0 7px 18px color-mix(in srgb, var(--feature) 18%, transparent);
+}
+.daytake-feature-icon svg { width: 25px; height: 25px; stroke-width: 1.7; }
+.daytake .daytake-feature h2 { max-width: 18ch; font-size: 1.15rem; line-height: 1.3; letter-spacing: -.025em; }
+.daytake-feature p { max-width: 32ch; font-size: .82rem; line-height: 1.7; color: var(--muted); margin: 12px 0 0; }
+
+.daytake-library { position: relative; padding: 55px 0 28px; overflow: clip; background: transparent; }
+.daytake-library-heading { text-align: center; margin-bottom: 28px; }
+.daytake-library-heading p { margin: 14px 0 0; font-size: .91rem; color: var(--muted); }
+.daytake-gallery { --gallery-gap: 18px; --gallery-card: clamp(190px, 20vw, 270px); padding: 20px 0; overflow: clip; }
+.daytake-gallery-tilt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; rotate: 2deg; margin-inline: -30px; }
+.daytake-gallery-lane { display: flex; overflow-x: auto; overflow-y: hidden; overflow-anchor: none; scrollbar-width: none; padding: 8px 0; overscroll-behavior-x: contain; touch-action: pan-x pan-y; }
+.daytake-gallery-lane::-webkit-scrollbar { display: none; }
+.daytake-gallery-group { display: flex; flex: none; gap: var(--gallery-gap); padding-right: var(--gallery-gap); }
+.daytake-photo-arrival { flex: 0 0 var(--gallery-card); width: var(--gallery-card); }
+.daytake-photo {
+  width: 100%; aspect-ratio: 1.55; position: relative; padding: 0;
+  display: block; border: 0; border-radius: 13px; background: var(--surface); overflow: hidden;
+}
+.daytake-photo > img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; transition: scale .45s; }
+.daytake-photo:hover > img { scale: 1.035; }
+.daytake-photo:hover .daytake-tile-face { transform: scale(1.02); }
+.daytake-photo .daytake-tile-face { transition: transform .45s; }
+.daytake-photo-badge { position: absolute; display: grid; place-items: center; border-radius: 50%; z-index: 2; }
+.daytake-category-badge { top: 12px; left: 12px; width: 27px; height: 27px; color: #2563EB; background: #fff; }
+.daytake-category-badge svg { width: 13px; height: 13px; }
+.daytake-play-badge { bottom: 12px; right: 12px; width: 35px; height: 35px; background: #2563EB; color: #fff; }
+.daytake-play-badge svg { width: 13px; height: 13px; margin-left: 2px; }
+.daytake-photo-caption {
+  position: absolute; left: 14px; bottom: 13px; z-index: 2; max-width: 70%;
+  color: #0f172a; font-size: .72rem; font-weight: 700; opacity: 0;
+  padding: 4px 8px; border-radius: 8px; background: rgba(255,255,255,.92);
+}
+.daytake-photo:hover .daytake-photo-caption, .daytake-photo:focus-visible .daytake-photo-caption { opacity: 1; }
+.daytake-gallery-footer { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: .68rem; margin-top: 12px; }
+.daytake-motion-toggle { display: inline-flex; align-items: center; gap: 7px; min-width: 64px; min-height: 44px; border: 0; background: transparent; color: var(--muted); font-size: .68rem; }
+.daytake-motion-toggle:hover { color: var(--blue); }
+.daytake-motion-toggle svg { width: 13px; height: 13px; }
+
+.daytake-editorial {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center; column-gap: clamp(32px, 5.5vw, 85px);
+  padding-block: 85px; margin-block: 35px; position: relative;
+}
+.daytake-editorial::before {
+  content: ""; position: absolute; z-index: 0; top: 80px; bottom: 90px; left: 20%; right: -5%;
+  background: linear-gradient(90deg, transparent, var(--about) 45%, var(--about));
+  border-radius: 16px; pointer-events: none;
+}
+.daytake-editorial-figure { margin: 0; min-width: 0; z-index: 1; }
+.daytake-editorial-stage { position: relative; isolation: isolate; aspect-ratio: 1 / 1.1; }
+.daytake-editorial-media { position: absolute; inset: 0 auto auto 7%; width: 76%; height: 97%; transform-origin: center bottom; }
+.daytake-editorial-photo { display: block; padding: 0; border: 0; width: 100%; height: 100%; border-radius: 24px; overflow: hidden; background: var(--surface); position: relative; }
+.daytake-editorial-photo img { width: 100%; height: 100%; object-fit: cover; }
+.daytake-editorial-photo[data-full-frame="true"] img { object-fit: contain; }
+.daytake-editorial-photo .daytake-tile-face { position: absolute; inset: 0; border: 0; border-radius: 24px; padding: 18px; }
+.daytake-editorial-open { position: absolute; right: -18px; top: 14px; width: 56px; height: 56px; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--accent); color: var(--accent-ink); box-shadow: 0 6px 18px rgb(37 99 235 / .22); }
+.daytake-editorial-open svg { width: 21px; height: 21px; margin-left: 3px; }
+.daytake-editorial-toolbar { position: absolute; top: 24%; left: 0; width: 43px; display: grid; padding: 5px 0; background: rgb(255 255 255 / .74); backdrop-filter: blur(14px); border-radius: 99px; box-shadow: 0 7px 20px rgb(31 24 68 / .1); }
+.daytake-editorial-toolbar button, .daytake-editorial-toolbar a { display: grid; place-items: center; width: 43px; height: 39px; padding: 0; border: 0; background: transparent; color: #777184; }
+.daytake-editorial-toolbar svg { width: 16px; height: 16px; }
+.daytake-editorial-toolbar [aria-pressed="true"], .daytake-editorial-toolbar :is(a,button):hover { color: #3658cc; }
+.daytake-audio { position: absolute; z-index: 3; left: 0; bottom: 9%; width: 48%; padding: 10px 12px; border-radius: 11px; background: #fff; color: #3b5e4e; box-shadow: 0 9px 24px rgb(25 35 47 / .14); }
+.daytake-waveform { display: flex; align-items: center; justify-content: space-between; gap: 2px; height: 30px; }
+.daytake-waveform i { display: block; flex: 1; max-width: 3px; border-radius: 2px; background: #63bc9a; }
+.daytake-waveform i:nth-child(n+19) { background: #bcd6c9; }
+.daytake-audio-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; font-size: .52rem; font-weight: 700; }
+.daytake-audio-meta > span:first-child { display: flex; gap: 5px; align-items: center; }
+.daytake-audio-progress { position: absolute; left: 0; bottom: 0; width: 62%; height: 3px; background: #62b699; border-radius: 0 0 0 11px; }
+.daytake-editorial-line { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.daytake-editorial-line path { fill: none; stroke: var(--blue); stroke-width: .32; stroke-linecap: round; stroke-linejoin: round; }
+.daytake-editorial-card { position: absolute; z-index: 2; width: 29%; left: 69%; text-align: left; padding: 6px; border: 0; border-radius: 10px; background: rgba(255,254,253,.92); box-shadow: 0 8px 24px rgb(35 27 60 / .13); }
+.daytake-editorial-question { top: 51%; }
+.daytake-editorial-result { top: 82%; left: 53%; width: 27%; }
+.daytake-editorial-card img { width: 100%; height: auto; aspect-ratio: 1.85; object-fit: cover; border-radius: 6px; }
+.daytake-editorial-card strong { display: block; padding: 5px 2px 2px; font-size: clamp(.57rem, .85vw, .73rem); line-height: 1.2; }
+.daytake-editorial-card small { display: block; color: var(--muted); font-size: clamp(.43rem, .6vw, .52rem); padding: 1px 2px 3px; }
+.daytake-mini-image { position: relative; display: block; }
+.daytake-mini-image i { position: absolute; display: grid; place-items: center; width: 23px; height: 23px; right: -10px; top: 2px; border-radius: 50%; color: #fff; background: #2563EB; }
+.daytake-mini-image svg { width: 9px; height: 9px; margin-left: 1px; }
+.daytake-editorial-figure figcaption { margin: 12px 7% 0; font-size: .62rem; color: var(--muted); }
+.daytake-editorial-content { position: relative; z-index: 1; }
+.daytake-editorial-content h2 { font-size: clamp(2rem, 3.55vw, 3.5rem); line-height: 1.13; }
+.daytake-editorial-content > p { max-width: 36ch; margin: 22px 0 28px; font-size: .9rem; line-height: 1.7; color: var(--muted); }
+.daytake-editorial-actions { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+.daytake-watch { display: inline-flex; align-items: center; gap: 9px; padding: 0; border: 0; background: transparent; font-size: .76rem; font-weight: 600; min-height: 48px; }
+.daytake-watch > span { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.55); }
+.daytake-watch svg { width: 11px; height: 11px; margin-left: 2px; color: var(--blue); }
+.daytake-watch:hover { color: var(--blue); }
+.daytake-trust { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; border-top: 1px solid var(--line); margin-top: 35px; padding-top: 22px; }
+.daytake-trust-item { display: flex; align-items: center; gap: 8px; font-size: .58rem; line-height: 1.55; color: var(--muted); }
+.daytake-trust-item svg { width: 18px; height: 18px; flex: none; color: var(--blue); }
+.daytake-trust-item:nth-child(2) svg { color: var(--accent); }
+.daytake-trust-item:nth-child(3) svg { color: #8b69a4; }
+
+.daytake-people { padding: 40px 0 78px; text-align: center; overflow: clip; }
+.daytake-people h2 { font-size: clamp(2rem, 3.5vw, 3.4rem); }
+.daytake-people > .daytake-wrap > p { font-size: .91rem; color: var(--muted); margin: 18px 0 0; }
+.daytake-portrait-field { width: min(1120px, 100%); position: relative; isolation: isolate; margin: 20px auto 6px; height: 390px; }
+.daytake-portrait-line { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+.daytake-portrait-trace { fill: none; stroke: color-mix(in srgb, var(--blue) 30%, transparent); stroke-width: 1.5; }
+.daytake-portrait-line-phone { display: none; }
+.daytake-creators { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); width: 100%; }
+.daytake-creator-arrival { padding-top: 40px; }
+.daytake-creator-arrival:nth-child(2) { padding-top: 140px; }
+.daytake-creator-arrival:nth-child(3) { padding-top: 20px; }
+.daytake-creator-arrival:nth-child(4) { padding-top: 120px; }
+.daytake-creator { display: inline-grid; justify-items: center; padding: 0; border: 0; background: transparent; color: var(--ink); border-radius: 24px; }
+.daytake-creator-plate {
+  position: relative; display: block; width: clamp(148px, 15vw, 188px); aspect-ratio: 1;
+  margin-bottom: 20px;
+}
+.daytake-creator-backplate { position: absolute; inset: 0; border-radius: 28%; transform: rotate(var(--tilt)); background: #e6def8; }
+.daytake-creator-backplate.lavender { background: repeating-linear-gradient(35deg, #e7dff7 0 9px, #dcd2f0 9px 11px); }
+.daytake-creator-backplate.pink { background: #f4d9e0; }
+.daytake-creator-backplate.cream { background: #f1e6d1; }
+.daytake-creator-backplate.yellow { background: repeating-linear-gradient(-35deg, #f4ecbf 0 9px, #eae0a9 9px 11px); }
+.daytake-creator-body { position: absolute; inset: 9% 10%; border-radius: 17px; background: #fffefa; box-shadow: 0 8px 18px #3628380c; }
+.daytake-creator-avatar { position: absolute; width: 38%; aspect-ratio: 1; left: 31%; top: 17%; border-radius: 50%; overflow: hidden; transform-origin: 50% 50%; }
+.daytake-creator-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.daytake-creator-caption { position: absolute; inset: 59% 11% auto; display: grid; justify-items: center; gap: 8px; color: #252336; }
+.daytake-creator-caption strong { font-size: clamp(.6rem, .86vw, .75rem); line-height: 1.3; letter-spacing: -.015em; }
+.daytake-creator-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; font-size: .55rem; font-weight: 650; border-radius: 99px; color: #534d68; background: #eeebf4; }
+.daytake-creator-badge svg { width: 10px; height: 10px; }
+.daytake-creator-specialty { font-size: .65rem; color: var(--muted); }
+.daytake-creator:hover .daytake-creator-caption strong { color: #314ec7; }
+.daytake-particle-arrival { position: absolute; pointer-events: none; }
+.daytake-particle { display: block; width: 10px; height: 10px; border-radius: 50%; background: #6682e8; }
+.particle-0 { left: 3%; top: 56%; }
+.particle-1 { left: 29%; top: 9%; }
+.particle-1 .daytake-particle { width: 15px; height: 15px; background: #f38d79; }
+.particle-2 { left: 62%; top: 78%; }
+.particle-2 .daytake-particle { width: 6px; height: 6px; background: #272b50; }
+.particle-3 { left: 91%; top: 8%; }
+.particle-3 .daytake-particle { width: 9px; height: 9px; background: #f38d79; }
+.daytake-text-link { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: var(--blue); font-size: .78rem; font-weight: 750; }
+.daytake-text-link svg { width: 15px; height: 15px; }
+.daytake-text-link:hover { text-decoration: underline; text-underline-offset: .3em; }
+.daytake-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; border-top: 1px solid var(--line); padding: 30px 0 22px; }
+.daytake-footer p { font-size: .7rem; color: var(--muted); margin: 8px 0; }
+.daytake-footer nav { display: flex; gap: 28px; font-size: .73rem; }
+.daytake-footer nav a { min-height: 44px; display: grid; align-items: center; }
+.daytake-demo-note { flex-basis: 100%; font-size: .6rem; line-height: 1.7; color: var(--muted); }
+.daytake-dialog-photo { width: 100%; height: min(65vh, 570px); object-fit: contain; background: #f4f2fa; }
+.daytake-dialog-info { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 22px; }
+.daytake-dialog-info h2 { font-size: 1.35rem; }
+.daytake-dialog-info p { margin: 9px 0 0; color: var(--muted); font-size: .8rem; line-height: 1.6; }
+.daytake-studio-film { width: 100%; max-height: 70vh; display: block; background: #141524; }
+.daytake[data-theme="dark"] .daytake-hero-cta { background: var(--accent) !important; }
+.daytake[data-theme="dark"] .daytake-editorial-toolbar { background: rgb(27 27 43 / .8); }
+.daytake[data-theme="dark"] .daytake-editorial-toolbar :is(button,a) { color: #e0d7f5; }
+
+@media (max-width: 1000px) {
+  .daytake-wrap { width: calc(100% - 64px); }
+  .daytake-header { min-height: 75px; }
+  .daytake-hero { min-height: 100vh; }
+  .daytake-hero h1 { font-size: 3.5rem; }
+  .daytake-hero-content { padding-bottom: 82px; }
+  .daytake-mosaic { inset: 0 -18% 0 43%; }
+  .daytake-mosaic-grid { height: 680px; }
+  .daytake-editorial { column-gap: 32px; }
+  .daytake-editorial-content h2 { font-size: 2.25rem; }
+  .daytake-editorial-actions { gap: 12px; }
+  .daytake-primary { padding-inline: 20px; }
+  .daytake-trust { gap: 8px; }
+  .daytake-trust-item { flex-direction: column; align-items: start; }
+}
+@media (max-width: 759px) {
+  .daytake-wrap { width: calc(100% - 36px); }
+  .daytake-window-bar { height: 27px; padding-inline: 12px; font-size: 9px; }
+  .daytake-header { min-height: 66px; gap: 8px; }
+  .daytake-logo { font-size: 1.25rem; gap: 5px; }
+  .daytake-logo svg { width: 25px; height: 25px; }
+  .daytake-header nav { gap: 14px; font-size: .68rem; }
+  .daytake-header nav a:first-child { display: none; }
+  .daytake-header > .preview-icon-button { min-width: 44px; width: 44px; }
+  .daytake-header > .preview-icon-button svg { width: 15px; height: 15px; }
+  .daytake-hero { display: grid; align-items: start; grid-template-rows: auto 300px; min-height: 100vh; padding-bottom: 44px; }
+  .daytake-hero-content { grid-row: 1; padding: 34px 0 0; }
+  .daytake-hero h1 { font-size: clamp(2.6rem, 10.2vw, 4.2rem); line-height: 1.05; }
+  .daytake-hero p { font-size: .87rem; margin: 19px 0 24px; max-width: 33ch; }
+  .daytake-primary { min-height: 46px; font-size: .76rem; }
+  .daytake-counter { margin-top: 23px; gap: 10px; }
+  .daytake-counter-icon { width: 34px; height: 34px; }
+  .daytake-counter small { font-size: .58rem; }
+  .daytake-counter strong { font-size: 1rem; }
+  .daytake-mosaic { grid-row: 2; position: relative; inset: auto; height: 350px; margin: -8px -14% 0 -8%; }
+  .daytake-mosaic-grid { height: 650px; width: 100%; }
+  .daytake-mosaic-tile { aspect-ratio: .94; border-radius: 10px; }
+  .daytake-mosaic { --mosaic-gap: 10px; mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent), linear-gradient(180deg, transparent, #000 22%, #000 74%, transparent); }
+  .daytake-hero-foot { font-size: .58rem; bottom: 0; }
+  .daytake-features { padding-block: 40px 45px; }
+  .daytake-feature-grid { grid-template-columns: 1fr; gap: 30px; }
+  .daytake-feature { display: grid; grid-template-columns: 47px 1fr; gap: 5px 16px; }
+  .daytake-feature-icon { width: 47px; height: 47px; grid-row: span 2; margin: 0; }
+  .daytake-feature-icon svg { width: 21px; height: 21px; }
+  .daytake .daytake-feature h2 { font-size: 1.02rem; max-width: none; }
+  .daytake-feature p { font-size: .76rem; margin: 3px 0 0; }
+  .daytake-library { padding-top: 35px; padding-bottom: 20px; }
+  .daytake-library-heading { margin-bottom: 22px; }
+  .daytake-library-heading h2 { font-size: clamp(1.9rem, 7.8vw, 2.6rem); }
+  .daytake-library-heading p { font-size: .76rem; margin-top: 12px; }
+  .daytake-gallery { --gallery-gap: 12px; --gallery-card: clamp(166px, 48vw, 245px); padding: 17px 0; }
+  .daytake-gallery-tilt { gap: 5px; }
+  .daytake-photo { border-radius: 11px; }
+  .daytake-category-badge { width: 23px; height: 23px; top: 8px; left: 8px; }
+  .daytake-category-badge svg { width: 11px; height: 11px; }
+  .daytake-play-badge { width: 29px; height: 29px; bottom: 8px; right: 8px; }
+  .daytake-play-badge svg { width: 11px; height: 11px; }
+  .daytake-gallery-footer { margin-top: 5px; font-size: .6rem; }
+  .daytake-editorial { grid-template-columns: 1fr; gap: 34px; padding: 45px 0; margin-block: 10px; }
+  .daytake-editorial::before { inset: 20% -8px 14px; background: linear-gradient(180deg, transparent, var(--about) 62%); }
+  .daytake-editorial-figure { max-width: 440px; width: 100%; justify-self: center; }
+  .daytake-editorial-stage { aspect-ratio: 1 / 1.06; }
+  .daytake-editorial-media { width: 76%; }
+  .daytake-editorial-photo { border-radius: 22px; }
+  .daytake-editorial-open { width: 47px; height: 47px; right: -15px; }
+  .daytake-editorial-open svg { width: 18px; height: 18px; }
+  .daytake-editorial-toolbar { top: 25%; width: 44px; }
+  .daytake-editorial-toolbar :is(button,a) { width: 44px; height: 44px; }
+  .daytake-editorial-toolbar svg { width: 14px; height: 14px; }
+  .daytake-audio { padding: 8px 10px; width: 47%; }
+  .daytake-waveform { height: 24px; }
+  .daytake-waveform i { max-height: 24px; max-width: 2px; }
+  .daytake-audio-meta { font-size: .48rem; }
+  .daytake-editorial-card { padding: 5px; }
+  .daytake-editorial-card strong { font-size: .58rem; }
+  .daytake-editorial-card small { font-size: .44rem; }
+  .daytake-editorial-content { padding: 0 8px; }
+  .daytake-editorial-content h2 { font-size: 2.2rem; }
+  .daytake-editorial-content > p { font-size: .83rem; margin: 18px 0 22px; }
+  .daytake-editorial-actions { gap: 22px; }
+  .daytake-trust { margin-top: 26px; padding-top: 20px; }
+  .daytake-trust-item { flex-direction: row; align-items: center; font-size: .54rem; gap: 7px; }
+  .daytake-trust-item svg { width: 16px; height: 16px; }
+  .daytake-people { padding: 50px 0 40px; }
+  .daytake-people h2 { font-size: 2.2rem; }
+  .daytake-people > .daytake-wrap > p { font-size: .8rem; margin-top: 14px; }
+  .daytake-portrait-field { width: min(420px, 100%); height: 530px; margin-top: 20px; }
+  .daytake-portrait-line-wide { display: none; }
+  .daytake-portrait-line-phone { display: block; }
+  .daytake-creators { grid-template-columns: repeat(2, 1fr); grid-template-rows: 240px 240px; }
+  .daytake-creator-arrival { padding-top: 24px; }
+  .daytake-creator-arrival:nth-child(2) { padding-top: 80px; }
+  .daytake-creator-arrival:nth-child(3) { padding-top: 12px; }
+  .daytake-creator-arrival:nth-child(4) { padding-top: 66px; }
+  .daytake-creator-plate { width: clamp(130px, 35vw, 155px); margin-bottom: 17px; }
+  .daytake-creator-caption { gap: 6px; }
+  .daytake-creator-caption strong { font-size: .61rem; }
+  .daytake-creator-badge { padding: 2px 6px; font-size: .5rem; }
+  .daytake-creator-specialty { font-size: .58rem; }
+  .particle-1 { top: 4%; left: 52%; }
+  .particle-2 { top: 44%; left: 10%; }
+  .particle-3 { top: 51%; left: 87%; }
+  .daytake-footer { padding-block: 25px 18px; gap: 12px; }
+  .daytake-footer nav { gap: 18px; font-size: .65rem; }
+  .daytake-demo-note { font-size: .55rem; }
+  .daytake-dialog-info { padding: 17px; }
+  .daytake-dialog-info h2 { font-size: 1.15rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .daytake-mosaic-grid { transform: rotate(-8deg); }
+  .daytake-mosaic-track { will-change: auto; }
+  .daytake-gallery-copy { display: none; }
+  .daytake-motion-toggle { display: none; }
+  .daytake-primary, .daytake-photo > img { transition: none; }
+}
