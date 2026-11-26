@@ -35,11 +35,18 @@ export const VideosPage: React.FC = () => {
   useEffect(() => {
     let active = true;
     setLoading(true);
-    catalogService.listVideos({ q, category }).then((list) => {
-      if (!active) return;
-      setVideos(list);
-      setLoading(false);
-    });
+    catalogService
+      .listVideos({ q, category })
+      .then((list) => {
+        if (!active) return;
+        setVideos(list);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!active) return;
+        setVideos([]);
+        setLoading(false);
+      });
     return () => {
       active = false;
     };
@@ -63,17 +70,19 @@ export const VideosPage: React.FC = () => {
       {/* Page Header & Search */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-h1 text-[#0F172A]">{t.videos.title}</h1>
-          <p className="text-body text-[#64748B] mt-1">{t.videos.subtitle}</p>
+          <h1 className="text-h1 text-secondary">{t.videos.title}</h1>
+          <p className="text-body text-muted mt-1">{t.videos.subtitle}</p>
         </div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             updateFilter('q', searchInput.trim());
           }}
-          className="w-full md:w-96 flex gap-2"
+          className="w-full md:w-96 flex flex-col min-[420px]:flex-row gap-2"
         >
           <Input
+            id="videos-search-input"
+            name="videoQuery"
             value={searchInput}
             onChange={(e) => {
               setSearchInput(e.target.value);
@@ -82,7 +91,7 @@ export const VideosPage: React.FC = () => {
             placeholder={t.videos.searchPlaceholder}
             leftAddon={<Search className="h-4 w-4" />}
           />
-          <Button type="submit" className="h-[46px]">
+          <Button type="submit" className="h-11.5">
             {t.nav.search}
           </Button>
         </form>
@@ -95,8 +104,8 @@ export const VideosPage: React.FC = () => {
           onClick={() => updateFilter('category', '')}
           className={`px-3.5 py-2 rounded-full text-[13px] font-medium border shrink-0 cursor-pointer transition-colors ${
             !category
-              ? 'bg-[#2563EB] text-white border-[#2563EB]'
-              : 'bg-white text-[#0F172A] border-[#E2E8F0] hover:border-[#2563EB]'
+              ? 'bg-primary text-white border-primary'
+              : 'bg-white dark:bg-slate-900/90 text-secondary dark:text-slate-200 border-border dark:border-slate-700 hover:border-primary dark:hover:border-blue-400'
           }`}
         >
           {t.common.all}
@@ -108,8 +117,8 @@ export const VideosPage: React.FC = () => {
             onClick={() => updateFilter('category', cat.slug)}
             className={`px-3.5 py-2 rounded-full text-[13px] font-medium border shrink-0 cursor-pointer transition-colors ${
               category === cat.slug
-                ? 'bg-[#2563EB] text-white border-[#2563EB]'
-                : 'bg-white text-[#0F172A] border-[#E2E8F0] hover:border-[#2563EB]'
+                ? 'bg-primary text-white border-primary'
+                : 'bg-white dark:bg-slate-900/90 text-secondary dark:text-slate-200 border-border dark:border-slate-700 hover:border-primary dark:hover:border-blue-400'
             }`}
           >
             {pickText(cat.name)}
@@ -121,7 +130,7 @@ export const VideosPage: React.FC = () => {
       {!q && !category && featuredVideo && (
         <section className="glass-panel rounded-[28px] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
           <div
-            className={`lg:col-span-5 min-h-[220px] bg-gradient-to-br ${featuredVideo.thumbnailTheme} border-b lg:border-b-0 lg:border-r border-[#E2E8F0] p-6 flex flex-col justify-between`}
+            className={`lg:col-span-5 min-h-55 bg-linear-to-br ${featuredVideo.thumbnailTheme} border-b lg:border-b-0 lg:border-r border-border dark:border-slate-700/70 p-6 flex flex-col justify-between`}
           >
             <Badge tone="primary" className="w-fit">
               <Sparkles className="h-3.5 w-3.5" />
@@ -130,19 +139,19 @@ export const VideosPage: React.FC = () => {
             <div className="flex items-center justify-between pt-8">
               <Link
                 to={`/videos/${featuredVideo.slug}`}
-                className="h-12 w-12 rounded-full bg-[#2563EB] text-white flex items-center justify-center hover:bg-[#1D4ED8] transition-colors"
+                className="h-12 w-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-hover transition-colors"
               >
                 <Play className="h-5 w-5 fill-current ml-0.5" />
               </Link>
-              <span className="px-2.5 py-1 rounded-[8px] bg-[#0F172A]/85 text-white text-[12px] font-medium">
+              <span className="px-2.5 py-1 rounded-[8px] bg-secondary/85 text-white text-[12px] font-medium">
                 {formatNumber(featuredVideo.durationMinutes)} {t.common.minutes}
               </span>
             </div>
           </div>
           <div className="lg:col-span-7 p-6 md:p-8 flex flex-col justify-between gap-5">
             <div className="space-y-2.5">
-              <h2 className="text-h2 text-[#0F172A]">{pickText(featuredVideo.title)}</h2>
-              <p className="text-body text-[#64748B]">{pickText(featuredVideo.description)}</p>
+              <h2 className="text-h2 text-secondary">{pickText(featuredVideo.title)}</h2>
+              <p className="text-body text-muted">{pickText(featuredVideo.description)}</p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Link to={`/videos/${featuredVideo.slug}`}>
@@ -169,8 +178,8 @@ export const VideosPage: React.FC = () => {
           ))}
         </div>
       ) : videos.length === 0 ? (
-        <div className="bg-white rounded-[12px] border border-[#E2E8F0] p-10 text-center space-y-3">
-          <p className="text-[16px] font-semibold text-[#0F172A]">{t.common.noResults}</p>
+        <div className="bg-white dark:bg-slate-900/90 rounded-[12px] border border-border dark:border-slate-700/80 p-10 text-center space-y-3">
+          <p className="text-[16px] font-semibold text-secondary">{t.common.noResults}</p>
           <Button variant="outline" onClick={() => setSearchParams(new URLSearchParams())}>
             {t.common.clearAll}
           </Button>
@@ -178,7 +187,7 @@ export const VideosPage: React.FC = () => {
       ) : q || category ? (
         /* Filtered 4-column Grid */
         <section className="space-y-4">
-          <h2 className="text-h3 text-[#0F172A]">
+          <h2 className="text-h3 text-secondary">
             {t.videos.allVideosTitle} ({videos.length})
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -204,10 +213,10 @@ const VideoSectionRow: React.FC<{ title: string; videos: VideoItem[] }> = ({ tit
   if (videos.length === 0) return null;
   return (
     <section className="space-y-4">
-      <h2 className="text-h3 text-[#0F172A]">{title}</h2>
+      <h2 className="text-h3 text-secondary">{title}</h2>
       <div className="flex lg:grid lg:grid-cols-4 gap-5 overflow-x-auto pb-2 lg:pb-0 no-scrollbar snap-x">
         {videos.slice(0, 4).map((video) => (
-          <div key={video.id} className="min-w-[260px] sm:min-w-[290px] lg:min-w-0 snap-start">
+          <div key={video.id} className="min-w-65 sm:min-w-72.5 lg:min-w-0 snap-start">
             <VideoCard video={video} className="h-full" />
           </div>
         ))}

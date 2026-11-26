@@ -9,6 +9,7 @@ interface I18nContextValue {
   t: TranslationKeys;
   pickText: (text: LocalizedText | string) => string;
   formatNumber: (num: number) => string;
+  formatCurrency: (amount: number, currency?: 'USD') => string;
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null);
@@ -59,7 +60,16 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return new Intl.NumberFormat(locale === 'km' ? 'km-KH' : 'en-US').format(num);
     };
 
-    return { locale, setLocale, toggleLocale, t, pickText, formatNumber };
+    const formatCurrency = (amount: number, currency: 'USD' = 'USD'): string => {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency,
+        minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
+        maximumFractionDigits: 2,
+      }).format(amount);
+    };
+
+    return { locale, setLocale, toggleLocale, t, pickText, formatNumber, formatCurrency };
   }, [locale]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

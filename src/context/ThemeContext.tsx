@@ -13,6 +13,22 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 const STORAGE_KEY = 'camcodelearn_theme';
 
+function applyDocumentTheme(theme: ThemeMode, disableTransitions = false) {
+  const root = document.documentElement;
+  if (disableTransitions) {
+    root.classList.add('theme-switching');
+  }
+  root.classList.toggle('dark', theme === 'dark');
+  root.setAttribute('data-theme', theme);
+  if (disableTransitions) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        root.classList.remove('theme-switching');
+      });
+    });
+  }
+}
+
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<ThemeMode>(() => {
     try {
@@ -25,9 +41,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle('dark', theme === 'dark');
-    root.setAttribute('data-theme', theme);
+    applyDocumentTheme(theme);
     try {
       localStorage.setItem(STORAGE_KEY, theme);
     } catch {
@@ -35,8 +49,18 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [theme]);
 
-  const setTheme = (next: ThemeMode) => setThemeState(next);
-  const toggleTheme = () => setThemeState((prev) => (prev === 'light' ? 'dark' : 'light'));
+  const setTheme = (next: ThemeMode) => {
+    applyDocumentTheme(next, true);
+    setThemeState(next);
+  };
+
+  const toggleTheme = () => {
+    setThemeState((prev) => {
+      const next: ThemeMode = prev === 'light' ? 'dark' : 'light';
+      applyDocumentTheme(next, true);
+      return next;
+    });
+  };
 
   const value = useMemo<ThemeContextValue>(
     () => ({

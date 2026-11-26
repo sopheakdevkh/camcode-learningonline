@@ -4,10 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CamcodeLearn — Learning & Video Streaming Platform</title>
+    <script>
+      (function () {
+        try {
+          var root = document.documentElement;
+          root.classList.add('preload');
+          var theme = localStorage.getItem('camcodelearn_theme');
+          if (theme === 'dark') {
+            root.classList.add('dark');
+            root.setAttribute('data-theme', 'dark');
+          } else {
+            root.setAttribute('data-theme', 'light');
+          }
+          var locale = localStorage.getItem('camcodelearn_locale');
+          if (locale === 'km' || locale === 'en') {
+            root.lang = locale;
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Roboto:wght@300;400;500;700&family=Siemreap&display=swap"
       rel="stylesheet"
     />
   </head>

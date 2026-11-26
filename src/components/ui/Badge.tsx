@@ -9,13 +9,13 @@ interface BadgeProps {
 }
 
 const toneClasses: Record<BadgeTone, string> = {
-  neutral: 'bg-[#F1F5F9] text-[#475569] border-[#E2E8F0]',
-  primary: 'bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]',
-  success: 'bg-[#F0FDF4] text-[#15803D] border-[#BBF7D0]',
-  warning: 'bg-[#FFFBEB] text-[#B45309] border-[#FDE68A]',
-  error: 'bg-[#FEF2F2] text-[#B91C1C] border-[#FECACA]',
-  info: 'bg-[#ECFEFF] text-[#0E7490] border-[#A5F3FC]',
-  dark: 'bg-[#0F172A] text-white border-[#0F172A]',
+  neutral: 'bg-[#F1F5F9] dark:bg-slate-800 text-[#334155] dark:text-slate-200 border-[#CBD5E1] dark:border-slate-700',
+  primary: 'bg-[#EFF6FF] dark:bg-blue-950/70 text-primary-hover dark:text-blue-200 border-[#BFDBFE] dark:border-blue-700/70',
+  success: 'bg-[#F0FDF4] dark:bg-emerald-950/70 text-[#166534] dark:text-emerald-200 border-[#86EFAC] dark:border-emerald-700/70',
+  warning: 'bg-[#FFFBEB] dark:bg-amber-950/70 text-[#92400E] dark:text-amber-200 border-[#FCD34D] dark:border-amber-700/70',
+  error: 'bg-[#FEF2F2] dark:bg-red-950/70 text-[#991B1B] dark:text-red-200 border-[#FCA5A5] dark:border-red-700/70',
+  info: 'bg-[#ECFEFF] dark:bg-cyan-950/70 text-[#155E75] dark:text-cyan-200 border-[#67E8F9] dark:border-cyan-700/70',
+  dark: 'bg-secondary text-white border-secondary dark:bg-slate-100 dark:text-slate-900 dark:border-slate-100',
 };
 
 export const Badge: React.FC<BadgeProps> = ({ tone = 'neutral', children, className = '' }) => {

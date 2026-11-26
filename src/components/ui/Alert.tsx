@@ -12,20 +12,20 @@ interface AlertProps {
 
 const styles: Record<AlertTone, { wrap: string; icon: React.ReactNode }> = {
   info: {
-    wrap: 'bg-[#ECFEFF] border-[#A5F3FC] text-[#0E7490]',
-    icon: <Info className="h-5 w-5 text-[#0891B2] shrink-0" />,
+    wrap: 'bg-[#ECFEFF] dark:bg-cyan-950/60 border-[#67E8F9] dark:border-cyan-500/40 text-[#155E75] dark:text-cyan-100',
+    icon: <Info className="h-5 w-5 text-[#0E7490] dark:text-cyan-300 shrink-0 mt-0.5" />,
   },
   success: {
-    wrap: 'bg-[#F0FDF4] border-[#BBF7D0] text-[#15803D]',
-    icon: <CheckCircle2 className="h-5 w-5 text-[#16A34A] shrink-0" />,
+    wrap: 'bg-[#F0FDF4] dark:bg-emerald-950/60 border-[#86EFAC] dark:border-emerald-500/40 text-[#166534] dark:text-emerald-100',
+    icon: <CheckCircle2 className="h-5 w-5 text-[#15803D] dark:text-emerald-300 shrink-0 mt-0.5" />,
   },
   warning: {
-    wrap: 'bg-[#FFFBEB] border-[#FDE68A] text-[#B45309]',
-    icon: <AlertTriangle className="h-5 w-5 text-[#D97706] shrink-0" />,
+    wrap: 'bg-[#FFFBEB] dark:bg-amber-950/60 border-[#FCD34D] dark:border-amber-500/40 text-[#92400E] dark:text-amber-100',
+    icon: <AlertTriangle className="h-5 w-5 text-[#B45309] dark:text-amber-300 shrink-0 mt-0.5" />,
   },
   error: {
-    wrap: 'bg-[#FEF2F2] border-[#FECACA] text-[#B91C1C]',
-    icon: <AlertCircle className="h-5 w-5 text-[#DC2626] shrink-0" />,
+    wrap: 'bg-[#FEF2F2] dark:bg-red-950/65 border-[#FCA5A5] dark:border-red-500/45 text-[#991B1B] dark:text-red-100',
+    icon: <AlertCircle className="h-5 w-5 text-[#B91C1C] dark:text-red-300 shrink-0 mt-0.5" />,
   },
 };
 

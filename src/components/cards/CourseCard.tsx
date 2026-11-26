@@ -25,16 +25,16 @@ interface CourseCardProps {
 }
 
 const categoryCoverIcon: Record<string, React.ReactNode> = {
-  'digital-marketing': <Megaphone className="h-10 w-10 text-[#2563EB]" />,
-  'software-engineering': <Code2 className="h-10 w-10 text-[#0891B2]" />,
-  'ui-ux-design': <Palette className="h-10 w-10 text-[#16A34A]" />,
-  'business-finance': <Briefcase className="h-10 w-10 text-[#D97706]" />,
-  'data-ai': <BarChart3 className="h-10 w-10 text-[#2563EB]" />,
+  'digital-marketing': <Megaphone className="h-10 w-10 text-primary" />,
+  'software-engineering': <Code2 className="h-10 w-10 text-info" />,
+  'ui-ux-design': <Palette className="h-10 w-10 text-success" />,
+  'business-finance': <Briefcase className="h-10 w-10 text-warning" />,
+  'data-ai': <BarChart3 className="h-10 w-10 text-primary" />,
   'creative-video': <Film className="h-10 w-10 text-[#E11D48]" />,
 };
 
 export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }) => {
-  const { pickText, t, formatNumber } = useI18n();
+  const { pickText, t, formatNumber, formatCurrency } = useI18n();
   const { hasCourseAccess } = useAuth();
   const instructor = catalogService.getInstructorById(course.instructorId);
   const category = catalogService.getCategoryBySlug(course.categorySlug);
@@ -56,15 +56,15 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
   return (
     <Link
       to={`/courses/${course.slug}`}
-      className={`group glass-card flex flex-col rounded-[16px] overflow-hidden ${className}`}
+      className={`group glass-card flex flex-col rounded-2xl overflow-hidden ${className}`}
     >
       {/* Inset Rounded Thumbnail (matching Known card layout) */}
       <div className="p-3.5 pb-0">
         <div
-          className={`relative h-44 w-full rounded-[12px] bg-gradient-to-br ${course.thumbnailTheme} border border-white/80 overflow-hidden p-3.5 flex flex-col justify-between`}
+          className={`relative h-44 w-full rounded-[12px] border border-white/80 dark:border-slate-700/70 bg-linear-to-br ${course.thumbnailTheme} overflow-hidden p-3.5 flex flex-col justify-between`}
         >
           <div className="flex items-center justify-between gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-white/90 text-[11px] font-semibold text-[#0F172A] shadow-xs">
+            <span className="px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-900/90 text-[11px] font-semibold text-secondary dark:text-slate-100 shadow-xs">
               {category ? pickText(category.name) : course.thumbnailLabel}
             </span>
             {access !== 'none' ? (
@@ -74,30 +74,30 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
                   : t.marketplace.enrolledBadge}
               </Badge>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/90 text-[11px] font-semibold text-[#0F172A]">
-                <Star className="h-3 w-3 fill-[#D97706] text-[#D97706]" />
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/90 dark:bg-slate-900/90 text-[11px] font-semibold text-secondary dark:text-slate-100">
+                <Star className="h-3 w-3 fill-warning text-warning dark:fill-amber-400 dark:text-amber-400" />
                 {course.rating.toFixed(1)}
               </span>
             )}
           </div>
 
           <div className="flex items-center justify-center my-auto">
-            <div className="h-16 w-16 rounded-2xl bg-white/85 backdrop-blur-sm border border-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+            <div className="h-16 w-16 rounded-2xl bg-white/85 dark:bg-slate-900/85 backdrop-blur-sm border border-white dark:border-slate-700/80 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
               {categoryCoverIcon[course.categorySlug] ?? (
-                <BookOpen className="h-9 w-9 text-[#2563EB]" />
+                <BookOpen className="h-9 w-9 text-primary dark:text-blue-400" />
               )}
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] font-medium text-[#475569]">
-            <span className="px-2 py-0.5 rounded bg-white/85">
+          <div className="flex items-center justify-between text-[11px] font-medium text-[#334155] dark:text-slate-200">
+            <span className="px-2 py-0.5 rounded bg-white/85 dark:bg-slate-900/85">
               {course.difficulty === 'beginner'
                 ? t.common.beginner
                 : course.difficulty === 'intermediate'
                   ? t.common.intermediate
                   : t.common.advanced}
             </span>
-            <span className="px-2 py-0.5 rounded bg-white/85">
+            <span className="px-2 py-0.5 rounded bg-white/85 dark:bg-slate-900/85">
               {formatNumber(course.durationHours)} {t.common.hours}
             </span>
           </div>
@@ -107,7 +107,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
       {/* Card Content */}
       <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between gap-4">
         <div className="space-y-2">
-          <p className="text-[12px] text-[#64748B] truncate">
+          <p className="text-[12px] text-muted truncate">
             {instructor?.name} ·{' '}
             {course.language === 'bilingual'
               ? t.common.bilingual
@@ -116,11 +116,11 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
                 : t.common.english}
           </p>
 
-          <h3 className="text-[16px] font-bold text-[#0F172A] group-hover:text-[#2563EB] transition-colors line-clamp-2 leading-snug min-h-[44px]">
+          <h3 className="text-[16px] font-bold text-secondary group-hover:text-primary transition-colors line-clamp-2 leading-snug min-h-11">
             {pickText(course.title)}
           </h3>
 
-          <div className="flex items-center gap-4 pt-0.5 text-[12px] text-[#64748B]">
+          <div className="flex items-center gap-4 pt-0.5 text-[12px] text-muted tabular-nums">
             <span className="inline-flex items-center gap-1.5">
               <FileText className="h-3.5 w-3.5 text-[#94A3B8]" />
               {t.marketplace.lessonLabel}: {formatNumber(course.lessonsCount)}
@@ -133,19 +133,19 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
         </div>
 
         {/* Bottom Price + Primary Blue Action Pill (matching Known card footer) */}
-        <div className="pt-3 border-t border-[#E2E8F0]/80 flex items-center justify-between gap-3">
+        <div className="pt-3 border-t border-border/80 flex items-center justify-between gap-3">
           <div>
-            <p className="text-[11px] text-[#64748B] leading-none mb-1">{t.common.price}</p>
+            <p className="text-[11px] text-muted leading-none mb-1">{t.common.price}</p>
             {course.price === 0 ? (
               <span className="text-[18px] font-bold text-[#E11D48]">{t.common.free}</span>
             ) : (
-              <span className="text-[18px] font-bold text-[#0F172A]">
-                ${course.price % 1 === 0 ? course.price.toFixed(0) : course.price.toFixed(2)}
+              <span className="text-[18px] font-bold tabular-nums text-secondary">
+                {formatCurrency(course.price)}
               </span>
             )}
           </div>
 
-          <span className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[8px] bg-[#2563EB] group-hover:bg-[#1D4ED8] text-white text-[13px] font-medium transition-colors shrink-0">
+          <span className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[8px] bg-primary group-hover:bg-primary-hover text-white text-[13px] font-medium transition-colors shrink-0">
             <ArrowRight className="h-3.5 w-3.5" />
             <span>{actionLabel()}</span>
           </span>

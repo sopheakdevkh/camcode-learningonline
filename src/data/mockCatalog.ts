@@ -183,7 +183,7 @@ export const MOCK_COURSES: Course[] = [
     reviewsCount: 318,
     studentsCount: 5420,
     lastUpdated: '2026-10-18',
-    thumbnailTheme: 'from-blue-50 to-indigo-100 border-blue-200',
+    thumbnailTheme: 'from-blue-50 to-indigo-100 border-blue-200 dark:from-blue-950/85 dark:to-indigo-950/90 dark:border-blue-800/60',
     thumbnailLabel: 'MARKETING · 12H',
     featured: true,
     outcomes: [
@@ -367,7 +367,7 @@ export const MOCK_COURSES: Course[] = [
     reviewsCount: 245,
     studentsCount: 3890,
     lastUpdated: '2026-11-04',
-    thumbnailTheme: 'from-cyan-50 to-sky-100 border-cyan-200',
+    thumbnailTheme: 'from-cyan-50 to-sky-100 border-cyan-200 dark:from-cyan-950/85 dark:to-sky-950/90 dark:border-cyan-800/60',
     thumbnailLabel: 'ENGINEERING · 16H',
     featured: true,
     outcomes: [
@@ -438,7 +438,7 @@ export const MOCK_COURSES: Course[] = [
     reviewsCount: 192,
     studentsCount: 3150,
     lastUpdated: '2026-10-12',
-    thumbnailTheme: 'from-emerald-50 to-teal-100 border-emerald-200',
+    thumbnailTheme: 'from-emerald-50 to-teal-100 border-emerald-200 dark:from-emerald-950/85 dark:to-teal-950/90 dark:border-emerald-800/60',
     thumbnailLabel: 'DESIGN · 9H',
     featured: true,
     outcomes: [
@@ -492,7 +492,7 @@ export const MOCK_COURSES: Course[] = [
     reviewsCount: 410,
     studentsCount: 8920,
     lastUpdated: '2026-09-28',
-    thumbnailTheme: 'from-slate-100 to-blue-50 border-slate-200',
+    thumbnailTheme: 'from-slate-100 to-blue-50 border-slate-200 dark:from-slate-900/90 dark:to-blue-950/85 dark:border-slate-700/70',
     thumbnailLabel: 'FREE · 4H',
     featured: false,
     outcomes: [
@@ -545,7 +545,7 @@ export const MOCK_COURSES: Course[] = [
     reviewsCount: 112,
     studentsCount: 1940,
     lastUpdated: '2026-10-05',
-    thumbnailTheme: 'from-amber-50 to-orange-100 border-amber-200',
+    thumbnailTheme: 'from-amber-50 to-orange-100 border-amber-200 dark:from-amber-950/80 dark:to-orange-950/85 dark:border-amber-800/60',
     thumbnailLabel: 'FINANCE · 8H',
     featured: false,
     outcomes: [
@@ -598,7 +598,7 @@ export const MOCK_COURSES: Course[] = [
     reviewsCount: 284,
     studentsCount: 6410,
     lastUpdated: '2026-11-10',
-    thumbnailTheme: 'from-sky-50 to-blue-100 border-sky-200',
+    thumbnailTheme: 'from-sky-50 to-blue-100 border-sky-200 dark:from-sky-950/85 dark:to-blue-950/90 dark:border-sky-800/60',
     thumbnailLabel: 'FREE · AI · 3H',
     featured: false,
     outcomes: [
@@ -649,7 +649,7 @@ export const MOCK_COURSES: Course[] = [
     reviewsCount: 156,
     studentsCount: 2780,
     lastUpdated: '2026-10-22',
-    thumbnailTheme: 'from-rose-50 to-orange-100 border-rose-200',
+    thumbnailTheme: 'from-rose-50 to-orange-100 border-rose-200 dark:from-rose-950/80 dark:to-orange-950/85 dark:border-rose-800/60',
     thumbnailLabel: 'VIDEO · 10H',
     featured: false,
     outcomes: [
@@ -700,7 +700,7 @@ export const MOCK_COURSES: Course[] = [
     reviewsCount: 98,
     studentsCount: 1420,
     lastUpdated: '2026-11-15',
-    thumbnailTheme: 'from-slate-100 to-indigo-100 border-slate-300',
+    thumbnailTheme: 'from-slate-100 to-indigo-100 border-slate-300 dark:from-slate-900/90 dark:to-indigo-950/90 dark:border-indigo-800/60',
     thumbnailLabel: 'ADVANCED · 15H',
     featured: false,
     outcomes: [
@@ -751,7 +751,7 @@ export const MOCK_COURSES: Course[] = [
     reviewsCount: 134,
     studentsCount: 2640,
     lastUpdated: '2026-09-14',
-    thumbnailTheme: 'from-blue-50 to-cyan-50 border-blue-200',
+    thumbnailTheme: 'from-blue-50 to-cyan-50 border-blue-200 dark:from-blue-950/85 dark:to-cyan-950/85 dark:border-blue-800/60',
     thumbnailLabel: 'MARKETING · 6H',
     featured: false,
     outcomes: [
@@ -800,7 +800,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     trending: true,
     recommended: true,
     recentlyAdded: true,
-    thumbnailTheme: 'from-blue-50 to-slate-100 border-blue-200',
+    thumbnailTheme: 'from-blue-50 to-slate-100 border-blue-200 dark:from-blue-950/85 dark:to-slate-900/90 dark:border-blue-800/60',
     tags: ['Design', 'Localization', 'Product'],
   },
   {
@@ -824,7 +824,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     trending: true,
     recommended: true,
     recentlyAdded: true,
-    thumbnailTheme: 'from-indigo-50 to-blue-100 border-indigo-200',
+    thumbnailTheme: 'from-indigo-50 to-blue-100 border-indigo-200 dark:from-indigo-950/85 dark:to-blue-950/90 dark:border-indigo-800/60',
     tags: ['Ads', 'Benchmarks', 'Growth'],
   },
   {
@@ -847,7 +847,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     viewsCount: 8700,
     recommended: true,
     recentlyAdded: true,
-    thumbnailTheme: 'from-amber-50 to-yellow-100 border-amber-200',
+    thumbnailTheme: 'from-amber-50 to-yellow-100 border-amber-200 dark:from-amber-950/80 dark:to-yellow-950/80 dark:border-amber-800/60',
     tags: ['Finance', 'Metrics', 'Premium'],
   },
   {
@@ -869,7 +869,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     requiredPlans: ['free', 'basic', 'premium'],
     viewsCount: 24100,
     trending: true,
-    thumbnailTheme: 'from-rose-50 to-slate-100 border-rose-200',
+    thumbnailTheme: 'from-rose-50 to-slate-100 border-rose-200 dark:from-rose-950/80 dark:to-slate-900/90 dark:border-rose-800/60',
     tags: ['Studio', 'Lighting', 'Audio'],
   },
   {
@@ -891,7 +891,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     requiredPlans: ['basic', 'premium'],
     viewsCount: 15300,
     recommended: true,
-    thumbnailTheme: 'from-cyan-50 to-slate-100 border-cyan-200',
+    thumbnailTheme: 'from-cyan-50 to-slate-100 border-cyan-200 dark:from-cyan-950/85 dark:to-slate-900/90 dark:border-cyan-800/60',
     tags: ['React', 'Performance', 'DevTools'],
   },
   {
@@ -913,7 +913,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     requiredPlans: ['free', 'basic', 'premium'],
     viewsCount: 11200,
     recentlyAdded: true,
-    thumbnailTheme: 'from-sky-50 to-indigo-50 border-sky-200',
+    thumbnailTheme: 'from-sky-50 to-indigo-50 border-sky-200 dark:from-sky-950/85 dark:to-indigo-950/85 dark:border-sky-800/60',
     tags: ['AI', 'Productivity', 'Teams'],
   },
   {
@@ -935,7 +935,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     requiredPlans: ['basic', 'premium'],
     viewsCount: 16800,
     trending: true,
-    thumbnailTheme: 'from-emerald-50 to-slate-100 border-emerald-200',
+    thumbnailTheme: 'from-emerald-50 to-slate-100 border-emerald-200 dark:from-emerald-950/85 dark:to-slate-900/90 dark:border-emerald-800/60',
     tags: ['Khmer', 'Typography', 'UI'],
   },
   {
@@ -956,7 +956,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     accessType: 'premium',
     requiredPlans: ['premium'],
     viewsCount: 7400,
-    thumbnailTheme: 'from-slate-100 to-blue-100 border-slate-300',
+    thumbnailTheme: 'from-slate-100 to-blue-100 border-slate-300 dark:from-slate-900/90 dark:to-blue-950/90 dark:border-blue-800/60',
     tags: ['Payments', 'Security', 'Backend'],
   },
 ];

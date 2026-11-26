@@ -35,7 +35,7 @@ const REVIEWS_PER_PAGE = 2;
 export const CourseDetailPage: React.FC = () => {
   const { slug = '' } = useParams();
   const navigate = useNavigate();
-  const { t, pickText, formatNumber } = useI18n();
+  const { t, pickText, formatNumber, formatCurrency } = useI18n();
   const { isAuthenticated, hasCourseAccess, enrollFreeCourse } = useAuth();
 
   const [course, setCourse] = useState<Course | null>(null);
@@ -49,14 +49,21 @@ export const CourseDetailPage: React.FC = () => {
     let active = true;
     setLoading(true);
     setReviewPage(1);
-    catalogService.getCourseBySlug(slug).then((data) => {
-      if (!active) return;
-      setCourse(data);
-      if (data && data.curriculum.length > 0) {
-        setExpandedSections({ [data.curriculum[0].id]: true });
-      }
-      setLoading(false);
-    });
+    catalogService
+      .getCourseBySlug(slug)
+      .then((data) => {
+        if (!active) return;
+        setCourse(data);
+        if (data && data.curriculum.length > 0) {
+          setExpandedSections({ [data.curriculum[0].id]: true });
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!active) return;
+        setCourse(null);
+        setLoading(false);
+      });
     return () => {
       active = false;
     };
@@ -83,7 +90,7 @@ export const CourseDetailPage: React.FC = () => {
   if (!course) {
     return (
       <div className="container-page py-16 text-center space-y-4">
-        <h1 className="text-h2 text-[#0F172A]">{t.common.noResults}</h1>
+        <h1 className="text-h2 text-secondary">{t.common.noResults}</h1>
         <Link to="/courses">
           <Button variant="outline">{t.common.back}</Button>
         </Link>
@@ -171,27 +178,27 @@ export const CourseDetailPage: React.FC = () => {
   return (
     <div className="pb-24 lg:pb-12">
       {/* Top Light Frosted Header Banner */}
-      <div className="bg-white/75 backdrop-blur-sm border-b border-[#E2E8F0]/80">
+      <div className="bg-white/75 dark:bg-[#0b1120]/80 backdrop-blur-sm border-b border-border/80 dark:border-slate-800">
         <div className="container-page py-8">
           {/* Breadcrumbs */}
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[13px] text-[#64748B] mb-5 flex-wrap">
-            <Link to="/" className="hover:text-[#2563EB]">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[13px] text-muted mb-5 flex-wrap">
+            <Link to="/" className="hover:text-primary">
               {t.courseDetail.breadcrumbsHome}
             </Link>
             <ChevronRight className="h-3.5 w-3.5" />
-            <Link to="/courses" className="hover:text-[#2563EB]">
+            <Link to="/courses" className="hover:text-primary">
               {t.courseDetail.breadcrumbsCourses}
             </Link>
             {category && (
               <>
                 <ChevronRight className="h-3.5 w-3.5" />
-                <Link to={`/courses?category=${category.slug}`} className="hover:text-[#2563EB]">
+                <Link to={`/courses?category=${category.slug}`} className="hover:text-primary">
                   {pickText(category.name)}
                 </Link>
               </>
             )}
             <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-[#0F172A] font-medium truncate max-w-[260px]">
+            <span className="text-secondary font-medium truncate max-w-full sm:max-w-80 min-w-0">
               {pickText(course.title)}
             </span>
           </nav>
@@ -213,30 +220,30 @@ export const CourseDetailPage: React.FC = () => {
                   )}
                 </div>
 
-                <h1 className="text-h1 text-[#0F172A]">{pickText(course.title)}</h1>
-                <p className="text-body text-[#64748B]">{pickText(course.subtitle)}</p>
+                <h1 className="text-h1 text-secondary">{pickText(course.title)}</h1>
+                <p className="text-body text-muted">{pickText(course.subtitle)}</p>
               </div>
 
               {/* Metadata strip */}
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[14px] text-[#475569]">
-                <span className="inline-flex items-center gap-1.5 font-semibold text-[#0F172A]">
-                  <Star className="h-4 w-4 fill-[#D97706] text-[#D97706]" />
+                <span className="inline-flex items-center gap-1.5 font-semibold text-secondary">
+                  <Star className="h-4 w-4 fill-warning text-warning" />
                   {course.rating.toFixed(1)}
-                  <span className="font-normal text-[#64748B]">
+                  <span className="font-normal text-muted">
                     ({course.reviewsCount} {t.courseDetail.reviews})
                   </span>
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Users className="h-4 w-4 text-[#64748B]" />
+                  <Users className="h-4 w-4 text-muted" />
                   {formatNumber(course.studentsCount)} {t.common.students}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Clock className="h-4 w-4 text-[#64748B]" />
+                  <Clock className="h-4 w-4 text-muted" />
                   {formatNumber(course.durationHours)} {t.common.hours} ·{' '}
                   {formatNumber(course.lessonsCount)} {t.common.lessons}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Globe className="h-4 w-4 text-[#64748B]" />
+                  <Globe className="h-4 w-4 text-muted" />
                   {course.language === 'bilingual'
                     ? t.common.bilingual
                     : course.language === 'km'
@@ -247,7 +254,7 @@ export const CourseDetailPage: React.FC = () => {
 
               {/* Instructor Card */}
               {instructor && (
-                <div className="flex items-center gap-3.5 p-4 rounded-[12px] bg-[#F8FAFC] border border-[#E2E8F0]">
+                <div className="flex items-center gap-3.5 p-4 rounded-[12px] bg-background border border-border">
                   <span
                     className="h-11 w-11 rounded-full text-white font-semibold text-[14px] flex items-center justify-center shrink-0"
                     style={{ backgroundColor: instructor.avatarColor }}
@@ -255,10 +262,10 @@ export const CourseDetailPage: React.FC = () => {
                     {instructor.initials}
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[14px] font-semibold text-[#0F172A]">
+                    <p className="text-[14px] font-semibold text-secondary">
                       {t.common.by} {instructor.name}
                     </p>
-                    <p className="text-[13px] text-[#64748B] truncate">
+                    <p className="text-[13px] text-muted truncate">
                       {pickText(instructor.role)} · {t.common.updated}: {course.lastUpdated}
                     </p>
                   </div>
@@ -270,12 +277,12 @@ export const CourseDetailPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setPreviewOpen(true)}
-                  className={`w-full h-48 rounded-[12px] bg-gradient-to-br ${course.thumbnailTheme} border flex flex-col items-center justify-center gap-2 cursor-pointer`}
+                  className={`w-full h-48 rounded-[12px] bg-linear-to-br ${course.thumbnailTheme} border flex flex-col items-center justify-center gap-2 cursor-pointer`}
                 >
-                  <span className="h-12 w-12 rounded-full bg-white border border-[#E2E8F0] flex items-center justify-center text-[#2563EB]">
+                  <span className="h-12 w-12 rounded-full bg-white dark:bg-slate-900 border border-border dark:border-slate-700 flex items-center justify-center text-primary dark:text-blue-400">
                     <Play className="h-5 w-5 fill-current ml-0.5" />
                   </span>
-                  <span className="text-[14px] font-medium text-[#0F172A]">
+                  <span className="text-[14px] font-medium text-secondary dark:text-slate-100">
                     {t.courseDetail.previewCourse}
                   </span>
                 </button>
@@ -284,16 +291,16 @@ export const CourseDetailPage: React.FC = () => {
 
             {/* Right Column: 30% (4 cols) Sticky Purchase Card */}
             <aside className="hidden lg:block lg:col-span-4">
-              <div className="bg-white rounded-[12px] border border-[#E2E8F0] overflow-hidden sticky top-24">
+              <div className="bg-white dark:bg-slate-900 rounded-[12px] border border-border dark:border-slate-700/80 overflow-hidden sticky top-24">
                 <button
                   type="button"
                   onClick={() => setPreviewOpen(true)}
-                  className={`w-full h-48 bg-gradient-to-br ${course.thumbnailTheme} border-b border-[#E2E8F0] flex flex-col items-center justify-center gap-2.5 group cursor-pointer`}
+                  className={`w-full h-48 bg-linear-to-br ${course.thumbnailTheme} border-b border-border dark:border-slate-700/80 flex flex-col items-center justify-center gap-2.5 group cursor-pointer`}
                 >
-                  <span className="h-13 w-13 rounded-full bg-white border border-[#E2E8F0] flex items-center justify-center text-[#2563EB] group-hover:bg-[#2563EB] group-hover:text-white transition-colors">
+                  <span className="h-13 w-13 rounded-full bg-white dark:bg-slate-900 border border-border dark:border-slate-700 flex items-center justify-center text-primary dark:text-blue-400 group-hover:bg-primary group-hover:text-white transition-colors">
                     <Play className="h-5 w-5 fill-current ml-0.5" />
                   </span>
-                  <span className="text-[13px] font-semibold text-[#0F172A]">
+                  <span className="text-[13px] font-semibold text-secondary dark:text-slate-100">
                     {t.courseDetail.previewCourse}
                   </span>
                 </button>
@@ -301,16 +308,16 @@ export const CourseDetailPage: React.FC = () => {
                 <div className="p-6 space-y-5">
                   <div className="flex items-baseline gap-2.5">
                     {course.price === 0 ? (
-                      <span className="text-[28px] font-bold text-[#16A34A]">
+                      <span className="text-[28px] font-bold text-success">
                         {t.common.free}
                       </span>
                     ) : (
                       <>
-                        <span className="text-[30px] font-bold text-[#0F172A]">
-                          ${course.price.toFixed(2)}
+                        <span className="text-[30px] font-bold tabular-nums text-secondary">
+                          {formatCurrency(course.price)}
                         </span>
                         {course.originalPrice && (
-                          <span className="text-[15px] text-[#64748B] line-through">
+                          <span className="text-[15px] text-muted line-through">
                             ${course.originalPrice.toFixed(2)}
                           </span>
                         )}
@@ -327,31 +334,31 @@ export const CourseDetailPage: React.FC = () => {
                     {cta.label}
                   </Button>
 
-                  <p className="text-[12px] text-[#64748B] text-center">{cta.note}</p>
+                  <p className="text-[12px] text-muted text-center">{cta.note}</p>
 
-                  <div className="pt-4 border-t border-[#E2E8F0] space-y-2.5">
-                    <p className="text-[13px] font-semibold text-[#0F172A]">
+                  <div className="pt-4 border-t border-border space-y-2.5">
+                    <p className="text-[13px] font-semibold text-secondary">
                       {t.courseDetail.benefitsHeading}
                     </p>
                     <ul className="space-y-2 text-[13px] text-[#475569]">
                       <li className="flex items-center gap-2">
-                        <PlayCircle className="h-4 w-4 text-[#2563EB] shrink-0" />
+                        <PlayCircle className="h-4 w-4 text-primary shrink-0" />
                         <span>
                           {course.durationHours} {t.courseDetail.benefitDuration}
                         </span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <BookOpen className="h-4 w-4 text-[#2563EB] shrink-0" />
+                        <BookOpen className="h-4 w-4 text-primary shrink-0" />
                         <span>
                           {course.lessonsCount} {t.courseDetail.benefitLessons}
                         </span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Award className="h-4 w-4 text-[#2563EB] shrink-0" />
+                        <Award className="h-4 w-4 text-primary shrink-0" />
                         <span>{t.courseDetail.benefitCertificate}</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Smartphone className="h-4 w-4 text-[#2563EB] shrink-0" />
+                        <Smartphone className="h-4 w-4 text-primary shrink-0" />
                         <span>{t.courseDetail.benefitAccess}</span>
                       </li>
                     </ul>
@@ -367,12 +374,12 @@ export const CourseDetailPage: React.FC = () => {
       <div className="container-page py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
           {/* Learning Outcomes */}
-          <section className="glass-card rounded-[24px] p-6">
-            <h2 className="text-h3 text-[#0F172A] mb-4">{t.courseDetail.whatYouLearn}</h2>
+          <section className="glass-card rounded-3xl p-6">
+            <h2 className="text-h3 text-secondary mb-4">{t.courseDetail.whatYouLearn}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {course.outcomes.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-2.5 text-[14px] text-[#0F172A]">
-                  <Check className="h-4 w-4 text-[#16A34A] mt-1 shrink-0" />
+                <div key={idx} className="flex items-start gap-2.5 text-[14px] text-secondary">
+                  <Check className="h-4 w-4 text-success mt-1 shrink-0" />
                   <span>{pickText(item)}</span>
                 </div>
               ))}
@@ -380,16 +387,16 @@ export const CourseDetailPage: React.FC = () => {
           </section>
 
           {/* Description */}
-          <section className="glass-card rounded-[24px] p-6 space-y-3">
-            <h2 className="text-h3 text-[#0F172A]">{t.common.learnMore}</h2>
+          <section className="glass-card rounded-3xl p-6 space-y-3">
+            <h2 className="text-h3 text-secondary">{t.common.learnMore}</h2>
             <p className="text-body text-[#475569]">{pickText(course.description)}</p>
           </section>
 
           {/* Curriculum Accordion */}
-          <section className="glass-card rounded-[24px] p-6 space-y-4">
+          <section className="glass-card rounded-3xl p-6 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-h3 text-[#0F172A]">{t.courseDetail.curriculum}</h2>
-              <div className="flex items-center gap-3 text-[13px] font-medium text-[#2563EB]">
+              <h2 className="text-h3 text-secondary">{t.courseDetail.curriculum}</h2>
+              <div className="flex items-center gap-3 text-[13px] font-medium text-primary">
                 <button
                   type="button"
                   onClick={() => setAllSections(true)}
@@ -408,7 +415,7 @@ export const CourseDetailPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="divide-y divide-[#E2E8F0] border border-[#E2E8F0] rounded-[10px] overflow-hidden">
+            <div className="divide-y divide-border border border-border rounded-[10px] overflow-hidden">
               {course.curriculum.map((section) => {
                 const isOpen = Boolean(expandedSections[section.id]);
                 return (
@@ -416,12 +423,12 @@ export const CourseDetailPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => toggleSection(section.id)}
-                      className="w-full px-4 py-3.5 bg-[#F8FAFC] hover:bg-[#F1F5F9] flex items-center justify-between gap-3 text-left cursor-pointer"
+                      className="w-full px-4 py-3.5 bg-background dark:bg-slate-900/90 hover:bg-[#F1F5F9] dark:hover:bg-slate-800 flex items-center justify-between gap-3 text-left cursor-pointer transition-colors"
                     >
-                      <span className="text-[15px] font-semibold text-[#0F172A]">
+                      <span className="text-[15px] font-semibold text-secondary">
                         {pickText(section.title)}
                       </span>
-                      <div className="flex items-center gap-3 shrink-0 text-[13px] text-[#64748B]">
+                      <div className="flex items-center gap-3 shrink-0 text-[13px] text-muted">
                         <span>
                           {section.lessons.length} {t.common.lessons}
                         </span>
@@ -433,7 +440,7 @@ export const CourseDetailPage: React.FC = () => {
                       </div>
                     </button>
                     {isOpen && (
-                      <ul className="divide-y divide-[#E2E8F0] bg-white">
+                      <ul className="divide-y divide-border bg-white">
                         {section.lessons.map((lesson) => (
                           <li
                             key={lesson.id}
@@ -441,13 +448,13 @@ export const CourseDetailPage: React.FC = () => {
                           >
                             <div className="flex items-center gap-3 min-w-0">
                               {lesson.type === 'video' ? (
-                                <PlayCircle className="h-4 w-4 text-[#2563EB] shrink-0" />
+                                <PlayCircle className="h-4 w-4 text-primary shrink-0" />
                               ) : lesson.type === 'quiz' ? (
-                                <HelpCircle className="h-4 w-4 text-[#D97706] shrink-0" />
+                                <HelpCircle className="h-4 w-4 text-warning shrink-0" />
                               ) : (
-                                <FileText className="h-4 w-4 text-[#64748B] shrink-0" />
+                                <FileText className="h-4 w-4 text-muted shrink-0" />
                               )}
-                              <span className="text-[#0F172A] truncate">
+                              <span className="text-secondary truncate">
                                 {pickText(lesson.title)}
                               </span>
                             </div>
@@ -456,14 +463,14 @@ export const CourseDetailPage: React.FC = () => {
                                 <button
                                   type="button"
                                   onClick={() => setPreviewOpen(true)}
-                                  className="text-[12px] font-medium text-[#2563EB] hover:underline cursor-pointer"
+                                  className="text-[12px] font-medium text-primary hover:underline cursor-pointer"
                                 >
                                   {t.courseDetail.previewLessonLabel}
                                 </button>
                               ) : access === 'none' ? (
                                 <Lock className="h-3.5 w-3.5 text-[#94A3B8]" />
                               ) : null}
-                              <span className="text-[12px] text-[#64748B]">
+                              <span className="text-[12px] text-muted">
                                 {lesson.durationMinutes} {t.common.minutes}
                               </span>
                             </div>
@@ -478,8 +485,8 @@ export const CourseDetailPage: React.FC = () => {
           </section>
 
           {/* Requirements */}
-          <section className="glass-card rounded-[24px] p-6 space-y-3">
-            <h2 className="text-h3 text-[#0F172A]">{t.courseDetail.requirements}</h2>
+          <section className="glass-card rounded-3xl p-6 space-y-3">
+            <h2 className="text-h3 text-secondary">{t.courseDetail.requirements}</h2>
             <ul className="list-disc pl-5 space-y-1.5 text-[15px] text-[#475569]">
               {course.requirements.map((req, idx) => (
                 <li key={idx}>{pickText(req)}</li>
@@ -488,17 +495,17 @@ export const CourseDetailPage: React.FC = () => {
           </section>
 
           {/* Paginated Reviews */}
-          <section className="glass-card rounded-[24px] p-6 space-y-4">
+          <section className="glass-card rounded-3xl p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-h3 text-[#0F172A]">{t.courseDetail.reviews}</h2>
-              <span className="text-[14px] font-semibold text-[#0F172A] inline-flex items-center gap-1">
-                <Star className="h-4 w-4 fill-[#D97706] text-[#D97706]" />
+              <h2 className="text-h3 text-secondary">{t.courseDetail.reviews}</h2>
+              <span className="text-[14px] font-semibold text-secondary inline-flex items-center gap-1">
+                <Star className="h-4 w-4 fill-warning text-warning" />
                 {course.rating.toFixed(1)}
               </span>
             </div>
 
             {course.reviews.length === 0 ? (
-              <p className="text-[14px] text-[#64748B]">
+              <p className="text-[14px] text-muted">
                 Verified learner reviews appear here after cohort completion.
               </p>
             ) : (
@@ -507,18 +514,18 @@ export const CourseDetailPage: React.FC = () => {
                   {paginatedReviews.map((rev) => (
                     <div
                       key={rev.id}
-                      className="p-4 rounded-[10px] bg-[#F8FAFC] border border-[#E2E8F0] space-y-2"
+                      className="p-4 rounded-[10px] bg-background border border-border space-y-2"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div>
-                          <p className="text-[14px] font-semibold text-[#0F172A]">
+                          <p className="text-[14px] font-semibold text-secondary">
                             {rev.authorName}
                           </p>
-                          <p className="text-[12px] text-[#64748B]">{pickText(rev.authorRole)}</p>
+                          <p className="text-[12px] text-muted">{pickText(rev.authorRole)}</p>
                         </div>
-                        <span className="text-[12px] text-[#64748B]">{rev.date}</span>
+                        <span className="text-[12px] text-muted">{rev.date}</span>
                       </div>
-                      <p className="text-[14px] text-[#0F172A]">{pickText(rev.comment)}</p>
+                      <p className="text-[14px] text-secondary">{pickText(rev.comment)}</p>
                     </div>
                   ))}
                 </div>
@@ -534,13 +541,13 @@ export const CourseDetailPage: React.FC = () => {
       </div>
 
       {/* Mobile Sticky Bottom Purchase Bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-[#E2E8F0] px-4 py-3 flex items-center justify-between gap-4">
-        <div>
-          <p className="text-[12px] text-[#64748B] truncate max-w-[160px]">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-t border-border dark:border-slate-800 px-4 py-3 flex items-center justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-[12px] text-muted truncate">
             {pickText(course.title)}
           </p>
-          <p className="text-[18px] font-bold text-[#0F172A]">
-            {course.price === 0 ? t.common.free : `$${course.price.toFixed(2)}`}
+          <p className="text-[18px] font-bold tabular-nums text-secondary">
+            {course.price === 0 ? t.common.free : formatCurrency(course.price)}
           </p>
         </div>
         <Button
@@ -558,7 +565,7 @@ export const CourseDetailPage: React.FC = () => {
         title={`${t.courseDetail.previewModalTitle}: ${pickText(course.title)}`}
       >
         <div className="space-y-4">
-          <div className="aspect-video rounded-[10px] bg-[#0F172A] text-white flex flex-col items-center justify-center p-6 text-center space-y-3">
+          <div className="aspect-video rounded-[10px] bg-secondary dark:bg-[#060a13] dark:border dark:border-slate-800 text-white flex flex-col items-center justify-center p-6 text-center space-y-3">
             <PlayCircle className="h-12 w-12 text-[#60A5FA]" />
             <p className="text-[16px] font-semibold">{pickText(course.title)}</p>
             <p className="text-[13px] text-[#94A3B8] max-w-md">

@@ -48,12 +48,12 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className = '' }) =
   return (
     <Link
       to={`/videos/${video.slug}`}
-      className={`group glass-card flex flex-col rounded-[16px] overflow-hidden ${className}`}
+      className={`group glass-card flex flex-col rounded-2xl overflow-hidden ${className}`}
     >
       {/* Inset Rounded Thumbnail */}
       <div className="p-3.5 pb-0">
         <div
-          className={`relative h-40 w-full rounded-[12px] bg-gradient-to-br ${video.thumbnailTheme} border border-white/80 p-3 flex flex-col justify-between overflow-hidden`}
+          className={`relative h-40 w-full rounded-[12px] border border-white/80 dark:border-slate-700/70 bg-linear-to-br ${video.thumbnailTheme} p-3 flex flex-col justify-between overflow-hidden`}
         >
           <div className="flex items-start justify-between gap-2">
             {renderAccessBadge()}
@@ -62,10 +62,10 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className = '' }) =
               onClick={handleWatchlistClick}
               title={isSaved ? t.videos.savedWatchlist : t.videos.saveWatchlist}
               aria-label={isSaved ? t.videos.savedWatchlist : t.videos.saveWatchlist}
-              className="p-1.5 rounded-[8px] bg-white/90 border border-[#E2E8F0] text-[#0F172A] hover:text-[#2563EB] hover:border-[#2563EB] transition-colors cursor-pointer"
+              className="h-9 w-9 inline-flex items-center justify-center rounded-[8px] bg-white/90 dark:bg-slate-900/90 border border-border dark:border-slate-700 text-secondary dark:text-slate-100 hover:text-primary dark:hover:text-blue-400 hover:border-primary dark:hover:border-blue-400 transition-colors cursor-pointer"
             >
               {isSaved ? (
-                <BookmarkCheck className="h-4 w-4 text-[#2563EB]" />
+                <BookmarkCheck className="h-4 w-4 text-primary" />
               ) : (
                 <Bookmark className="h-4 w-4" />
               )}
@@ -73,13 +73,13 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className = '' }) =
           </div>
 
           <div className="flex items-center justify-center my-auto">
-            <span className="inline-flex items-center justify-center h-11 w-11 rounded-full bg-white/95 border border-white text-[#2563EB] shadow-sm group-hover:bg-[#2563EB] group-hover:text-white transition-colors">
+            <span className="inline-flex items-center justify-center h-11 w-11 rounded-full bg-white/95 dark:bg-slate-900/90 border border-white dark:border-slate-700 text-primary dark:text-blue-400 shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
               <Play className="h-4 w-4 fill-current ml-0.5" />
             </span>
           </div>
 
           <div className="flex items-center justify-end">
-            <span className="px-2 py-0.5 rounded-[6px] bg-[#0F172A]/80 text-white text-[11px] font-medium">
+            <span className="px-2 py-0.5 rounded-md bg-secondary/80 text-white text-[11px] font-medium">
               {formatNumber(video.durationMinutes)} {t.common.minutes}
             </span>
           </div>
@@ -89,14 +89,14 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className = '' }) =
       {/* Body */}
       <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between gap-3">
         <div className="space-y-1.5">
-          <p className="text-[12px] text-[#64748B] truncate">
+          <p className="text-[12px] text-muted truncate">
             {instructor?.name}
             {category ? ` · ${pickText(category.name)}` : ''}
           </p>
-          <h3 className="text-[15px] font-bold text-[#0F172A] group-hover:text-[#2563EB] transition-colors line-clamp-2 leading-snug min-h-[42px]">
+          <h3 className="text-[15px] font-bold text-secondary group-hover:text-primary transition-colors line-clamp-2 leading-snug min-h-10.5">
             {pickText(video.title)}
           </h3>
-          <div className="flex items-center gap-4 text-[12px] text-[#64748B] pt-0.5">
+          <div className="flex items-center gap-4 text-[12px] text-muted tabular-nums pt-0.5">
             <span className="inline-flex items-center gap-1">
               <Clock className="h-3.5 w-3.5 text-[#94A3B8]" />
               {formatNumber(video.durationMinutes)} {t.common.minutes}
@@ -108,10 +108,10 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className = '' }) =
           </div>
         </div>
 
-        <div className="pt-3 border-t border-[#E2E8F0]/80 flex items-center justify-between gap-2">
+        <div className="pt-3 border-t border-border/80 flex items-center justify-between gap-2">
           <span
             className={`text-[13px] font-bold ${
-              video.accessType === 'free' ? 'text-[#E11D48]' : 'text-[#0F172A]'
+              video.accessType === 'free' ? 'text-[#E11D48]' : 'text-secondary'
             }`}
           >
             {video.accessType === 'free'
@@ -120,7 +120,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className = '' }) =
                 ? 'Premium'
                 : 'Member'}
           </span>
-          <span className="inline-flex items-center gap-1.5 h-8 px-3 rounded-[8px] bg-[#2563EB] group-hover:bg-[#1D4ED8] text-white text-[12px] font-medium transition-colors">
+          <span className="inline-flex items-center gap-1.5 h-8 px-3 rounded-[8px] bg-primary group-hover:bg-primary-hover text-white text-[12px] font-medium transition-colors">
             <ArrowRight className="h-3.5 w-3.5" />
             <span>{canWatch ? t.videos.watchNow : t.videos.subscribeToWatch}</span>
           </span>

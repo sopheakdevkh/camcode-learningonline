@@ -1,35 +1,60 @@
-import React, { useEffect } from 'react';
+import React, { lazy, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { I18nProvider } from '@/i18n/I18nContext';
-import {
-  ForgotPasswordPage,
-  LoginPage,
-  RegisterPage,
-  ResetPasswordPage,
-} from '@/pages/AuthPages';
-import { CategoriesPage } from '@/pages/CategoriesPage';
-import { CheckoutPage } from '@/pages/CheckoutPage';
-import { CourseDetailPage } from '@/pages/CourseDetailPage';
-import { CoursesPage } from '@/pages/CoursesPage';
 import { HomePage } from '@/pages/HomePage';
-import { PricingPage } from '@/pages/PricingPage';
-import {
-  AboutPage,
-  ContactPage,
-  FaqPage,
-  PrivacyPage,
-  TermsPage,
-} from '@/pages/StaticPages';
-import { VideoDetailPage } from '@/pages/VideoDetailPage';
-import { VideosPage } from '@/pages/VideosPage';
+
+const CoursesPage = lazy(() =>
+  import('@/pages/CoursesPage').then((m) => ({ default: m.CoursesPage })),
+);
+const CourseDetailPage = lazy(() =>
+  import('@/pages/CourseDetailPage').then((m) => ({ default: m.CourseDetailPage })),
+);
+const VideosPage = lazy(() =>
+  import('@/pages/VideosPage').then((m) => ({ default: m.VideosPage })),
+);
+const VideoDetailPage = lazy(() =>
+  import('@/pages/VideoDetailPage').then((m) => ({ default: m.VideoDetailPage })),
+);
+const CategoriesPage = lazy(() =>
+  import('@/pages/CategoriesPage').then((m) => ({ default: m.CategoriesPage })),
+);
+const PricingPage = lazy(() =>
+  import('@/pages/PricingPage').then((m) => ({ default: m.PricingPage })),
+);
+const CheckoutPage = lazy(() =>
+  import('@/pages/CheckoutPage').then((m) => ({ default: m.CheckoutPage })),
+);
+const LoginPage = lazy(() => import('@/pages/AuthPages').then((m) => ({ default: m.LoginPage })));
+const RegisterPage = lazy(() =>
+  import('@/pages/AuthPages').then((m) => ({ default: m.RegisterPage })),
+);
+const ForgotPasswordPage = lazy(() =>
+  import('@/pages/AuthPages').then((m) => ({ default: m.ForgotPasswordPage })),
+);
+const ResetPasswordPage = lazy(() =>
+  import('@/pages/AuthPages').then((m) => ({ default: m.ResetPasswordPage })),
+);
+const AboutPage = lazy(() =>
+  import('@/pages/StaticPages').then((m) => ({ default: m.AboutPage })),
+);
+const ContactPage = lazy(() =>
+  import('@/pages/StaticPages').then((m) => ({ default: m.ContactPage })),
+);
+const TermsPage = lazy(() =>
+  import('@/pages/StaticPages').then((m) => ({ default: m.TermsPage })),
+);
+const PrivacyPage = lazy(() =>
+  import('@/pages/StaticPages').then((m) => ({ default: m.PrivacyPage })),
+);
+const FaqPage = lazy(() => import('@/pages/StaticPages').then((m) => ({ default: m.FaqPage })));
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
   }, [pathname]);
   return null;
 };

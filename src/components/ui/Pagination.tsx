@@ -34,10 +34,10 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, onPage
             type="button"
             onClick={() => onPageChange(p)}
             aria-current={p === page ? 'page' : undefined}
-            className={`h-9 min-w-9 px-3 rounded-[8px] text-[14px] font-medium transition-colors cursor-pointer ${
+            className={`h-9 min-w-9 px-3 rounded-[8px] text-[14px] font-medium tabular-nums transition-colors cursor-pointer ${
               p === page
-                ? 'bg-[#2563EB] text-white'
-                : 'bg-white text-[#0F172A] border border-[#E2E8F0] hover:bg-[#F8FAFC]'
+                ? 'bg-primary text-white'
+                : 'bg-white dark:bg-slate-900 text-secondary dark:text-slate-100 border border-border dark:border-slate-700 hover:bg-background dark:hover:bg-slate-800'
             }`}
           >
             {p}

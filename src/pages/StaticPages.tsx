@@ -11,8 +11,8 @@ export const AboutPage: React.FC = () => {
   return (
     <div className="container-page py-10 md:py-16 max-w-4xl space-y-8">
       <div className="space-y-3">
-        <h1 className="text-h1 text-[#0F172A]">{t.staticPages.aboutTitle}</h1>
-        <p className="text-body text-[#64748B]">
+        <h1 className="text-h1 text-secondary">{t.staticPages.aboutTitle}</h1>
+        <p className="text-body text-muted">
           {pickText({
             en: 'CamcodeLearn is a modern bilingual learning and video streaming platform built to serve students, working professionals, corporate teams, instructors, and creators across English and Khmer.',
             km: 'CamcodeLearn គឺជាថ្នាលសិក្សា និងវីដេអូអនឡាញពីរភាសា (អង់គ្លេស និងខ្មែរ) ដែលបង្កើតឡើងសម្រាប់សិស្ស អ្នកជំនាញ ក្រុមហ៊ុន គ្រូបង្រៀន និងអ្នកបង្កើតមាតិកា។',
@@ -21,8 +21,8 @@ export const AboutPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="glass-card rounded-[24px] p-6 space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
+        <div className="glass-card rounded-3xl p-6 space-y-2">
+          <h2 className="text-h3 text-secondary">
             {pickText({ en: 'Our Mission', km: 'បេសកកម្មរបស់យើង' })}
           </h2>
           <p className="text-[15px] text-[#475569] leading-relaxed">
@@ -33,8 +33,8 @@ export const AboutPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="glass-card rounded-[24px] p-6 space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
+        <div className="glass-card rounded-3xl p-6 space-y-2">
+          <h2 className="text-h3 text-secondary">
             {pickText({ en: 'Three-App Ecosystem', km: 'ប្រព័ន្ធកម្មវិធីទាំង ៣' })}
           </h2>
           <p className="text-[15px] text-[#475569] leading-relaxed">
@@ -68,8 +68,8 @@ export const ContactPage: React.FC = () => {
   return (
     <div className="container-page py-10 md:py-16 max-w-4xl space-y-8">
       <div>
-        <h1 className="text-h1 text-[#0F172A]">{t.staticPages.contactTitle}</h1>
-        <p className="text-body text-[#64748B] mt-1">
+        <h1 className="text-h1 text-secondary">{t.staticPages.contactTitle}</h1>
+        <p className="text-body text-muted mt-1">
           {pickText({
             en: 'Have questions about courses, team training, or creator partnerships? Reach out anytime.',
             km: 'មានសំណួរអំពីវគ្គសិក្សា ការបណ្តុះបណ្តាលក្រុមហ៊ុន ឬភាពជាដៃគូ? សូមទាក់ទងមកយើងគ្រប់ពេល។',
@@ -79,26 +79,26 @@ export const ContactPage: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         <div className="md:col-span-5 space-y-4">
-          <div className="glass-card rounded-[24px] p-5 space-y-4 text-[14px]">
+          <div className="glass-card rounded-3xl p-5 space-y-4 text-[14px]">
             <div className="flex items-start gap-3">
-              <Mail className="h-5 w-5 text-[#2563EB] shrink-0 mt-0.5" />
+              <Mail className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-[#0F172A]">Email</p>
-                <p className="text-[#64748B]">support@camcodelearn.example</p>
+                <p className="font-semibold text-secondary">Email</p>
+                <p className="text-muted">support@camcodelearn.example</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <Phone className="h-5 w-5 text-[#2563EB] shrink-0 mt-0.5" />
+              <Phone className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-[#0F172A]">Phone</p>
-                <p className="text-[#64748B]">+855 23 900 123</p>
+                <p className="font-semibold text-secondary">Phone</p>
+                <p className="text-muted">+855 23 900 123</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <MapPin className="h-5 w-5 text-[#2563EB] shrink-0 mt-0.5" />
+              <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-[#0F172A]">Office</p>
-                <p className="text-[#64748B]">Phnom Penh, Cambodia</p>
+                <p className="font-semibold text-secondary">Office</p>
+                <p className="text-muted">Phnom Penh, Cambodia</p>
               </div>
             </div>
           </div>
@@ -106,7 +106,7 @@ export const ContactPage: React.FC = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="md:col-span-7 glass-card rounded-[24px] p-6 space-y-4"
+          className="md:col-span-7 glass-card rounded-3xl p-6 space-y-4"
         >
           {submitted && (
             <Alert tone="success">
@@ -130,15 +130,17 @@ export const ContactPage: React.FC = () => {
             required
           />
           <div>
-            <label className="block text-[14px] font-medium text-[#0F172A] mb-1.5">
+            <label htmlFor="contact-message" className="block text-[14px] font-medium text-secondary mb-1.5">
               {pickText({ en: 'Message', km: 'សាររបស់អ្នក' })}
             </label>
             <textarea
+              id="contact-message"
+              name="message"
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               required
-              className="w-full p-3.5 rounded-[8px] border border-[#E2E8F0] bg-white text-[15px] text-[#0F172A] outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20"
+              className="w-full p-3.5 rounded-[8px] border border-[#CBD5E1] dark:border-slate-700 bg-white dark:bg-slate-900/90 text-[15px] text-secondary dark:text-slate-100 outline-none focus:border-primary dark:focus:border-blue-400 focus:ring-2 focus:ring-primary/20 dark:focus:ring-blue-400/25"
             />
           </div>
           <Button type="submit" size="lg">
@@ -154,10 +156,10 @@ export const TermsPage: React.FC = () => {
   const { t, pickText } = useI18n();
   return (
     <div className="container-page py-10 md:py-16 max-w-3xl space-y-6">
-      <h1 className="text-h1 text-[#0F172A]">{t.staticPages.termsTitle}</h1>
-      <div className="glass-card rounded-[24px] p-6 md:p-8 space-y-5 text-[15px] text-[#475569] leading-relaxed">
+      <h1 className="text-h1 text-secondary">{t.staticPages.termsTitle}</h1>
+      <div className="glass-card rounded-3xl p-6 md:p-8 space-y-5 text-[15px] text-[#475569] leading-relaxed">
         <section className="space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
+          <h2 className="text-h3 text-secondary">
             {pickText({ en: '1. Course Purchases & Subscriptions', km: '១. ការទិញវគ្គសិក្សា និងការជាវប្រចាំខែ' })}
           </h2>
           <p>
@@ -168,7 +170,7 @@ export const TermsPage: React.FC = () => {
           </p>
         </section>
         <section className="space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
+          <h2 className="text-h3 text-secondary">
             {pickText({ en: '2. Payment Verification & Renewal', km: '២. ការផ្ទៀងផ្ទាត់ការបង់ប្រាក់ និងការបន្ត' })}
           </h2>
           <p>
@@ -187,10 +189,10 @@ export const PrivacyPage: React.FC = () => {
   const { t, pickText } = useI18n();
   return (
     <div className="container-page py-10 md:py-16 max-w-3xl space-y-6">
-      <h1 className="text-h1 text-[#0F172A]">{t.staticPages.privacyTitle}</h1>
-      <div className="glass-card rounded-[24px] p-6 md:p-8 space-y-5 text-[15px] text-[#475569] leading-relaxed">
+      <h1 className="text-h1 text-secondary">{t.staticPages.privacyTitle}</h1>
+      <div className="glass-card rounded-3xl p-6 md:p-8 space-y-5 text-[15px] text-[#475569] leading-relaxed">
         <section className="space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
+          <h2 className="text-h3 text-secondary">
             {pickText({ en: '1. Data We Collect', km: '១. ទិន្នន័យដែលយើងប្រមូល' })}
           </h2>
           <p>
@@ -201,7 +203,7 @@ export const PrivacyPage: React.FC = () => {
           </p>
         </section>
         <section className="space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
+          <h2 className="text-h3 text-secondary">
             {pickText({ en: '2. Security & Payment Privacy', km: '២. សុវត្ថិភាព និងឯកជនភាពនៃការបង់ប្រាក់' })}
           </h2>
           <p>
@@ -255,26 +257,26 @@ export const FaqPage: React.FC = () => {
 
   return (
     <div className="container-page py-12 md:py-16 max-w-3xl space-y-10">
-      <h1 className="text-h1 text-[#0F172A] text-center">{t.staticPages.faqTitle}</h1>
+      <h1 className="text-h1 text-secondary text-center">{t.staticPages.faqTitle}</h1>
       <div className="space-y-5">
         {faqs.map((item, idx) => {
           const isOpen = openIdx === idx;
           return (
-            <article key={idx} className="glass-card rounded-[24px] overflow-hidden">
+            <article key={idx} className="glass-card rounded-3xl overflow-hidden">
               <button
                 type="button"
                 onClick={() => setOpenIdx(isOpen ? null : idx)}
                 className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left cursor-pointer"
               >
-                <span className="text-[17px] font-medium text-[#0F172A]">{pickText(item.q)}</span>
+                <span className="text-[17px] font-medium text-secondary">{pickText(item.q)}</span>
                 <ChevronDown
-                  className={`h-4 w-4 text-[#64748B] shrink-0 transition-transform ${
+                  className={`h-4 w-4 text-muted shrink-0 transition-transform ${
                     isOpen ? 'rotate-180' : ''
                   }`}
                 />
               </button>
               {isOpen && (
-                <div className="px-6 pb-5 text-[14px] text-[#64748B] leading-relaxed">
+                <div className="px-6 pb-5 text-[14px] text-muted leading-relaxed">
                   {pickText(item.a)}
                 </div>
               )}

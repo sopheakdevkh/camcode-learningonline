@@ -9,11 +9,15 @@ import {
   ShieldCheck,
   Tag,
 } from 'lucide-react';
+import { toast } from 'sonner';
+import { z } from 'zod';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n/I18nContext';
+import { calculateOrderTotals } from '@/lib/pricingMath';
+import { API_CONFIG } from '@/services/apiClient';
 import { catalogService } from '@/services/catalogService';
 import { checkoutService } from '@/services/checkoutService';
 import { pricingService } from '@/services/pricingService';
@@ -27,8 +31,32 @@ import type {
   SubscriptionPlan,
 } from '@/types';
 
+const checkoutSchema = z
+  .object({
+    fullName: z.string().trim().min(1, 'Please provide your full name and a valid email address.'),
+    email: z.string().trim().email('Please provide your full name and a valid email address.'),
+    paymentMethod: z.enum(['card', 'khqr', 'bank_transfer']),
+    cardNumber: z.string(),
+    cardExpiry: z.string(),
+    cardCvc: z.string(),
+    acceptTerms: z.literal(true, {
+      message: 'Please accept the Terms of Service and billing terms before paying.',
+    }),
+  })
+  .superRefine((data, ctx) => {
+    if (
+      data.paymentMethod === 'card' &&
+      (!data.cardNumber.trim() || !data.cardExpiry.trim() || !data.cardCvc.trim())
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please complete your card payment details.',
+      });
+    }
+  });
+
 export const CheckoutPage: React.FC = () => {
-  const { t, pickText } = useI18n();
+  const { t, pickText, formatCurrency } = useI18n();
   const { user, grantPurchasedCourse, grantSubscription } = useAuth();
   const [searchParams] = useSearchParams();
 
@@ -48,9 +76,9 @@ export const CheckoutPage: React.FC = () => {
   const [email, setEmail] = useState(user?.email ?? '');
   const [phone, setPhone] = useState(user?.phone ?? '');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
-  const [cardNumber, setCardNumber] = useState('4242 •••• •••• 4242');
-  const [cardExpiry, setCardExpiry] = useState('12/28');
-  const [cardCvc, setCardCvc] = useState('424');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvc, setCardCvc] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
 
   // Coupon
@@ -72,17 +100,31 @@ export const CheckoutPage: React.FC = () => {
     let active = true;
     setLoadingItem(true);
     if (checkoutType === 'course' && courseSlug) {
-      catalogService.getCourseBySlug(courseSlug).then((c) => {
-        if (!active) return;
-        setCourse(c);
-        setLoadingItem(false);
-      });
+      catalogService
+        .getCourseBySlug(courseSlug)
+        .then((c) => {
+          if (!active) return;
+          setCourse(c);
+          setLoadingItem(false);
+        })
+        .catch(() => {
+          if (!active) return;
+          setCourse(null);
+          setLoadingItem(false);
+        });
     } else if (checkoutType === 'subscription') {
-      pricingService.getPlanByTier(planTier).then((p) => {
-        if (!active) return;
-        setPlan(p ?? null);
-        setLoadingItem(false);
-      });
+      pricingService
+        .getPlanByTier(planTier)
+        .then((p) => {
+          if (!active) return;
+          setPlan(p ?? null);
+          setLoadingItem(false);
+        })
+        .catch(() => {
+          if (!active) return;
+          setPlan(null);
+          setLoadingItem(false);
+        });
     } else {
       setLoadingItem(false);
     }
@@ -98,7 +140,7 @@ export const CheckoutPage: React.FC = () => {
         ? plan.name
         : null;
 
-  const subtotal =
+  const rawSubtotal =
     checkoutType === 'course' && course
       ? course.price
       : checkoutType === 'subscription' && plan
@@ -107,27 +149,29 @@ export const CheckoutPage: React.FC = () => {
           : plan.yearlyPrice
         : 0;
 
-  const discount = appliedCoupon
-    ? appliedCoupon.discountType === 'percent'
-      ? Number(((subtotal * appliedCoupon.value) / 100).toFixed(2))
-      : Math.min(subtotal, appliedCoupon.value)
-    : 0;
-
-  const taxableBase = Math.max(0, subtotal - discount);
-  const tax = Number((taxableBase * 0.1).toFixed(2));
-  const total = Number((taxableBase + tax).toFixed(2));
+  const { subtotal, discount, tax, total } = calculateOrderTotals({
+    subtotal: rawSubtotal,
+    coupon: appliedCoupon,
+    taxRate: checkoutType === 'subscription' && plan ? plan.taxRate : 0.1,
+  });
 
   const handleApplyCoupon = async () => {
     setCouponError('');
     if (!couponInput.trim()) return;
     setApplyingCoupon(true);
-    const found = await pricingService.validateCoupon(couponInput);
-    setApplyingCoupon(false);
-    if (!found) {
-      setCouponError('Invalid coupon code. Try SAVE20, KHMER10, or WELCOME5.');
-      return;
+    try {
+      const found = await pricingService.validateCoupon(couponInput);
+      if (!found) {
+        setCouponError('Invalid coupon code. Try SAVE20, KHMER10, or WELCOME5.');
+        return;
+      }
+      setAppliedCoupon(found);
+      toast.success(`Coupon ${found.code} applied`);
+    } catch {
+      setCouponError(t.common.errorGeneric);
+    } finally {
+      setApplyingCoupon(false);
     }
-    setAppliedCoupon(found);
   };
 
   const handleSubmitPayment = async (e: React.FormEvent) => {
@@ -135,16 +179,17 @@ export const CheckoutPage: React.FC = () => {
     if (submitting || order?.status === 'pending' || order?.status === 'verified') return;
 
     setFormError('');
-    if (!fullName.trim() || !/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setFormError('Please provide your full name and a valid email address.');
-      return;
-    }
-    if (paymentMethod === 'card' && (!cardNumber.trim() || !cardExpiry.trim() || !cardCvc.trim())) {
-      setFormError('Please complete your card payment details.');
-      return;
-    }
-    if (!acceptTerms) {
-      setFormError('Please accept the Terms of Service and billing terms before paying.');
+    const parsed = checkoutSchema.safeParse({
+      fullName,
+      email,
+      paymentMethod,
+      cardNumber,
+      cardExpiry,
+      cardCvc,
+      acceptTerms,
+    });
+    if (!parsed.success) {
+      setFormError(parsed.error.issues[0]?.message ?? t.common.errorGeneric);
       return;
     }
     if (!itemTitle) return;
@@ -163,20 +208,26 @@ export const CheckoutPage: React.FC = () => {
         total,
         couponCode: appliedCoupon?.code,
         paymentMethod,
-        simulateFailure: simulateFail,
+        simulateFailure: API_CONFIG.useMock ? simulateFail : false,
       });
       setOrder(pendingOrder);
 
       // Step 2: Await backend webhook verification before activating access
-      const confirmed = await checkoutService.verifyOrderWebhook(pendingOrder, simulateFail);
+      const confirmed = await checkoutService.verifyOrderWebhook(
+        pendingOrder,
+        API_CONFIG.useMock ? simulateFail : false,
+      );
       setOrder(confirmed);
 
       if (confirmed.status === 'verified') {
+        toast.success(t.checkout.verifiedTitle);
         if (checkoutType === 'course' && course) {
           grantPurchasedCourse(course.id);
         } else if (checkoutType === 'subscription' && plan) {
           grantSubscription(plan.tier, billingCycle);
         }
+      } else if (confirmed.status === 'failed') {
+        toast.error(t.checkout.failedTitle);
       }
     } catch (err) {
       setFormError(err instanceof Error ? err.message : t.common.errorGeneric);
@@ -188,8 +239,8 @@ export const CheckoutPage: React.FC = () => {
   if (!loadingItem && !itemTitle) {
     return (
       <div className="container-page py-16 text-center space-y-4">
-        <h1 className="text-h2 text-[#0F172A]">{t.checkout.noItemTitle}</h1>
-        <p className="text-body text-[#64748B]">{t.checkout.noItemDesc}</p>
+        <h1 className="text-h2 text-secondary">{t.checkout.noItemTitle}</h1>
+        <p className="text-body text-muted">{t.checkout.noItemDesc}</p>
         <div className="flex justify-center gap-3 pt-2">
           <Link to="/courses">
             <Button>{t.home.exploreCourses}</Button>
@@ -205,13 +256,13 @@ export const CheckoutPage: React.FC = () => {
   const orderSummaryContent = (
     <div className="space-y-4">
       {itemTitle && (
-        <div className="p-4 rounded-[10px] bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
-          <p className="text-[12px] font-semibold uppercase tracking-wider text-[#2563EB]">
+        <div className="p-4 rounded-[10px] bg-background border border-border space-y-1">
+          <p className="text-[12px] font-semibold uppercase tracking-wider text-primary">
             {checkoutType === 'course' ? t.nav.courses : t.nav.pricing}
           </p>
-          <p className="text-[16px] font-semibold text-[#0F172A]">{pickText(itemTitle)}</p>
+          <p className="text-[16px] font-semibold text-secondary">{pickText(itemTitle)}</p>
           {checkoutType === 'subscription' && (
-            <p className="text-[13px] text-[#64748B]">
+            <p className="text-[13px] text-muted">
               {t.checkout.billingCycleLabel}:{' '}
               {billingCycle === 'monthly' ? t.pricing.monthly : t.pricing.yearly}
             </p>
@@ -221,11 +272,13 @@ export const CheckoutPage: React.FC = () => {
 
       {/* Coupon */}
       <div className="space-y-2">
-        <label className="block text-[13px] font-medium text-[#0F172A]">
+        <label htmlFor="checkout-coupon-code" className="block text-[13px] font-medium text-secondary">
           {t.checkout.couponLabel}
         </label>
         <div className="flex gap-2">
           <Input
+            id="checkout-coupon-code"
+            name="couponCode"
             value={couponInput}
             onChange={(e) => setCouponInput(e.target.value)}
             placeholder={t.checkout.couponPlaceholder}
@@ -254,38 +307,38 @@ export const CheckoutPage: React.FC = () => {
             </Button>
           )}
         </div>
-        {couponError && <p className="text-[12px] text-[#DC2626]">{couponError}</p>}
+        {couponError && <p className="text-[12px] font-medium text-[#B91C1C] dark:text-red-400">{couponError}</p>}
         {appliedCoupon && (
-          <p className="text-[12px] text-[#16A34A] font-medium">
+          <p className="text-[12px] text-[#15803D] dark:text-emerald-400 font-medium">
             ✓ {appliedCoupon.code} — {pickText(appliedCoupon.description)}
           </p>
         )}
       </div>
 
       {/* Price Breakdown */}
-      <div className="pt-3 border-t border-[#E2E8F0] space-y-2.5 text-[14px]">
+      <div className="pt-3 border-t border-border space-y-2.5 text-[14px] tabular-nums">
         <div className="flex justify-between text-[#475569]">
           <span>{t.checkout.subtotal}</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>{formatCurrency(subtotal)}</span>
         </div>
         {discount > 0 && (
-          <div className="flex justify-between text-[#16A34A] font-medium">
+          <div className="flex justify-between text-success font-medium">
             <span>{t.checkout.discount}</span>
-            <span>-${discount.toFixed(2)}</span>
+            <span>-{formatCurrency(discount)}</span>
           </div>
         )}
         <div className="flex justify-between text-[#475569]">
           <span>{t.checkout.tax}</span>
-          <span>${tax.toFixed(2)}</span>
+          <span>{formatCurrency(tax)}</span>
         </div>
-        <div className="pt-3 border-t border-[#E2E8F0] flex justify-between text-[18px] font-bold text-[#0F172A]">
+        <div className="pt-3 border-t border-border flex justify-between text-[18px] font-bold text-secondary">
           <span>{t.checkout.total}</span>
-          <span>${total.toFixed(2)}</span>
+          <span>{formatCurrency(total)}</span>
         </div>
       </div>
 
       {checkoutType === 'subscription' && (
-        <p className="text-[12px] text-[#64748B] leading-relaxed">{t.checkout.renewalInfo}</p>
+        <p className="text-[12px] text-muted leading-relaxed">{t.checkout.renewalInfo}</p>
       )}
     </div>
   );
@@ -294,8 +347,8 @@ export const CheckoutPage: React.FC = () => {
     <div className="container-page py-8 md:py-12 pb-28 lg:pb-12">
       <div className="max-w-5xl mx-auto space-y-6">
         <div>
-          <h1 className="text-h1 text-[#0F172A]">{t.checkout.title}</h1>
-          <p className="text-body text-[#64748B] mt-1">{t.checkout.subtitle}</p>
+          <h1 className="text-h1 text-secondary">{t.checkout.title}</h1>
+          <p className="text-body text-muted mt-1">{t.checkout.subtitle}</p>
         </div>
 
         {/* Mobile Expandable Order Summary */}
@@ -303,7 +356,7 @@ export const CheckoutPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setMobileSummaryOpen((o) => !o)}
-            className="w-full px-4 py-3.5 flex items-center justify-between text-[14px] font-semibold text-[#0F172A]"
+            className="w-full px-4 py-3.5 flex items-center justify-between text-[14px] font-semibold text-secondary"
           >
             <span className="flex items-center gap-2">
               <span>{t.checkout.orderSummary}</span>
@@ -311,10 +364,10 @@ export const CheckoutPage: React.FC = () => {
                 className={`h-4 w-4 transition-transform ${mobileSummaryOpen ? 'rotate-180' : ''}`}
               />
             </span>
-            <span className="text-[16px] font-bold text-[#2563EB]">${total.toFixed(2)}</span>
+            <span className="text-[16px] font-bold tabular-nums text-primary">{formatCurrency(total)}</span>
           </button>
           {mobileSummaryOpen && (
-            <div className="p-4 pt-0 border-t border-[#E2E8F0]">{orderSummaryContent}</div>
+            <div className="p-4 pt-0 border-t border-border">{orderSummaryContent}</div>
           )}
         </div>
 
@@ -372,8 +425,8 @@ export const CheckoutPage: React.FC = () => {
           <div className="lg:col-span-7 space-y-6">
             {formError && <Alert tone="error">{formError}</Alert>}
 
-            <section className="glass-card rounded-[24px] p-6 space-y-4">
-              <h2 className="text-h3 text-[#0F172A]">{t.checkout.customerDetails}</h2>
+            <section className="glass-card rounded-3xl p-6 space-y-4">
+              <h2 className="text-h3 text-secondary">{t.checkout.customerDetails}</h2>
               <Input
                 label={t.auth.fullName}
                 value={fullName}
@@ -398,10 +451,10 @@ export const CheckoutPage: React.FC = () => {
               </div>
             </section>
 
-            <section className="glass-card rounded-[24px] p-6 space-y-5">
+            <section className="glass-card rounded-3xl p-6 space-y-5">
               <div className="flex items-center justify-between">
-                <h2 className="text-h3 text-[#0F172A]">{t.checkout.paymentMethod}</h2>
-                <span className="inline-flex items-center gap-1 text-[12px] text-[#64748B]">
+                <h2 className="text-h3 text-secondary">{t.checkout.paymentMethod}</h2>
+                <span className="inline-flex items-center gap-1 text-[12px] text-muted">
                   <Lock className="h-3.5 w-3.5" /> TLS Encrypted
                 </span>
               </div>
@@ -421,8 +474,8 @@ export const CheckoutPage: React.FC = () => {
                     onClick={() => setPaymentMethod(method)}
                     className={`p-3 rounded-[8px] border text-left text-[13px] font-medium flex items-center gap-2 cursor-pointer transition-colors ${
                       paymentMethod === method
-                        ? 'border-[#2563EB] bg-[#EFF6FF] text-[#2563EB]'
-                        : 'border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC]'
+                        ? 'border-primary dark:border-blue-400 bg-[#EFF6FF] dark:bg-blue-950/60 text-primary-hover dark:text-blue-300'
+                        : 'border-border dark:border-slate-700 bg-white dark:bg-slate-900/90 text-secondary dark:text-slate-100 hover:bg-background dark:hover:bg-slate-800'
                     }`}
                   >
                     {icon}
@@ -435,6 +488,8 @@ export const CheckoutPage: React.FC = () => {
                 <div className="space-y-4">
                   <Input
                     label={t.checkout.cardNumber}
+                    placeholder="4242 4242 4242 4242"
+                    autoComplete="cc-number"
                     value={cardNumber}
                     onChange={(e) => setCardNumber(e.target.value)}
                     disabled={submitting || order?.status === 'verified'}
@@ -442,12 +497,16 @@ export const CheckoutPage: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <Input
                       label={t.checkout.cardExpiry}
+                      placeholder="MM/YY"
+                      autoComplete="cc-exp"
                       value={cardExpiry}
                       onChange={(e) => setCardExpiry(e.target.value)}
                       disabled={submitting || order?.status === 'verified'}
                     />
                     <Input
                       label={t.checkout.cardCvc}
+                      placeholder="CVC"
+                      autoComplete="cc-csc"
                       value={cardCvc}
                       onChange={(e) => setCardCvc(e.target.value)}
                       disabled={submitting || order?.status === 'verified'}
@@ -464,28 +523,34 @@ export const CheckoutPage: React.FC = () => {
                 <Alert tone="info">{t.checkout.bankHint}</Alert>
               )}
 
-              <label className="flex items-start gap-2.5 text-[13px] text-[#475569] cursor-pointer pt-2">
+              <label htmlFor="checkout-accept-terms" className="flex items-start gap-2.5 text-[13px] text-[#475569] cursor-pointer pt-2">
                 <input
+                  id="checkout-accept-terms"
+                  name="acceptTerms"
                   type="checkbox"
                   checked={acceptTerms}
                   onChange={(e) => setAcceptTerms(e.target.checked)}
                   disabled={submitting || order?.status === 'verified'}
-                  className="mt-0.5 accent-[#2563EB]"
+                  className="mt-0.5 accent-primary"
                 />
                 <span>{t.checkout.acceptTerms}</span>
               </label>
 
-              {/* Testing helper for webhook failure state */}
-              <label className="flex items-center gap-2 text-[12px] text-[#64748B] cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={simulateFail}
-                  onChange={(e) => setSimulateFail(e.target.checked)}
-                  disabled={submitting || order?.status === 'verified'}
-                  className="accent-[#DC2626]"
-                />
-                <span>{t.checkout.simulateFailureToggle}</span>
-              </label>
+              {/* Testing helper for webhook failure state (mock mode only) */}
+              {API_CONFIG.useMock && (
+                <label htmlFor="checkout-simulate-fail" className="flex items-center gap-2 text-[12px] text-muted cursor-pointer">
+                  <input
+                    id="checkout-simulate-fail"
+                    name="simulateFail"
+                    type="checkbox"
+                    checked={simulateFail}
+                    onChange={(e) => setSimulateFail(e.target.checked)}
+                    disabled={submitting || order?.status === 'verified'}
+                    className="accent-error"
+                  />
+                  <span>{t.checkout.simulateFailureToggle}</span>
+                </label>
+              )}
 
               <div className="hidden lg:block pt-2">
                 <Button
@@ -498,26 +563,26 @@ export const CheckoutPage: React.FC = () => {
                 >
                   {submitting
                     ? t.checkout.processing
-                    : `${t.checkout.payNow} · $${total.toFixed(2)}`}
+                    : `${t.checkout.payNow} · ${formatCurrency(total)}`}
                 </Button>
               </div>
             </section>
           </div>
 
           {/* Right: Desktop Order Summary */}
-          <aside className="hidden lg:block lg:col-span-5 glass-panel rounded-[24px] p-6 sticky top-24 space-y-4">
+          <aside className="hidden lg:block lg:col-span-5 glass-panel rounded-3xl p-6 sticky top-24 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-h3 text-[#0F172A]">{t.checkout.orderSummary}</h2>
-              <ShieldCheck className="h-5 w-5 text-[#16A34A]" />
+              <h2 className="text-h3 text-secondary">{t.checkout.orderSummary}</h2>
+              <ShieldCheck className="h-5 w-5 text-success" />
             </div>
             {orderSummaryContent}
           </aside>
 
           {/* Mobile Sticky Payment CTA */}
-          <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-[#E2E8F0] px-4 py-3 flex items-center justify-between gap-4">
+          <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-t border-border dark:border-slate-800 px-4 py-3 flex items-center justify-between gap-4">
             <div>
-              <p className="text-[12px] text-[#64748B]">{t.checkout.total}</p>
-              <p className="text-[18px] font-bold text-[#0F172A]">${total.toFixed(2)}</p>
+              <p className="text-[12px] text-muted">{t.checkout.total}</p>
+              <p className="text-[18px] font-bold tabular-nums text-secondary">{formatCurrency(total)}</p>
             </div>
             <Button
               type="submit"

@@ -1,13 +1,39 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2, Eye, EyeOff, GraduationCap } from 'lucide-react';
+import { z } from 'zod';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n/I18nContext';
+import { sanitizeRedirectPath } from '@/lib/security';
 import type { Locale } from '@/types';
+
+const loginSchema = z.object({
+  identifier: z.string().trim().min(1, 'Please enter your email or phone number.'),
+  password: z.string().min(6, 'Password must be at least 6 characters.'),
+});
+
+const registerSchema = z
+  .object({
+    fullName: z.string().trim().min(1, 'Full name is required.'),
+    email: z.string().trim().email('Please enter a valid email address.'),
+    password: z
+      .string()
+      .min(8, 'Please meet all password requirements.')
+      .regex(/[A-Za-z]/, 'Please meet all password requirements.')
+      .regex(/\d/, 'Please meet all password requirements.'),
+    confirmPassword: z.string(),
+    acceptTerms: z.literal(true, {
+      message: 'Please accept the Terms of Service and Privacy Policy.',
+    }),
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    message: 'Passwords do not match.',
+    path: ['confirmPassword'],
+  });
 
 const AuthSplitShell: React.FC<{
   title: string;
@@ -21,48 +47,48 @@ const AuthSplitShell: React.FC<{
       <div className="w-full max-w-5xl space-y-4">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-[14px] font-medium text-[#2563EB] hover:underline"
+          className="inline-flex items-center gap-2 text-[14px] font-medium text-primary hover:underline"
         >
           <ArrowLeft className="h-4 w-4" />
           {t.auth.backToSite}
         </Link>
 
-        <div className="glass-panel rounded-[32px] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+        <div className="glass-panel rounded-4xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
           {/* Form Column */}
           <div className="lg:col-span-7 p-6 sm:p-10">
             <Link to="/" className="flex items-center gap-2 mb-6 w-fit hover:opacity-90">
-              <span className="h-8 w-8 rounded-[8px] bg-[#2563EB] text-white flex items-center justify-center">
+              <span className="h-8 w-8 rounded-[8px] bg-primary text-white flex items-center justify-center">
                 <GraduationCap className="h-4 w-4" />
               </span>
-              <span className="font-bold text-[16px] text-[#0F172A]">{t.brand.name}</span>
+              <span className="font-bold text-[16px] text-secondary">{t.brand.name}</span>
             </Link>
 
-            <h1 className="text-h2 text-[#0F172A]">{title}</h1>
-            <p className="text-body text-[#64748B] mt-1.5 mb-6">{subtitle}</p>
+            <h1 className="text-h2 text-secondary">{title}</h1>
+            <p className="text-body text-muted mt-1.5 mb-6">{subtitle}</p>
             {children}
           </div>
 
         {/* Desktop Benefit / Illustration Column */}
-        <div className="hidden lg:flex lg:col-span-5 bg-[#F8FAFC] border-l border-[#E2E8F0] p-10 flex-col justify-between">
+        <div className="hidden lg:flex lg:col-span-5 bg-background dark:bg-slate-900/75 border-l border-border dark:border-slate-800 p-10 flex-col justify-between">
           <div className="space-y-4">
             <Link
               to="/"
-              className="inline-flex h-11 w-11 rounded-[10px] bg-[#2563EB] text-white items-center justify-center hover:bg-[#1D4ED8] transition-colors"
+              className="inline-flex h-11 w-11 rounded-[10px] bg-primary text-white items-center justify-center hover:bg-primary-hover transition-colors"
             >
               <GraduationCap className="h-6 w-6" />
             </Link>
-            <h2 className="text-[22px] font-semibold text-[#0F172A] leading-snug">
+            <h2 className="text-[22px] font-semibold text-secondary leading-snug">
               {t.auth.splitBenefitTitle}
             </h2>
-            <p className="text-[14px] text-[#64748B] leading-relaxed">
+            <p className="text-[14px] text-muted leading-relaxed">
               {t.auth.splitBenefitDesc}
             </p>
           </div>
 
           <ul className="space-y-3 pt-6">
             {[t.auth.splitPoint1, t.auth.splitPoint2, t.auth.splitPoint3].map((point) => (
-              <li key={point} className="flex items-start gap-2.5 text-[14px] text-[#0F172A]">
-                <CheckCircle2 className="h-4 w-4 text-[#16A34A] mt-0.5 shrink-0" />
+              <li key={point} className="flex items-start gap-2.5 text-[14px] text-secondary">
+                <CheckCircle2 className="h-4 w-4 text-success mt-0.5 shrink-0" />
                 <span>{point}</span>
               </li>
             ))}
@@ -81,8 +107,10 @@ export const LoginPage: React.FC = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const intendedTo =
-    (location.state as { from?: string } | null)?.from || searchParams.get('redirect') || '/';
+  const intendedTo = sanitizeRedirectPath(
+    (location.state as { from?: string } | null)?.from || searchParams.get('redirect'),
+    '/',
+  );
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -94,12 +122,9 @@ export const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!identifier.trim()) {
-      setError('Please enter your email or phone number.');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters.');
+    const parsed = loginSchema.safeParse({ identifier, password });
+    if (!parsed.success) {
+      setError(parsed.error.issues[0]?.message ?? 'Invalid input.');
       return;
     }
 
@@ -138,7 +163,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               onClick={() => setShowPassword((s) => !s)}
               aria-label="Toggle password visibility"
-              className="p-1 text-[#64748B] hover:text-[#0F172A] cursor-pointer"
+              className="p-1 text-muted hover:text-secondary cursor-pointer"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -146,16 +171,18 @@ export const LoginPage: React.FC = () => {
         />
 
         <div className="flex items-center justify-between gap-2 text-[13px]">
-          <label className="inline-flex items-center gap-2 text-[#475569] cursor-pointer">
+          <label htmlFor="login-remember-me" className="inline-flex items-center gap-2 text-[#475569] cursor-pointer">
             <input
+              id="login-remember-me"
+              name="rememberMe"
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="accent-[#2563EB]"
+              className="accent-primary"
             />
             <span>{t.auth.rememberMe}</span>
           </label>
-          <Link to="/forgot-password" className="font-medium text-[#2563EB] hover:underline">
+          <Link to="/forgot-password" className="font-medium text-primary hover:underline">
             {t.auth.forgotPasswordLink}
           </Link>
         </div>
@@ -164,12 +191,12 @@ export const LoginPage: React.FC = () => {
           {t.auth.signInBtn}
         </Button>
 
-        <p className="text-[14px] text-[#64748B] text-center pt-2">
+        <p className="text-[14px] text-muted text-center pt-2">
           {t.auth.noAccount}{' '}
           <Link
             to="/register"
             state={{ from: intendedTo }}
-            className="font-semibold text-[#2563EB] hover:underline"
+            className="font-semibold text-primary hover:underline"
           >
             {t.nav.signUp}
           </Link>
@@ -184,7 +211,10 @@ export const RegisterPage: React.FC = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const intendedTo = (location.state as { from?: string } | null)?.from || '/';
+  const intendedTo = sanitizeRedirectPath(
+    (location.state as { from?: string } | null)?.from,
+    '/',
+  );
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -205,24 +235,15 @@ export const RegisterPage: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    if (!fullName.trim()) {
-      setError('Full name is required.');
-      return;
-    }
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setError('Please enter a valid email address.');
-      return;
-    }
-    if (!hasMinLen || !hasLetter || !hasNumber) {
-      setError('Please meet all password requirements.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
-    if (!acceptTerms) {
-      setError('Please accept the Terms of Service and Privacy Policy.');
+    const parsed = registerSchema.safeParse({
+      fullName,
+      email,
+      password,
+      confirmPassword,
+      acceptTerms,
+    });
+    if (!parsed.success) {
+      setError(parsed.error.issues[0]?.message ?? 'Please check your registration details.');
       return;
     }
 
@@ -288,7 +309,7 @@ export const RegisterPage: React.FC = () => {
                 type="button"
                 onClick={() => setShowPassword((s) => !s)}
                 aria-label="Toggle password visibility"
-                className="p-1 text-[#64748B] hover:text-[#0F172A] cursor-pointer"
+                className="p-1 text-muted hover:text-secondary cursor-pointer"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -307,16 +328,16 @@ export const RegisterPage: React.FC = () => {
         </div>
 
         {/* Password requirements checklist */}
-        <div className="p-3 rounded-[8px] bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
-          <p className="text-[12px] font-semibold text-[#475569]">{t.auth.passwordReqTitle}</p>
+        <div className="p-3 rounded-[8px] bg-background dark:bg-slate-900/80 border border-border dark:border-slate-700 space-y-1">
+          <p className="text-[12px] font-semibold text-[#334155] dark:text-slate-300">{t.auth.passwordReqTitle}</p>
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-[12px]">
-            <span className={hasMinLen ? 'text-[#16A34A] font-medium' : 'text-[#64748B]'}>
+            <span className={hasMinLen ? 'text-[#15803D] dark:text-emerald-400 font-medium' : 'text-[#475569] dark:text-slate-400'}>
               ✓ {t.auth.reqLength}
             </span>
-            <span className={hasLetter ? 'text-[#16A34A] font-medium' : 'text-[#64748B]'}>
+            <span className={hasLetter ? 'text-[#15803D] dark:text-emerald-400 font-medium' : 'text-[#475569] dark:text-slate-400'}>
               ✓ {t.auth.reqLetter}
             </span>
-            <span className={hasNumber ? 'text-[#16A34A] font-medium' : 'text-[#64748B]'}>
+            <span className={hasNumber ? 'text-[#15803D] dark:text-emerald-400 font-medium' : 'text-[#475569] dark:text-slate-400'}>
               ✓ {t.auth.reqNumber}
             </span>
           </div>
@@ -334,20 +355,22 @@ export const RegisterPage: React.FC = () => {
           ]}
         />
 
-        <label className="flex items-start gap-2.5 text-[13px] text-[#475569] cursor-pointer">
+        <label htmlFor="register-accept-terms" className="flex items-start gap-2.5 text-[13px] text-[#475569] cursor-pointer">
           <input
+            id="register-accept-terms"
+            name="acceptTerms"
             type="checkbox"
             checked={acceptTerms}
             onChange={(e) => setAcceptTerms(e.target.checked)}
-            className="mt-0.5 accent-[#2563EB]"
+            className="mt-0.5 accent-primary"
           />
           <span>
             {t.auth.acceptTermsPrefix}{' '}
-            <Link to="/terms" className="text-[#2563EB] hover:underline">
+            <Link to="/terms" className="text-primary hover:underline">
               {t.auth.termsLink}
             </Link>{' '}
             {t.auth.andWord}{' '}
-            <Link to="/privacy" className="text-[#2563EB] hover:underline">
+            <Link to="/privacy" className="text-primary hover:underline">
               {t.auth.privacyLink}
             </Link>
             .
@@ -358,9 +381,9 @@ export const RegisterPage: React.FC = () => {
           {t.auth.createAccountBtn}
         </Button>
 
-        <p className="text-[14px] text-[#64748B] text-center pt-2">
+        <p className="text-[14px] text-muted text-center pt-2">
           {t.auth.haveAccount}{' '}
-          <Link to="/login" className="font-semibold text-[#2563EB] hover:underline">
+          <Link to="/login" className="font-semibold text-primary hover:underline">
             {t.nav.login}
           </Link>
         </p>
@@ -418,7 +441,7 @@ export const ForgotPasswordPage: React.FC = () => {
         </Button>
 
         <div className="text-center pt-2">
-          <Link to="/login" className="text-[14px] font-medium text-[#2563EB] hover:underline">
+          <Link to="/login" className="text-[14px] font-medium text-primary hover:underline">
             {t.auth.backToLogin}
           </Link>
         </div>

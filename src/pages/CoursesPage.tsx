@@ -86,6 +86,11 @@ export const CoursesPage: React.FC = () => {
         if (!active) return;
         setResult(res);
         setLoading(false);
+      })
+      .catch(() => {
+        if (!active) return;
+        setResult({ items: [], total: 0, page: 1, pageSize: 6, totalPages: 1 });
+        setLoading(false);
       });
     return () => {
       active = false;
@@ -134,14 +139,14 @@ export const CoursesPage: React.FC = () => {
       {/* Known-template Header: 2-line editorial heading + < > chip scroll buttons */}
       <div className="flex items-end justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-h1 text-[#0F172A] leading-tight">
+          <h1 className="text-h1 text-secondary leading-tight">
             {t.marketplace.title}
             <br />
             {t.marketplace.titleLine2}
           </h1>
           {q && (
-            <p className="text-[14px] text-[#64748B] mt-2">
-              {t.nav.search}: <strong className="text-[#0F172A]">“{q}”</strong> · {result.total}{' '}
+            <p className="text-[14px] text-muted mt-2">
+              {t.nav.search}: <strong className="text-secondary">“{q}”</strong> · {result.total}{' '}
               {t.common.results}
             </p>
           )}
@@ -152,7 +157,7 @@ export const CoursesPage: React.FC = () => {
             type="button"
             onClick={() => scrollChips('left')}
             aria-label={t.common.previous}
-            className="h-9 w-9 rounded-full border border-[#E2E8F0] bg-white/90 text-[#64748B] hover:text-[#0F172A] hover:border-[#CBD5E1] flex items-center justify-center shadow-xs cursor-pointer transition-colors"
+            className="h-9 w-9 rounded-full border border-border bg-white/90 text-muted hover:text-secondary hover:border-[#CBD5E1] flex items-center justify-center shadow-xs cursor-pointer transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -160,7 +165,7 @@ export const CoursesPage: React.FC = () => {
             type="button"
             onClick={() => scrollChips('right')}
             aria-label={t.common.next}
-            className="h-9 w-9 rounded-full border border-[#E2E8F0] bg-white/90 text-[#0F172A] hover:border-[#CBD5E1] flex items-center justify-center shadow-xs cursor-pointer transition-colors"
+            className="h-9 w-9 rounded-full border border-border bg-white/90 text-secondary hover:border-[#CBD5E1] flex items-center justify-center shadow-xs cursor-pointer transition-colors"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -177,8 +182,8 @@ export const CoursesPage: React.FC = () => {
           onClick={() => updateParam('category', '')}
           className={`inline-flex items-center gap-1.5 h-9 px-4 rounded-[8px] text-[13px] font-medium shrink-0 border transition-colors cursor-pointer ${
             !category
-              ? 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]'
-              : 'bg-white/85 text-[#475569] border-[#E2E8F0] hover:border-[#CBD5E1] hover:text-[#0F172A]'
+              ? 'bg-[#EFF6FF] dark:bg-blue-950/70 text-primary-hover dark:text-blue-300 border-[#BFDBFE] dark:border-blue-700/70'
+              : 'bg-white/85 dark:bg-slate-900/80 text-[#334155] dark:text-slate-300 border-border dark:border-slate-700 hover:border-[#94A3B8] dark:hover:border-slate-500 hover:text-secondary dark:hover:text-white'
           }`}
         >
           <Star className="h-3.5 w-3.5 fill-current" />
@@ -194,8 +199,8 @@ export const CoursesPage: React.FC = () => {
               onClick={() => updateParam('category', active ? '' : cat.slug)}
               className={`inline-flex items-center h-9 px-4 rounded-[8px] text-[13px] font-medium shrink-0 border transition-colors cursor-pointer ${
                 active
-                  ? 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]'
-                  : 'bg-white/85 text-[#475569] border-[#E2E8F0] hover:border-[#CBD5E1] hover:text-[#0F172A]'
+                  ? 'bg-[#EFF6FF] dark:bg-blue-950/70 text-primary-hover dark:text-blue-300 border-[#BFDBFE] dark:border-blue-700/70'
+                  : 'bg-white/85 dark:bg-slate-900/80 text-[#334155] dark:text-slate-300 border-border dark:border-slate-700 hover:border-[#94A3B8] dark:hover:border-slate-500 hover:text-secondary dark:hover:text-white'
               }`}
             >
               {pickText(cat.name)}
@@ -209,10 +214,11 @@ export const CoursesPage: React.FC = () => {
         <div className="flex items-center gap-2.5">
           <select
             id="course-sort"
+            name="sort"
             aria-label={t.marketplace.sortBy}
             value={sort}
             onChange={(e) => updateParam('sort', e.target.value)}
-            className="h-9 px-3 rounded-[8px] border border-[#E2E8F0] bg-white/90 text-[13px] font-medium text-[#0F172A] outline-none focus:border-[#2563EB]"
+            className="h-9 max-w-full px-3 rounded-[8px] border border-border dark:border-slate-700 bg-white/90 dark:bg-slate-900 text-[13px] font-medium text-secondary dark:text-slate-100 outline-none focus:border-primary dark:focus:border-blue-400"
           >
             <option value="recommended">{t.marketplace.sortRecommended}</option>
             <option value="price_asc">{t.marketplace.sortPriceAsc}</option>
@@ -226,7 +232,7 @@ export const CoursesPage: React.FC = () => {
             <button
               type="button"
               onClick={clearAllFilters}
-              className="inline-flex items-center gap-1 h-9 px-3 rounded-[8px] bg-white/85 border border-[#E2E8F0] text-[12px] font-medium text-[#2563EB] hover:bg-white cursor-pointer"
+              className="inline-flex items-center gap-1 h-9 px-3 rounded-[8px] bg-white/85 dark:bg-slate-900/90 border border-border dark:border-slate-700 text-[12px] font-medium text-primary dark:text-blue-400 hover:bg-white dark:hover:bg-slate-800 cursor-pointer"
             >
               <span>{t.common.clearAll}</span>
               <X className="h-3.5 w-3.5" />
@@ -239,14 +245,14 @@ export const CoursesPage: React.FC = () => {
           onClick={() => setFilterPanelOpen((o) => !o)}
           className={`inline-flex items-center gap-2 h-9 px-3.5 rounded-[8px] border text-[13px] font-medium cursor-pointer transition-colors ${
             filterPanelOpen || activeFilterCount > 0
-              ? 'border-[#2563EB] bg-[#EFF6FF] text-[#2563EB]'
-              : 'border-[#E2E8F0] bg-white/90 text-[#0F172A] hover:bg-white'
+              ? 'border-primary dark:border-blue-500/70 bg-[#EFF6FF] dark:bg-blue-950/60 text-primary dark:text-blue-300'
+              : 'border-border dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 text-secondary dark:text-slate-100 hover:bg-white dark:hover:bg-slate-800'
           }`}
         >
           <SlidersHorizontal className="h-3.5 w-3.5" />
           <span>{t.marketplace.filterBtn}</span>
           {activeFilterCount > 0 && (
-            <span className="h-5 min-w-5 px-1.5 rounded-full bg-[#2563EB] text-white text-[11px] flex items-center justify-center">
+            <span className="h-5 min-w-5 px-1.5 rounded-full bg-primary text-white text-[11px] flex items-center justify-center">
               {activeFilterCount}
             </span>
           )}
@@ -262,9 +268,11 @@ export const CoursesPage: React.FC = () => {
                 e.preventDefault();
                 updateParam('q', searchInput.trim());
               }}
-              className="flex-1 flex gap-2"
+              className="flex-1 flex flex-col min-[420px]:flex-row gap-2 min-w-0"
             >
               <Input
+                id="courses-filter-search"
+                name="courseQuery"
                 value={searchInput}
                 onChange={(e) => {
                   setSearchInput(e.target.value);
@@ -273,7 +281,7 @@ export const CoursesPage: React.FC = () => {
                 placeholder={t.marketplace.searchPlaceholder}
                 leftAddon={<Search className="h-4 w-4" />}
               />
-              <Button type="submit" className="h-[46px]">
+              <Button type="submit" className="h-11.5">
                 {t.nav.search}
               </Button>
             </form>
@@ -285,13 +293,15 @@ export const CoursesPage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
             {/* Difficulty */}
             <div>
-              <label className="block text-[12px] font-semibold text-[#64748B] mb-1.5">
+              <label htmlFor="course-filter-difficulty" className="block text-[12px] font-semibold text-muted mb-1.5">
                 {t.common.difficulty}
               </label>
               <select
+                id="course-filter-difficulty"
+                name="difficulty"
                 value={difficulty}
                 onChange={(e) => updateParam('difficulty', e.target.value)}
-                className="w-full h-10 px-3 rounded-[8px] border border-[#E2E8F0] bg-white text-[13px] text-[#0F172A]"
+                className="w-full h-10 px-3 rounded-[8px] border border-border dark:border-slate-700 bg-white dark:bg-slate-900 text-[13px] text-secondary dark:text-slate-100"
               >
                 <option value="">{t.common.all}</option>
                 <option value="beginner">{t.common.beginner}</option>
@@ -302,13 +312,15 @@ export const CoursesPage: React.FC = () => {
 
             {/* Price */}
             <div>
-              <label className="block text-[12px] font-semibold text-[#64748B] mb-1.5">
+              <label htmlFor="course-filter-price" className="block text-[12px] font-semibold text-muted mb-1.5">
                 {t.common.price}
               </label>
               <select
+                id="course-filter-price"
+                name="price"
                 value={priceType}
                 onChange={(e) => updateParam('price', e.target.value)}
-                className="w-full h-10 px-3 rounded-[8px] border border-[#E2E8F0] bg-white text-[13px] text-[#0F172A]"
+                className="w-full h-10 px-3 rounded-[8px] border border-border dark:border-slate-700 bg-white dark:bg-slate-900 text-[13px] text-secondary dark:text-slate-100"
               >
                 <option value="all">{t.marketplace.priceAll}</option>
                 <option value="free">{t.marketplace.priceFree}</option>
@@ -318,13 +330,15 @@ export const CoursesPage: React.FC = () => {
 
             {/* Rating */}
             <div>
-              <label className="block text-[12px] font-semibold text-[#64748B] mb-1.5">
+              <label htmlFor="course-filter-rating" className="block text-[12px] font-semibold text-muted mb-1.5">
                 {t.common.rating}
               </label>
               <select
+                id="course-filter-rating"
+                name="rating"
                 value={minRating}
                 onChange={(e) => updateParam('rating', e.target.value)}
-                className="w-full h-10 px-3 rounded-[8px] border border-[#E2E8F0] bg-white text-[13px] text-[#0F172A]"
+                className="w-full h-10 px-3 rounded-[8px] border border-border dark:border-slate-700 bg-white dark:bg-slate-900 text-[13px] text-secondary dark:text-slate-100"
               >
                 <option value="0">{t.common.all}</option>
                 <option value="4.5">{t.marketplace.rating45}</option>
@@ -334,13 +348,15 @@ export const CoursesPage: React.FC = () => {
 
             {/* Duration */}
             <div>
-              <label className="block text-[12px] font-semibold text-[#64748B] mb-1.5">
+              <label htmlFor="course-filter-duration" className="block text-[12px] font-semibold text-muted mb-1.5">
                 {t.common.duration}
               </label>
               <select
+                id="course-filter-duration"
+                name="duration"
                 value={duration}
                 onChange={(e) => updateParam('duration', e.target.value)}
-                className="w-full h-10 px-3 rounded-[8px] border border-[#E2E8F0] bg-white text-[13px] text-[#0F172A]"
+                className="w-full h-10 px-3 rounded-[8px] border border-border dark:border-slate-700 bg-white dark:bg-slate-900 text-[13px] text-secondary dark:text-slate-100"
               >
                 <option value="all">{t.marketplace.durationAll}</option>
                 <option value="short">{t.marketplace.durationShort}</option>
@@ -351,13 +367,15 @@ export const CoursesPage: React.FC = () => {
 
             {/* Language */}
             <div>
-              <label className="block text-[12px] font-semibold text-[#64748B] mb-1.5">
+              <label htmlFor="course-filter-language" className="block text-[12px] font-semibold text-muted mb-1.5">
                 {t.common.language}
               </label>
               <select
+                id="course-filter-language"
+                name="lang"
                 value={language}
                 onChange={(e) => updateParam('lang', e.target.value)}
-                className="w-full h-10 px-3 rounded-[8px] border border-[#E2E8F0] bg-white text-[13px] text-[#0F172A]"
+                className="w-full h-10 px-3 rounded-[8px] border border-border dark:border-slate-700 bg-white dark:bg-slate-900 text-[13px] text-secondary dark:text-slate-100"
               >
                 <option value="">{t.common.all}</option>
                 <option value="en">{t.common.english}</option>
@@ -368,13 +386,15 @@ export const CoursesPage: React.FC = () => {
 
             {/* Instructor */}
             <div>
-              <label className="block text-[12px] font-semibold text-[#64748B] mb-1.5">
+              <label htmlFor="course-filter-instructor" className="block text-[12px] font-semibold text-muted mb-1.5">
                 {t.common.instructor}
               </label>
               <select
+                id="course-filter-instructor"
+                name="instructor"
                 value={instructorId}
                 onChange={(e) => updateParam('instructor', e.target.value)}
-                className="w-full h-10 px-3 rounded-[8px] border border-[#E2E8F0] bg-white text-[13px] text-[#0F172A]"
+                className="w-full h-10 px-3 rounded-[8px] border border-border dark:border-slate-700 bg-white dark:bg-slate-900 text-[13px] text-secondary dark:text-slate-100"
               >
                 <option value="">{t.common.all}</option>
                 {instructors.map((inst) => (
@@ -396,11 +416,11 @@ export const CoursesPage: React.FC = () => {
           ))}
         </div>
       ) : result.items.length === 0 ? (
-        <div className="glass-card rounded-[24px] p-10 text-center space-y-3">
-          <h3 className="text-[18px] font-semibold text-[#0F172A]">
+        <div className="glass-card rounded-3xl p-10 text-center space-y-3">
+          <h3 className="text-[18px] font-semibold text-secondary">
             {t.marketplace.emptyTitle}
           </h3>
-          <p className="text-[14px] text-[#64748B] max-w-md mx-auto">
+          <p className="text-[14px] text-muted max-w-md mx-auto">
             {t.marketplace.emptyDesc}
           </p>
           <div className="pt-2">

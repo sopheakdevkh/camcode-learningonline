@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { useTheme } from '@/context/ThemeContext';
 import { PublicFooter } from './PublicFooter';
 import { PublicHeader } from './PublicHeader';
 
 const AUTH_PATHS = new Set(['/login', '/register', '/forgot-password', '/reset-password']);
 
+const PageFallback: React.FC = () => (
+  <div className="container-page py-12 space-y-6">
+    <Skeleton className="h-10 w-64" />
+    <Skeleton className="h-64 w-full rounded-2xl" />
+  </div>
+);
+
 export const MainLayout: React.FC = () => {
   const { pathname } = useLocation();
+  const { theme } = useTheme();
   const hideChrome = AUTH_PATHS.has(pathname);
 
   return (
@@ -16,10 +27,13 @@ export const MainLayout: React.FC = () => {
         <div aria-hidden="true" className="bg-environment" />
         {!hideChrome && <PublicHeader />}
         <main className="relative z-10 w-full flex-1">
-          <Outlet />
+          <Suspense fallback={<PageFallback />}>
+            <Outlet />
+          </Suspense>
         </main>
         {!hideChrome && <PublicFooter />}
       </div>
+      <Toaster richColors position="top-right" theme={theme} />
     </>
   );
 };

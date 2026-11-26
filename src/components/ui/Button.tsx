@@ -16,17 +16,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#2563EB] text-white border border-transparent hover:bg-[#1D4ED8] active:bg-[#1E40AF] focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-offset-2',
+    'bg-primary text-white border border-transparent hover:bg-primary-hover active:bg-[#1E40AF] focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950',
   secondary:
-    'bg-[#2563EB] text-white border border-transparent hover:bg-[#1D4ED8] active:bg-[#1E40AF] focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-offset-2',
+    'bg-secondary text-white border border-transparent hover:bg-[#1E293B] active:bg-[#334155] dark:bg-slate-700 dark:hover:bg-slate-600 dark:active:bg-slate-500 focus-visible:ring-2 focus-visible:ring-slate-500/40 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950',
   outline:
-    'bg-white text-[#2563EB] border border-[#BFDBFE] hover:bg-[#EFF6FF] hover:border-[#93C5FD] active:bg-[#DBEAFE] focus-visible:ring-2 focus-visible:ring-[#2563EB]/30 focus-visible:ring-offset-1',
+    'bg-white dark:bg-slate-900/90 text-primary-hover dark:text-blue-300 border border-[#BFDBFE] dark:border-slate-700 hover:bg-[#EFF6FF] dark:hover:bg-slate-800 hover:border-[#93C5FD] dark:hover:border-blue-500/60 active:bg-[#DBEAFE] dark:active:bg-slate-700 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-950',
   ghost:
-    'bg-transparent text-[#2563EB] border border-transparent hover:bg-[#EFF6FF] active:bg-[#DBEAFE] focus-visible:ring-2 focus-visible:ring-[#2563EB]/30',
+    'bg-transparent text-primary-hover dark:text-blue-300 border border-transparent hover:bg-[#EFF6FF] dark:hover:bg-slate-800/80 active:bg-[#DBEAFE] dark:active:bg-slate-800 focus-visible:ring-2 focus-visible:ring-primary/30',
   danger:
-    'bg-[#DC2626] text-white border border-transparent hover:bg-[#B91C1C] active:bg-[#991B1B] focus-visible:ring-2 focus-visible:ring-[#DC2626]/40 focus-visible:ring-offset-2',
+    'bg-error text-white border border-transparent hover:bg-[#B91C1C] active:bg-[#991B1B] focus-visible:ring-2 focus-visible:ring-error/40 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950',
   success:
-    'bg-[#16A34A] text-white border border-transparent hover:bg-[#15803D] active:bg-[#166534] focus-visible:ring-2 focus-visible:ring-[#16A34A]/40 focus-visible:ring-offset-2',
+    'bg-success text-white border border-transparent hover:bg-[#15803D] active:bg-[#166534] focus-visible:ring-2 focus-visible:ring-success/40 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
