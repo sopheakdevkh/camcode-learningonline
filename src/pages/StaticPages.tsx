@@ -1,31 +1,62 @@
 import React, { useState } from 'react';
-import { ChevronDown, Mail, MapPin, Phone } from 'lucide-react';
-import { Alert } from '@/components/ui/Alert';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { ChevronDown } from 'lucide-react';
+import { PageHero } from '@/components/layout/PageHero';
 import { useI18n } from '@/i18n/I18nContext';
+
+export { ContactPage } from './ContactPage';
 
 export const AboutPage: React.FC = () => {
   const { t, pickText } = useI18n();
 
   return (
-    <div className="container-page py-10 md:py-16 max-w-4xl space-y-8">
-      <div className="space-y-3">
-        <h1 className="text-h1 text-[#0F172A]">{t.staticPages.aboutTitle}</h1>
-        <p className="text-body text-[#64748B]">
-          {pickText({
-            en: 'CamcodeLearn is a modern bilingual learning and video streaming platform built to serve students, working professionals, corporate teams, instructors, and creators across English and Khmer.',
-            km: 'CamcodeLearn គឺជាថ្នាលសិក្សា និងវីដេអូអនឡាញពីរភាសា (អង់គ្លេស និងខ្មែរ) ដែលបង្កើតឡើងសម្រាប់សិស្ស អ្នកជំនាញ ក្រុមហ៊ុន គ្រូបង្រៀន និងអ្នកបង្កើតមាតិកា។',
-          })}
-        </p>
+    <div className="min-h-screen">
+      <PageHero
+        eyebrow="ABOUT US · COMPANY"
+        title={t.staticPages.aboutTitle}
+        description={pickText({
+          en: 'Camcode is a modern bilingual learning and video streaming platform built to serve students, working professionals, corporate teams, instructors, and creators across English and Khmer.',
+          km: 'Camcode គឺជាថ្នាលសិក្សា និងវីដេអូអនឡាញពីរភាសា (អង់គ្លេស និងខ្មែរ) ដែលបង្កើតឡើងសម្រាប់សិស្ស អ្នកជំនាញ ក្រុមហ៊ុន គ្រូបង្រៀន និងអ្នកបង្កើតមាតិកា។',
+        })}
+      />
+
+      <div className="surface-dots py-12 md:py-16">
+      <div className="container-page max-w-5xl space-y-10">
+
+      {/* Havenline-style Numbers Band */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="swiss-surface p-6 space-y-2">
+          <span className="font-mono-tech text-[10.5px] uppercase tracking-[0.08em] text-[#6e6a62]">
+            LEARNERS
+          </span>
+          <p className="font-serif-display text-[42px] font-medium tabular-nums text-[#141312] dark:text-[#f6f3ec]">
+            48,000+
+          </p>
+        </div>
+        <div className="swiss-surface p-6 space-y-2">
+          <span className="font-mono-tech text-[10.5px] uppercase tracking-[0.08em] text-[#6e6a62]">
+            COURSES & VIDEOS
+          </span>
+          <p className="font-serif-display text-[42px] font-medium tabular-nums text-[#1c5b48] dark:text-[#7CD4B5]">
+            570+
+          </p>
+        </div>
+        <div className="swiss-surface p-6 space-y-2">
+          <span className="font-mono-tech text-[10.5px] uppercase tracking-[0.08em] text-[#6e6a62]">
+            BILINGUAL TRACKS
+          </span>
+          <p className="font-serif-display text-[42px] font-medium tabular-nums text-[#141312] dark:text-[#f6f3ec]">
+            06
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="glass-card rounded-[24px] p-6 space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
+        <div className="swiss-surface p-6 sm:p-8 space-y-3">
+          <span className="font-mono-tech text-[11px] text-[#1c5b48] dark:text-[#7CD4B5]">01 / MISSION</span>
+          <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
             {pickText({ en: 'Our Mission', km: 'បេសកកម្មរបស់យើង' })}
           </h2>
-          <p className="text-[15px] text-[#475569] leading-relaxed">
+          <p className="text-[15px] text-[#6e6a62] leading-relaxed">
             {pickText({
               en: 'Make structured courses and high-signal educational videos accessible with clear pricing, transparent access rules, and seamless localization.',
               km: 'ធ្វើឱ្យវគ្គសិក្សាមានរចនាសម្ព័ន្ធ និងវីដេអូអប់រំមានគុណភាពអាចចូលរៀនបានងាយស្រួល ជាមួយតម្លៃតម្លាភាព និងភាសាច្បាស់លាស់។',
@@ -33,11 +64,12 @@ export const AboutPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="glass-card rounded-[24px] p-6 space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
+        <div className="rounded-xl bg-[#1c5b48] text-white p-6 sm:p-8 space-y-3">
+          <span className="font-mono-tech text-[11px] text-[#A7E8CE]">02 / ECOSYSTEM</span>
+          <h2 className="text-h3 text-white">
             {pickText({ en: 'Three-App Ecosystem', km: 'ប្រព័ន្ធកម្មវិធីទាំង ៣' })}
           </h2>
-          <p className="text-[15px] text-[#475569] leading-relaxed">
+          <p className="text-[15px] text-white/85 leading-relaxed">
             {pickText({
               en: 'Our public discovery website (Port 3000) connects seamlessly with our dedicated Learner Workspace (Port 3001) and Operations Console (Port 3002) over a unified API (Port 4000).',
               km: 'គេហទំព័រសាធារណៈ (Port 3000) តភ្ជាប់ជាមួយកម្មវិធីសិក្សា (Port 3001) និងផ្ទាំងគ្រប់គ្រង (Port 3002) តាមរយៈ API រួមមួយ (Port 4000)។',
@@ -45,106 +77,7 @@ export const AboutPage: React.FC = () => {
           </p>
         </div>
       </div>
-    </div>
-  );
-};
-
-export const ContactPage: React.FC = () => {
-  const { t, pickText } = useI18n();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim() || !message.trim()) return;
-    setSubmitted(true);
-    setName('');
-    setEmail('');
-    setMessage('');
-  };
-
-  return (
-    <div className="container-page py-10 md:py-16 max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-h1 text-[#0F172A]">{t.staticPages.contactTitle}</h1>
-        <p className="text-body text-[#64748B] mt-1">
-          {pickText({
-            en: 'Have questions about courses, team training, or creator partnerships? Reach out anytime.',
-            km: 'មានសំណួរអំពីវគ្គសិក្សា ការបណ្តុះបណ្តាលក្រុមហ៊ុន ឬភាពជាដៃគូ? សូមទាក់ទងមកយើងគ្រប់ពេល។',
-          })}
-        </p>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        <div className="md:col-span-5 space-y-4">
-          <div className="glass-card rounded-[24px] p-5 space-y-4 text-[14px]">
-            <div className="flex items-start gap-3">
-              <Mail className="h-5 w-5 text-[#2563EB] shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-[#0F172A]">Email</p>
-                <p className="text-[#64748B]">support@camcodelearn.example</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <Phone className="h-5 w-5 text-[#2563EB] shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-[#0F172A]">Phone</p>
-                <p className="text-[#64748B]">+855 23 900 123</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <MapPin className="h-5 w-5 text-[#2563EB] shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-[#0F172A]">Office</p>
-                <p className="text-[#64748B]">Phnom Penh, Cambodia</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="md:col-span-7 glass-card rounded-[24px] p-6 space-y-4"
-        >
-          {submitted && (
-            <Alert tone="success">
-              {pickText({
-                en: 'Thank you! Your inquiry has been received and our team will reply within 1 business day.',
-                km: 'សូមអរគុណ! សាររបស់អ្នកត្រូវបានទទួល ហើយក្រុមការងារនឹងឆ្លើយតបក្នុងរយៈពេល ១ ថ្ងៃធ្វើការ។',
-              })}
-            </Alert>
-          )}
-          <Input
-            label={t.auth.fullName}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <Input
-            label={t.auth.email}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <div>
-            <label className="block text-[14px] font-medium text-[#0F172A] mb-1.5">
-              {pickText({ en: 'Message', km: 'សាររបស់អ្នក' })}
-            </label>
-            <textarea
-              rows={4}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              required
-              className="w-full p-3.5 rounded-[8px] border border-[#E2E8F0] bg-white text-[15px] text-[#0F172A] outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20"
-            />
-          </div>
-          <Button type="submit" size="lg">
-            {pickText({ en: 'Send Message', km: 'ផ្ញើសារ' })}
-          </Button>
-        </form>
       </div>
     </div>
   );
@@ -153,12 +86,24 @@ export const ContactPage: React.FC = () => {
 export const TermsPage: React.FC = () => {
   const { t, pickText } = useI18n();
   return (
-    <div className="container-page py-10 md:py-16 max-w-3xl space-y-6">
-      <h1 className="text-h1 text-[#0F172A]">{t.staticPages.termsTitle}</h1>
-      <div className="glass-card rounded-[24px] p-6 md:p-8 space-y-5 text-[15px] text-[#475569] leading-relaxed">
+    <div className="min-h-screen">
+      <PageHero
+        eyebrow="LEGAL · TERMS"
+        title={t.staticPages.termsTitle}
+        description={pickText({
+          en: 'Clear terms governing course purchases, active memberships, billing verification, and learner access.',
+          km: 'លក្ខខណ្ឌច្បាស់លាស់សម្រាប់ការទិញវគ្គសិក្សា សមាជិកភាពសកម្ម និងការផ្ទៀងផ្ទាត់ការបង់ប្រាក់។',
+        })}
+      />
+      <div className="surface-dots py-12 md:py-16">
+      <div className="container-page max-w-3xl space-y-6">
+      <div className="swiss-surface p-6 md:p-8 space-y-6 text-[15px] text-[#6e6a62] leading-relaxed">
         <section className="space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
-            {pickText({ en: '1. Course Purchases & Subscriptions', km: '១. ការទិញវគ្គសិក្សា និងការជាវប្រចាំខែ' })}
+          <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
+            {pickText({
+              en: '1. Course Purchases & Subscriptions',
+              km: '១. ការទិញវគ្គសិក្សា និងការជាវប្រចាំខែ',
+            })}
           </h2>
           <p>
             {pickText({
@@ -167,9 +112,12 @@ export const TermsPage: React.FC = () => {
             })}
           </p>
         </section>
-        <section className="space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
-            {pickText({ en: '2. Payment Verification & Renewal', km: '២. ការផ្ទៀងផ្ទាត់ការបង់ប្រាក់ និងការបន្ត' })}
+        <section className="space-y-2 pt-4 border-t border-[#ded8ca] dark:border-[#2A332E]">
+          <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
+            {pickText({
+              en: '2. Payment Verification & Renewal',
+              km: '២. ការផ្ទៀងផ្ទាត់ការបង់ប្រាក់ និងការបន្ត',
+            })}
           </h2>
           <p>
             {pickText({
@@ -179,6 +127,8 @@ export const TermsPage: React.FC = () => {
           </p>
         </section>
       </div>
+      </div>
+      </div>
     </div>
   );
 };
@@ -186,11 +136,20 @@ export const TermsPage: React.FC = () => {
 export const PrivacyPage: React.FC = () => {
   const { t, pickText } = useI18n();
   return (
-    <div className="container-page py-10 md:py-16 max-w-3xl space-y-6">
-      <h1 className="text-h1 text-[#0F172A]">{t.staticPages.privacyTitle}</h1>
-      <div className="glass-card rounded-[24px] p-6 md:p-8 space-y-5 text-[15px] text-[#475569] leading-relaxed">
+    <div className="min-h-screen">
+      <PageHero
+        eyebrow="LEGAL · PRIVACY"
+        title={t.staticPages.privacyTitle}
+        description={pickText({
+          en: 'How we protect account credentials, course activity records, and payment processing privacy.',
+          km: 'របៀបដែលយើងការពារទិន្នន័យគណនី ប្រវត្តិការសិក្សា និងសុវត្ថិភាពនៃការទូទាត់ប្រាក់។',
+        })}
+      />
+      <div className="surface-dots py-12 md:py-16">
+      <div className="container-page max-w-3xl space-y-6">
+      <div className="swiss-surface p-6 md:p-8 space-y-6 text-[15px] text-[#6e6a62] leading-relaxed">
         <section className="space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
+          <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
             {pickText({ en: '1. Data We Collect', km: '១. ទិន្នន័យដែលយើងប្រមូល' })}
           </h2>
           <p>
@@ -200,9 +159,12 @@ export const PrivacyPage: React.FC = () => {
             })}
           </p>
         </section>
-        <section className="space-y-2">
-          <h2 className="text-h3 text-[#0F172A]">
-            {pickText({ en: '2. Security & Payment Privacy', km: '២. សុវត្ថិភាព និងឯកជនភាពនៃការបង់ប្រាក់' })}
+        <section className="space-y-2 pt-4 border-t border-[#ded8ca] dark:border-[#2A332E]">
+          <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
+            {pickText({
+              en: '2. Security & Payment Privacy',
+              km: '២. សុវត្ថិភាព និងឯកជនភាពនៃការបង់ប្រាក់',
+            })}
           </h2>
           <p>
             {pickText({
@@ -211,6 +173,8 @@ export const PrivacyPage: React.FC = () => {
             })}
           </p>
         </section>
+      </div>
+      </div>
       </div>
     </div>
   );
@@ -254,27 +218,45 @@ export const FaqPage: React.FC = () => {
   ];
 
   return (
-    <div className="container-page py-12 md:py-16 max-w-3xl space-y-10">
-      <h1 className="text-h1 text-[#0F172A] text-center">{t.staticPages.faqTitle}</h1>
-      <div className="space-y-5">
+    <div className="min-h-screen">
+      <PageHero
+        eyebrow="KNOWLEDGE BASE · FAQ"
+        title={t.staticPages.faqTitle}
+        description={pickText({
+          en: 'Answers on individual courses, active subscriptions, bilingual mode, and verified payments.',
+          km: 'ចម្លើយច្បាស់លាស់អំពីវគ្គសិក្សា ការជាវគម្រោង ភាសាពីរ និងការផ្ទៀងផ្ទាត់ការបង់ប្រាក់។',
+        })}
+      />
+      <div className="surface-dots py-12 md:py-16">
+      <div className="container-page max-w-3xl space-y-8">
+
+      <div className="space-y-3">
         {faqs.map((item, idx) => {
           const isOpen = openIdx === idx;
           return (
-            <article key={idx} className="glass-card rounded-[24px] overflow-hidden">
+            <article
+              key={idx}
+              className="rounded-xl border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] overflow-hidden"
+            >
               <button
                 type="button"
                 onClick={() => setOpenIdx(isOpen ? null : idx)}
-                className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left cursor-pointer"
+                className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left cursor-pointer hover:bg-[#e5dfd2]/40 dark:hover:bg-[#181E1B] transition-colors"
               >
-                <span className="text-[17px] font-medium text-[#0F172A]">{pickText(item.q)}</span>
+                <span className="text-[16px] font-bold text-[#141312] dark:text-[#f6f3ec]">
+                  <span className="font-mono-tech text-[11px] text-[#1c5b48] dark:text-[#7CD4B5] mr-3">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  {pickText(item.q)}
+                </span>
                 <ChevronDown
-                  className={`h-4 w-4 text-[#64748B] shrink-0 transition-transform ${
+                  className={`h-4 w-4 text-[#6e6a62] shrink-0 transition-transform ${
                     isOpen ? 'rotate-180' : ''
                   }`}
                 />
               </button>
               {isOpen && (
-                <div className="px-6 pb-5 text-[14px] text-[#64748B] leading-relaxed">
+                <div className="px-6 pb-5 pl-12 text-[14px] text-[#6e6a62] leading-relaxed">
                   {pickText(item.a)}
                 </div>
               )}
@@ -282,7 +264,8 @@ export const FaqPage: React.FC = () => {
           );
         })}
       </div>
+      </div>
+      </div>
     </div>
   );
 };
-

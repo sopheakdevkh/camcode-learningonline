@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, Eye, EyeOff, GraduationCap } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import { BrandMark } from '@/components/layout/PublicHeader';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
@@ -18,56 +19,54 @@ const AuthSplitShell: React.FC<{
 
   return (
     <div className="container-page min-h-screen flex items-center justify-center py-8 md:py-12">
-      <div className="w-full max-w-5xl space-y-4">
+      <div className="w-full max-w-5xl space-y-5">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-[14px] font-medium text-[#2563EB] hover:underline"
+          className="font-mono-tech inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.08em] font-semibold text-[#6e6a62] hover:text-[#1c5b48] transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
-          {t.auth.backToSite}
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>{t.auth.backToSite}</span>
         </Link>
 
-        <div className="glass-panel rounded-[32px] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+        <div className="swiss-surface overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-[0_24px_60px_-24px_rgba(23,28,25,0.16)]">
           {/* Form Column */}
           <div className="lg:col-span-7 p-6 sm:p-10">
-            <Link to="/" className="flex items-center gap-2 mb-6 w-fit hover:opacity-90">
-              <span className="h-8 w-8 rounded-[8px] bg-[#2563EB] text-white flex items-center justify-center">
-                <GraduationCap className="h-4 w-4" />
+            <Link to="/" className="inline-flex items-center gap-2.5 mb-8 w-fit hover:opacity-90">
+              <BrandMark />
+              <span className="font-serif-display text-[21px] font-medium tracking-[-0.02em] text-[#141312] dark:text-[#f6f3ec]">
+                {t.brand.name}
               </span>
-              <span className="font-bold text-[16px] text-[#0F172A]">{t.brand.name}</span>
             </Link>
 
-            <h1 className="text-h2 text-[#0F172A]">{title}</h1>
-            <p className="text-body text-[#64748B] mt-1.5 mb-6">{subtitle}</p>
+            <h1 className="text-h2 text-[#141312] dark:text-[#f6f3ec]">{title}</h1>
+            <p className="text-body text-[#6e6a62] mt-1.5 mb-7">{subtitle}</p>
             {children}
           </div>
 
-        {/* Desktop Benefit / Illustration Column */}
-        <div className="hidden lg:flex lg:col-span-5 bg-[#F8FAFC] border-l border-[#E2E8F0] p-10 flex-col justify-between">
-          <div className="space-y-4">
-            <Link
-              to="/"
-              className="inline-flex h-11 w-11 rounded-[10px] bg-[#2563EB] text-white items-center justify-center hover:bg-[#1D4ED8] transition-colors"
-            >
-              <GraduationCap className="h-6 w-6" />
-            </Link>
-            <h2 className="text-[22px] font-semibold text-[#0F172A] leading-snug">
-              {t.auth.splitBenefitTitle}
-            </h2>
-            <p className="text-[14px] text-[#64748B] leading-relaxed">
-              {t.auth.splitBenefitDesc}
-            </p>
-          </div>
+          {/* Desktop Deep Forest Green Benefit Column */}
+          <div className="hidden lg:flex lg:col-span-5 bg-[#1c5b48] text-[#f6f3ec] p-10 flex-col justify-between">
+            <div className="space-y-5">
+              <span className="font-mono-tech inline-flex items-center gap-2 text-[10.5px] uppercase tracking-[0.12em] text-white/75">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#A7E8CE]" aria-hidden="true" />
+                <span>IDENTITY ACCESS</span>
+              </span>
+              <h2 className="font-serif-display text-[28px] font-medium text-white leading-tight">
+                {t.auth.splitBenefitTitle}
+              </h2>
+              <p className="text-[14px] text-white/80 leading-relaxed">
+                {t.auth.splitBenefitDesc}
+              </p>
+            </div>
 
-          <ul className="space-y-3 pt-6">
-            {[t.auth.splitPoint1, t.auth.splitPoint2, t.auth.splitPoint3].map((point) => (
-              <li key={point} className="flex items-start gap-2.5 text-[14px] text-[#0F172A]">
-                <CheckCircle2 className="h-4 w-4 text-[#16A34A] mt-0.5 shrink-0" />
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+            <ul className="space-y-3.5 pt-8 border-t border-white/15">
+              {[t.auth.splitPoint1, t.auth.splitPoint2, t.auth.splitPoint3].map((point) => (
+                <li key={point} className="flex items-start gap-2.5 text-[14px] text-white/95">
+                  <CheckCircle2 className="h-4 w-4 text-[#A7E8CE] mt-0.5 shrink-0" />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -138,7 +137,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               onClick={() => setShowPassword((s) => !s)}
               aria-label="Toggle password visibility"
-              className="p-1 text-[#64748B] hover:text-[#0F172A] cursor-pointer"
+              className="p-1 text-[#6e6a62] hover:text-[#141312] cursor-pointer"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -146,30 +145,36 @@ export const LoginPage: React.FC = () => {
         />
 
         <div className="flex items-center justify-between gap-2 text-[13px]">
-          <label className="inline-flex items-center gap-2 text-[#475569] cursor-pointer">
+          <label className="inline-flex items-center gap-2 text-[#6e6a62] cursor-pointer">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="accent-[#2563EB]"
+              className="accent-[#1c5b48]"
             />
             <span>{t.auth.rememberMe}</span>
           </label>
-          <Link to="/forgot-password" className="font-medium text-[#2563EB] hover:underline">
+          <Link to="/forgot-password" className="font-semibold text-[#141312] dark:text-[#f6f3ec] hover:text-[#1c5b48]">
             {t.auth.forgotPasswordLink}
           </Link>
         </div>
 
-        <Button type="submit" fullWidth size="lg" loading={loading}>
+        <Button
+          type="submit"
+          fullWidth
+          size="lg"
+          loading={loading}
+          rightIcon={<ArrowUpRight className="h-4 w-4" />}
+        >
           {t.auth.signInBtn}
         </Button>
 
-        <p className="text-[14px] text-[#64748B] text-center pt-2">
+        <p className="text-[14px] text-[#6e6a62] text-center pt-2">
           {t.auth.noAccount}{' '}
           <Link
             to="/register"
             state={{ from: intendedTo }}
-            className="font-semibold text-[#2563EB] hover:underline"
+            className="font-bold text-[#1c5b48] dark:text-[#7CD4B5] underline underline-offset-4"
           >
             {t.nav.signUp}
           </Link>
@@ -288,7 +293,7 @@ export const RegisterPage: React.FC = () => {
                 type="button"
                 onClick={() => setShowPassword((s) => !s)}
                 aria-label="Toggle password visibility"
-                className="p-1 text-[#64748B] hover:text-[#0F172A] cursor-pointer"
+                className="p-1 text-[#6e6a62] hover:text-[#141312] cursor-pointer"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -307,16 +312,18 @@ export const RegisterPage: React.FC = () => {
         </div>
 
         {/* Password requirements checklist */}
-        <div className="p-3 rounded-[8px] bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
-          <p className="text-[12px] font-semibold text-[#475569]">{t.auth.passwordReqTitle}</p>
+        <div className="p-3.5 rounded-xl bg-[#e5dfd2]/75 dark:bg-[#181E1B] border border-[#ded8ca] dark:border-[#2A332E] space-y-1">
+          <p className="font-mono-tech text-[11px] uppercase tracking-[0.06em] font-semibold text-[#141312] dark:text-[#f6f3ec]">
+            {t.auth.passwordReqTitle}
+          </p>
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-[12px]">
-            <span className={hasMinLen ? 'text-[#16A34A] font-medium' : 'text-[#64748B]'}>
+            <span className={hasMinLen ? 'text-[#1c5b48] dark:text-[#7CD4B5] font-semibold' : 'text-[#6e6a62]'}>
               ✓ {t.auth.reqLength}
             </span>
-            <span className={hasLetter ? 'text-[#16A34A] font-medium' : 'text-[#64748B]'}>
+            <span className={hasLetter ? 'text-[#1c5b48] dark:text-[#7CD4B5] font-semibold' : 'text-[#6e6a62]'}>
               ✓ {t.auth.reqLetter}
             </span>
-            <span className={hasNumber ? 'text-[#16A34A] font-medium' : 'text-[#64748B]'}>
+            <span className={hasNumber ? 'text-[#1c5b48] dark:text-[#7CD4B5] font-semibold' : 'text-[#6e6a62]'}>
               ✓ {t.auth.reqNumber}
             </span>
           </div>
@@ -334,33 +341,42 @@ export const RegisterPage: React.FC = () => {
           ]}
         />
 
-        <label className="flex items-start gap-2.5 text-[13px] text-[#475569] cursor-pointer">
+        <label className="flex items-start gap-2.5 text-[13px] text-[#6e6a62] cursor-pointer">
           <input
             type="checkbox"
             checked={acceptTerms}
             onChange={(e) => setAcceptTerms(e.target.checked)}
-            className="mt-0.5 accent-[#2563EB]"
+            className="mt-0.5 accent-[#1c5b48]"
           />
           <span>
             {t.auth.acceptTermsPrefix}{' '}
-            <Link to="/terms" className="text-[#2563EB] hover:underline">
+            <Link to="/terms" className="font-semibold text-[#141312] dark:text-[#f6f3ec] underline">
               {t.auth.termsLink}
             </Link>{' '}
             {t.auth.andWord}{' '}
-            <Link to="/privacy" className="text-[#2563EB] hover:underline">
+            <Link to="/privacy" className="font-semibold text-[#141312] dark:text-[#f6f3ec] underline">
               {t.auth.privacyLink}
             </Link>
             .
           </span>
         </label>
 
-        <Button type="submit" fullWidth size="lg" loading={loading}>
+        <Button
+          type="submit"
+          fullWidth
+          size="lg"
+          loading={loading}
+          rightIcon={<ArrowUpRight className="h-4 w-4" />}
+        >
           {t.auth.createAccountBtn}
         </Button>
 
-        <p className="text-[14px] text-[#64748B] text-center pt-2">
+        <p className="text-[14px] text-[#6e6a62] text-center pt-2">
           {t.auth.haveAccount}{' '}
-          <Link to="/login" className="font-semibold text-[#2563EB] hover:underline">
+          <Link
+            to="/login"
+            className="font-bold text-[#1c5b48] dark:text-[#7CD4B5] underline underline-offset-4"
+          >
             {t.nav.login}
           </Link>
         </p>
@@ -413,12 +429,21 @@ export const ForgotPasswordPage: React.FC = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <Button type="submit" fullWidth size="lg" loading={loading}>
+        <Button
+          type="submit"
+          fullWidth
+          size="lg"
+          loading={loading}
+          rightIcon={<ArrowUpRight className="h-4 w-4" />}
+        >
           {t.auth.sendResetLinkBtn}
         </Button>
 
         <div className="text-center pt-2">
-          <Link to="/login" className="text-[14px] font-medium text-[#2563EB] hover:underline">
+          <Link
+            to="/login"
+            className="text-[14px] font-semibold text-[#1c5b48] dark:text-[#7CD4B5] underline"
+          >
             {t.auth.backToLogin}
           </Link>
         </div>
@@ -478,11 +503,16 @@ export const ResetPasswordPage: React.FC = () => {
           onChange={(e) => setConfirm(e.target.value)}
         />
 
-        <Button type="submit" fullWidth size="lg" loading={loading}>
+        <Button
+          type="submit"
+          fullWidth
+          size="lg"
+          loading={loading}
+          rightIcon={<ArrowUpRight className="h-4 w-4" />}
+        >
           {t.auth.updatePasswordBtn}
         </Button>
       </form>
     </AuthSplitShell>
   );
 };
-

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight,
+  ArrowUpRight,
   BarChart3,
   BookOpen,
   Briefcase,
@@ -25,12 +25,12 @@ interface CourseCardProps {
 }
 
 const categoryCoverIcon: Record<string, React.ReactNode> = {
-  'digital-marketing': <Megaphone className="h-10 w-10 text-[#2563EB]" />,
-  'software-engineering': <Code2 className="h-10 w-10 text-[#0891B2]" />,
-  'ui-ux-design': <Palette className="h-10 w-10 text-[#16A34A]" />,
-  'business-finance': <Briefcase className="h-10 w-10 text-[#D97706]" />,
-  'data-ai': <BarChart3 className="h-10 w-10 text-[#2563EB]" />,
-  'creative-video': <Film className="h-10 w-10 text-[#E11D48]" />,
+  'digital-marketing': <Megaphone className="h-5 w-5" />,
+  'software-engineering': <Code2 className="h-5 w-5" />,
+  'ui-ux-design': <Palette className="h-5 w-5" />,
+  'business-finance': <Briefcase className="h-5 w-5" />,
+  'data-ai': <BarChart3 className="h-5 w-5" />,
+  'creative-video': <Film className="h-5 w-5" />,
 };
 
 export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }) => {
@@ -53,104 +53,120 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
     return formatNumber(count);
   };
 
-  return (
-    <Link
-      to={`/courses/${course.slug}`}
-      className={`group glass-card flex flex-col rounded-[16px] overflow-hidden ${className}`}
-    >
-      {/* Inset Rounded Thumbnail (matching Known card layout) */}
-      <div className="p-3.5 pb-0">
-        <div
-          className={`relative h-44 w-full rounded-[12px] bg-gradient-to-br ${course.thumbnailTheme} border border-white/80 overflow-hidden p-3.5 flex flex-col justify-between`}
-        >
-          <div className="flex items-center justify-between gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-white/90 text-[11px] font-semibold text-[#0F172A] shadow-xs">
-              {category ? pickText(category.name) : course.thumbnailLabel}
-            </span>
-            {access !== 'none' ? (
-              <Badge tone="success">
-                {access === 'subscription'
-                  ? t.marketplace.includedBadge
-                  : t.marketplace.enrolledBadge}
-              </Badge>
-            ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/90 text-[11px] font-semibold text-[#0F172A]">
-                <Star className="h-3 w-3 fill-[#D97706] text-[#D97706]" />
-                {course.rating.toFixed(1)}
-              </span>
-            )}
-          </div>
+  const difficultyLabel =
+    course.difficulty === 'beginner'
+      ? t.common.beginner
+      : course.difficulty === 'intermediate'
+        ? t.common.intermediate
+        : t.common.advanced;
 
-          <div className="flex items-center justify-center my-auto">
-            <div className="h-16 w-16 rounded-2xl bg-white/85 backdrop-blur-sm border border-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-              {categoryCoverIcon[course.categorySlug] ?? (
-                <BookOpen className="h-9 w-9 text-[#2563EB]" />
+  return (
+    <Link to={`/courses/${course.slug}`} className={`block h-full ${className}`}>
+      <article className="card-note group flex h-full flex-col justify-between p-5 md:p-6">
+        <div>
+          {/* Inset Warm-Stone Blueprint Frame */}
+          <div className="relative h-40 w-full rounded-xl bg-[#e5dfd2]/75 dark:bg-[#181E1B] border border-[#ded8ca] dark:border-[#2A332E] swiss-blueprint-bg overflow-hidden p-3.5 flex flex-col justify-between transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#3E4D45]">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono-tech inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#efebe1] dark:bg-[#151A17] border border-[#ded8ca] dark:border-[#2A332E] text-[10px] font-medium uppercase tracking-[0.06em] text-[#141312] dark:text-[#f6f3ec] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6]">
+                <span className="swiss-dot" aria-hidden="true" />
+                {category ? pickText(category.name) : course.thumbnailLabel}
+              </span>
+              {access !== 'none' ? (
+                <Badge tone="success">
+                  {access === 'subscription'
+                    ? t.marketplace.includedBadge
+                    : t.marketplace.enrolledBadge}
+                </Badge>
+              ) : (
+                <span className="font-mono-tech inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#efebe1] dark:bg-[#151A17] border border-[#ded8ca] dark:border-[#2A332E] text-[11px] font-semibold tabular-nums text-[#141312] dark:text-[#f6f3ec] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6]">
+                  <Star className="h-3 w-3 fill-[#1c5b48] text-[#1c5b48] dark:fill-[#7CD4B5] dark:text-[#7CD4B5]" />
+                  {course.rating.toFixed(1)}
+                </span>
               )}
+            </div>
+
+            <div className="flex items-center justify-center my-auto">
+              <div className="icon-box !w-12 !h-12 border border-[#ded8ca] dark:border-[#2A332E] group-hover:scale-105 shadow-xs">
+                {categoryCoverIcon[course.categorySlug] ?? <BookOpen className="h-5 w-5" />}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between font-mono-tech text-[10px] uppercase tracking-[0.08em] text-[#6e6a62] dark:text-[#A3ACA6]">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#efebe1]/95 dark:bg-[#151A17]/95 border border-[#ded8ca] dark:border-[#2A332E] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6]">
+                {difficultyLabel}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#efebe1]/95 dark:bg-[#151A17]/95 border border-[#ded8ca] dark:border-[#2A332E] tabular-nums transition-colors duration-[0.22s] group-hover:border-[#B9B3A6]">
+                {formatNumber(course.durationHours)} {t.common.hours}
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] font-medium text-[#475569]">
-            <span className="px-2 py-0.5 rounded bg-white/85">
-              {course.difficulty === 'beginner'
-                ? t.common.beginner
-                : course.difficulty === 'intermediate'
-                  ? t.common.intermediate
-                  : t.common.advanced}
-            </span>
-            <span className="px-2 py-0.5 rounded bg-white/85">
-              {formatNumber(course.durationHours)} {t.common.hours}
+          {/* Header Row: Serif Title + Mono Lesson Count Index */}
+          <div className="mt-5 flex items-start justify-between gap-4">
+            <h3 className="font-serif-display text-[21px] font-medium leading-[1.22] tracking-[-0.02em] text-[#141312] dark:text-[#f6f3ec] transition-colors duration-[0.22s] group-hover:text-[#1c5b48] dark:group-hover:text-[#7CD4B5] line-clamp-2">
+              {pickText(course.title)}
+            </h3>
+            <span aria-hidden="true" className="index-number mt-1 shrink-0">
+              {String(course.lessonsCount).padStart(2, '0')}L
             </span>
           </div>
-        </div>
-      </div>
 
-      {/* Card Content */}
-      <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between gap-4">
-        <div className="space-y-2">
-          <p className="text-[12px] text-[#64748B] truncate">
-            {instructor?.name} ·{' '}
-            {course.language === 'bilingual'
-              ? t.common.bilingual
-              : course.language === 'km'
-                ? t.common.khmer
-                : t.common.english}
+          {/* Short Editorial Subtitle / Instructor */}
+          <p className="mt-2.5 text-[14.5px] leading-[1.6] text-[#6e6a62] dark:text-[#A3ACA6] line-clamp-2">
+            {pickText(course.subtitle)}
           </p>
 
-          <h3 className="text-[16px] font-bold text-[#0F172A] group-hover:text-[#2563EB] transition-colors line-clamp-2 leading-snug min-h-[44px]">
-            {pickText(course.title)}
-          </h3>
-
-          <div className="flex items-center gap-4 pt-0.5 text-[12px] text-[#64748B]">
-            <span className="inline-flex items-center gap-1.5">
-              <FileText className="h-3.5 w-3.5 text-[#94A3B8]" />
-              {t.marketplace.lessonLabel}: {formatNumber(course.lessonsCount)}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Users className="h-3.5 w-3.5 text-[#94A3B8]" />
-              {t.marketplace.studentLabel}: {formatCompactStudents(course.studentsCount)}
-            </span>
-          </div>
+          {/* Rounded-full Metadata Pills with group-hover border transition */}
+          <ul className="mt-4 flex flex-wrap gap-2">
+            <li>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#101412] px-3 py-[5px] text-[12.5px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51]">
+                <FileText className="h-3 w-3 opacity-75" />
+                {formatNumber(course.lessonsCount)} {t.marketplace.lessonLabel}
+              </span>
+            </li>
+            <li>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#101412] px-3 py-[5px] text-[12.5px] font-medium text-[#4c4842] dark:text-[#D5D1C8] tabular-nums transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51]">
+                <Users className="h-3 w-3 opacity-75" />
+                {formatCompactStudents(course.studentsCount)}
+              </span>
+            </li>
+            {instructor && (
+              <li>
+                <span className="inline-flex items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#101412] px-3 py-[5px] text-[12.5px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51]">
+                  {instructor.name}
+                </span>
+              </li>
+            )}
+          </ul>
         </div>
 
-        {/* Bottom Price + Primary Blue Action Pill (matching Known card footer) */}
-        <div className="pt-3 border-t border-[#E2E8F0]/80 flex items-center justify-between gap-3">
-          <div>
-            <p className="text-[11px] text-[#64748B] leading-none mb-1">{t.common.price}</p>
+        {/* Footer Price + Action Row */}
+        <div className="mt-5 pt-4 border-t border-[#ded8ca] dark:border-[#2A332E] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#3E4D45] flex items-center justify-between gap-3">
+          <div className="flex items-baseline gap-2">
             {course.price === 0 ? (
-              <span className="text-[18px] font-bold text-[#E11D48]">{t.common.free}</span>
+              <span className="font-serif-display text-[22px] font-medium text-[#1c5b48] dark:text-[#7CD4B5]">
+                {t.common.free}
+              </span>
             ) : (
-              <span className="text-[18px] font-bold text-[#0F172A]">
+              <span className="font-serif-display text-[22px] font-medium tabular-nums text-[#141312] dark:text-[#f6f3ec]">
                 ${course.price % 1 === 0 ? course.price.toFixed(0) : course.price.toFixed(2)}
               </span>
             )}
+            <span className="t-method">
+              {course.language === 'bilingual'
+                ? t.common.bilingual
+                : course.language === 'km'
+                  ? t.common.khmer
+                  : t.common.english}
+            </span>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[8px] bg-[#2563EB] group-hover:bg-[#1D4ED8] text-white text-[13px] font-medium transition-colors shrink-0">
-            <ArrowRight className="h-3.5 w-3.5" />
+          <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-[#1c5b48] dark:text-[#7CD4B5] whitespace-nowrap transition-transform duration-[0.22s] group-hover:translate-x-0.5">
             <span>{actionLabel()}</span>
+            <ArrowUpRight className="h-3.5 w-3.5 swiss-arrow-shift" />
           </span>
         </div>
-      </div>
+      </article>
     </Link>
   );
 };

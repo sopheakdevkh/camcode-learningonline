@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
+  ArrowUpRight,
   Building2,
   ChevronDown,
   CreditCard,
@@ -187,16 +188,20 @@ export const CheckoutPage: React.FC = () => {
 
   if (!loadingItem && !itemTitle) {
     return (
-      <div className="container-page py-16 text-center space-y-4">
-        <h1 className="text-h2 text-[#0F172A]">{t.checkout.noItemTitle}</h1>
-        <p className="text-body text-[#64748B]">{t.checkout.noItemDesc}</p>
-        <div className="flex justify-center gap-3 pt-2">
-          <Link to="/courses">
-            <Button>{t.home.exploreCourses}</Button>
-          </Link>
-          <Link to="/pricing">
-            <Button variant="outline">{t.videos.viewPlans}</Button>
-          </Link>
+      <div className="surface-mist min-h-screen">
+        <div className="container-page pt-[140px] pb-16 text-center space-y-4">
+          <h1 className="text-h2 text-[#141312] dark:text-[#f6f3ec]">{t.checkout.noItemTitle}</h1>
+          <p className="text-body text-[#6e6a62]">{t.checkout.noItemDesc}</p>
+          <div className="flex justify-center gap-3 pt-2">
+            <Link to="/courses">
+              <Button rightIcon={<ArrowUpRight className="h-4 w-4" />}>
+                {t.home.exploreCourses}
+              </Button>
+            </Link>
+            <Link to="/pricing">
+              <Button variant="outline">{t.videos.viewPlans}</Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -205,13 +210,15 @@ export const CheckoutPage: React.FC = () => {
   const orderSummaryContent = (
     <div className="space-y-4">
       {itemTitle && (
-        <div className="p-4 rounded-[10px] bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
-          <p className="text-[12px] font-semibold uppercase tracking-wider text-[#2563EB]">
+        <div className="p-4 rounded-xl bg-[#e5dfd2]/75 dark:bg-[#181E1B] border border-[#ded8ca] dark:border-[#2A332E] space-y-1">
+          <p className="font-mono-tech text-[10px] font-semibold uppercase tracking-[0.08em] text-[#1c5b48] dark:text-[#7CD4B5]">
             {checkoutType === 'course' ? t.nav.courses : t.nav.pricing}
           </p>
-          <p className="text-[16px] font-semibold text-[#0F172A]">{pickText(itemTitle)}</p>
+          <p className="text-[16px] font-bold text-[#141312] dark:text-[#f6f3ec]">
+            {pickText(itemTitle)}
+          </p>
           {checkoutType === 'subscription' && (
-            <p className="text-[13px] text-[#64748B]">
+            <p className="font-mono-tech text-[11px] text-[#6e6a62]">
               {t.checkout.billingCycleLabel}:{' '}
               {billingCycle === 'monthly' ? t.pricing.monthly : t.pricing.yearly}
             </p>
@@ -221,7 +228,7 @@ export const CheckoutPage: React.FC = () => {
 
       {/* Coupon */}
       <div className="space-y-2">
-        <label className="block text-[13px] font-medium text-[#0F172A]">
+        <label className="block font-mono-tech text-[11px] uppercase tracking-[0.08em] font-medium text-[#6e6a62]">
           {t.checkout.couponLabel}
         </label>
         <div className="flex gap-2">
@@ -254,56 +261,71 @@ export const CheckoutPage: React.FC = () => {
             </Button>
           )}
         </div>
-        {couponError && <p className="text-[12px] text-[#DC2626]">{couponError}</p>}
+        {couponError && <p className="text-[12px] text-[#a5331f]">{couponError}</p>}
         {appliedCoupon && (
-          <p className="text-[12px] text-[#16A34A] font-medium">
+          <p className="font-mono-tech text-[12px] text-[#1c5b48] dark:text-[#7CD4B5] font-medium">
             ✓ {appliedCoupon.code} — {pickText(appliedCoupon.description)}
           </p>
         )}
       </div>
 
       {/* Price Breakdown */}
-      <div className="pt-3 border-t border-[#E2E8F0] space-y-2.5 text-[14px]">
-        <div className="flex justify-between text-[#475569]">
+      <div className="pt-4 border-t border-[#ded8ca] dark:border-[#2A332E] space-y-2.5 text-[14px]">
+        <div className="flex justify-between text-[#6e6a62]">
           <span>{t.checkout.subtotal}</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span className="font-mono-tech tabular-nums">${subtotal.toFixed(2)}</span>
         </div>
         {discount > 0 && (
-          <div className="flex justify-between text-[#16A34A] font-medium">
+          <div className="flex justify-between text-[#1c5b48] dark:text-[#7CD4B5] font-medium">
             <span>{t.checkout.discount}</span>
-            <span>-${discount.toFixed(2)}</span>
+            <span className="font-mono-tech tabular-nums">-${discount.toFixed(2)}</span>
           </div>
         )}
-        <div className="flex justify-between text-[#475569]">
+        <div className="flex justify-between text-[#6e6a62]">
           <span>{t.checkout.tax}</span>
-          <span>${tax.toFixed(2)}</span>
+          <span className="font-mono-tech tabular-nums">${tax.toFixed(2)}</span>
         </div>
-        <div className="pt-3 border-t border-[#E2E8F0] flex justify-between text-[18px] font-bold text-[#0F172A]">
+        <div className="pt-3 border-t border-[#ded8ca] dark:border-[#2A332E] flex justify-between items-baseline text-[18px] font-bold text-[#141312] dark:text-[#f6f3ec]">
           <span>{t.checkout.total}</span>
-          <span>${total.toFixed(2)}</span>
+          <span className="font-serif-display text-[26px] font-medium tabular-nums">${total.toFixed(2)}</span>
         </div>
       </div>
 
       {checkoutType === 'subscription' && (
-        <p className="text-[12px] text-[#64748B] leading-relaxed">{t.checkout.renewalInfo}</p>
+        <p className="font-mono-tech text-[11px] text-[#6e6a62] leading-relaxed">
+          {t.checkout.renewalInfo}
+        </p>
       )}
     </div>
   );
 
   return (
-    <div className="container-page py-8 md:py-12 pb-28 lg:pb-12">
+    <div className="surface-mist relative overflow-hidden min-h-screen">
+      <span aria-hidden="true" className="deco-ring left-[-240px] top-[-320px] size-[720px]" />
+      <span aria-hidden="true" className="deco-ring right-[-320px] top-[-220px] size-[640px]" />
+      <div className="relative container-page pt-[124px] pb-28 md:pt-[140px] lg:pb-16">
       <div className="max-w-5xl mx-auto space-y-6">
+        <div className="flex items-center justify-between gap-4 pb-5 border-b border-[#ded8ca] dark:border-[#2A332E]">
+          <span className="swiss-eyebrow">
+            <span className="swiss-dot" aria-hidden="true" />
+            <span>SECURE CHECKOUT</span>
+          </span>
+          <span className="font-mono-tech text-[11px] uppercase tracking-[0.08em] text-[#6e6a62]">
+            TLS · WEBHOOK VERIFIED
+          </span>
+        </div>
+
         <div>
-          <h1 className="text-h1 text-[#0F172A]">{t.checkout.title}</h1>
-          <p className="text-body text-[#64748B] mt-1">{t.checkout.subtitle}</p>
+          <h1 className="text-h1 text-[#141312] dark:text-[#f6f3ec]">{t.checkout.title}</h1>
+          <p className="text-body text-[#6e6a62] mt-1">{t.checkout.subtitle}</p>
         </div>
 
         {/* Mobile Expandable Order Summary */}
-        <div className="lg:hidden glass-card rounded-[20px] overflow-hidden">
+        <div className="lg:hidden swiss-surface overflow-hidden">
           <button
             type="button"
             onClick={() => setMobileSummaryOpen((o) => !o)}
-            className="w-full px-4 py-3.5 flex items-center justify-between text-[14px] font-semibold text-[#0F172A]"
+            className="w-full px-4 py-3.5 flex items-center justify-between text-[14px] font-bold text-[#141312] dark:text-[#f6f3ec]"
           >
             <span className="flex items-center gap-2">
               <span>{t.checkout.orderSummary}</span>
@@ -311,10 +333,14 @@ export const CheckoutPage: React.FC = () => {
                 className={`h-4 w-4 transition-transform ${mobileSummaryOpen ? 'rotate-180' : ''}`}
               />
             </span>
-            <span className="text-[16px] font-bold text-[#2563EB]">${total.toFixed(2)}</span>
+            <span className="font-mono-tech text-[16px] font-extrabold tabular-nums text-[#1c5b48] dark:text-[#7CD4B5]">
+              ${total.toFixed(2)}
+            </span>
           </button>
           {mobileSummaryOpen && (
-            <div className="p-4 pt-0 border-t border-[#E2E8F0]">{orderSummaryContent}</div>
+            <div className="p-4 pt-3 border-t border-[#ded8ca] dark:border-[#2A332E]">
+              {orderSummaryContent}
+            </div>
           )}
         </div>
 
@@ -322,24 +348,24 @@ export const CheckoutPage: React.FC = () => {
         {order?.status === 'pending' && (
           <Alert tone="warning" title={t.checkout.pendingTitle}>
             <p>{t.checkout.pendingDesc}</p>
-            <p className="text-[12px] mt-1 font-mono">Order ID: {order.orderId}</p>
+            <p className="font-mono-tech text-[12px] mt-1">Order ID: {order.orderId}</p>
           </Alert>
         )}
 
         {order?.status === 'verified' && (
           <Alert tone="success" title={t.checkout.verifiedTitle}>
             <p>{t.checkout.verifiedDesc}</p>
-            <p className="text-[12px] mt-1 font-mono">Order ID: {order.orderId}</p>
+            <p className="font-mono-tech text-[12px] mt-1">Order ID: {order.orderId}</p>
             <div className="mt-4 flex flex-wrap gap-3">
               {checkoutType === 'course' && course ? (
                 <Link to={`/courses/${course.slug}`}>
-                  <Button variant="success" size="sm">
+                  <Button variant="success" size="sm" rightIcon={<ArrowUpRight className="h-3.5 w-3.5" />}>
                     {t.checkout.goToCourse}
                   </Button>
                 </Link>
               ) : (
                 <Link to="/videos">
-                  <Button variant="success" size="sm">
+                  <Button variant="success" size="sm" rightIcon={<ArrowUpRight className="h-3.5 w-3.5" />}>
                     {t.checkout.goToVideos}
                   </Button>
                 </Link>
@@ -372,8 +398,13 @@ export const CheckoutPage: React.FC = () => {
           <div className="lg:col-span-7 space-y-6">
             {formError && <Alert tone="error">{formError}</Alert>}
 
-            <section className="glass-card rounded-[24px] p-6 space-y-4">
-              <h2 className="text-h3 text-[#0F172A]">{t.checkout.customerDetails}</h2>
+            <section className="swiss-surface p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-[#ded8ca] dark:border-[#2A332E]">
+                <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
+                  {t.checkout.customerDetails}
+                </h2>
+                <span className="font-mono-tech text-[11px] text-[#1c5b48] dark:text-[#7CD4B5]">01</span>
+              </div>
               <Input
                 label={t.auth.fullName}
                 value={fullName}
@@ -398,11 +429,13 @@ export const CheckoutPage: React.FC = () => {
               </div>
             </section>
 
-            <section className="glass-card rounded-[24px] p-6 space-y-5">
-              <div className="flex items-center justify-between">
-                <h2 className="text-h3 text-[#0F172A]">{t.checkout.paymentMethod}</h2>
-                <span className="inline-flex items-center gap-1 text-[12px] text-[#64748B]">
-                  <Lock className="h-3.5 w-3.5" /> TLS Encrypted
+            <section className="swiss-surface p-6 space-y-5">
+              <div className="flex items-center justify-between pb-3 border-b border-[#ded8ca] dark:border-[#2A332E]">
+                <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
+                  {t.checkout.paymentMethod}
+                </h2>
+                <span className="font-mono-tech inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.06em] text-[#6e6a62]">
+                  <Lock className="h-3.5 w-3.5 text-[#1c5b48] dark:text-[#7CD4B5]" /> TLS Encrypted
                 </span>
               </div>
 
@@ -419,10 +452,10 @@ export const CheckoutPage: React.FC = () => {
                     type="button"
                     disabled={submitting || order?.status === 'verified'}
                     onClick={() => setPaymentMethod(method)}
-                    className={`p-3 rounded-[8px] border text-left text-[13px] font-medium flex items-center gap-2 cursor-pointer transition-colors ${
+                    className={`p-3 rounded-xl border text-left text-[13px] font-semibold flex items-center gap-2 cursor-pointer transition-colors ${
                       paymentMethod === method
-                        ? 'border-[#2563EB] bg-[#EFF6FF] text-[#2563EB]'
-                        : 'border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC]'
+                        ? 'border-[#1c5b48] bg-[#1c5b48] text-white dark:bg-[#2D7A62]'
+                        : 'border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48]'
                     }`}
                   >
                     {icon}
@@ -456,33 +489,29 @@ export const CheckoutPage: React.FC = () => {
                 </div>
               )}
 
-              {paymentMethod === 'khqr' && (
-                <Alert tone="info">{t.checkout.khqrHint}</Alert>
-              )}
+              {paymentMethod === 'khqr' && <Alert tone="info">{t.checkout.khqrHint}</Alert>}
 
-              {paymentMethod === 'bank_transfer' && (
-                <Alert tone="info">{t.checkout.bankHint}</Alert>
-              )}
+              {paymentMethod === 'bank_transfer' && <Alert tone="info">{t.checkout.bankHint}</Alert>}
 
-              <label className="flex items-start gap-2.5 text-[13px] text-[#475569] cursor-pointer pt-2">
+              <label className="flex items-start gap-2.5 text-[13px] text-[#6e6a62] cursor-pointer pt-2">
                 <input
                   type="checkbox"
                   checked={acceptTerms}
                   onChange={(e) => setAcceptTerms(e.target.checked)}
                   disabled={submitting || order?.status === 'verified'}
-                  className="mt-0.5 accent-[#2563EB]"
+                  className="mt-0.5 accent-[#1c5b48]"
                 />
                 <span>{t.checkout.acceptTerms}</span>
               </label>
 
               {/* Testing helper for webhook failure state */}
-              <label className="flex items-center gap-2 text-[12px] text-[#64748B] cursor-pointer">
+              <label className="flex items-center gap-2 font-mono-tech text-[11px] text-[#6e6a62] cursor-pointer">
                 <input
                   type="checkbox"
                   checked={simulateFail}
                   onChange={(e) => setSimulateFail(e.target.checked)}
                   disabled={submitting || order?.status === 'verified'}
-                  className="accent-[#DC2626]"
+                  className="accent-[#a5331f]"
                 />
                 <span>{t.checkout.simulateFailureToggle}</span>
               </label>
@@ -495,6 +524,7 @@ export const CheckoutPage: React.FC = () => {
                   loading={submitting}
                   success={order?.status === 'verified'}
                   disabled={order?.status === 'verified'}
+                  rightIcon={<ArrowUpRight className="h-4 w-4" />}
                 >
                   {submitting
                     ? t.checkout.processing
@@ -505,32 +535,39 @@ export const CheckoutPage: React.FC = () => {
           </div>
 
           {/* Right: Desktop Order Summary */}
-          <aside className="hidden lg:block lg:col-span-5 glass-panel rounded-[24px] p-6 sticky top-24 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-h3 text-[#0F172A]">{t.checkout.orderSummary}</h2>
-              <ShieldCheck className="h-5 w-5 text-[#16A34A]" />
+          <aside className="hidden lg:block lg:col-span-5 swiss-surface border-[#1c5b48]/40 dark:border-[#2A332E] p-6 sticky top-24 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#ded8ca] dark:border-[#2A332E]">
+              <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
+                {t.checkout.orderSummary}
+              </h2>
+              <ShieldCheck className="h-5 w-5 text-[#1c5b48] dark:text-[#7CD4B5]" />
             </div>
             {orderSummaryContent}
           </aside>
 
           {/* Mobile Sticky Payment CTA */}
-          <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-[#E2E8F0] px-4 py-3 flex items-center justify-between gap-4">
+          <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-[#efebe1] dark:bg-[#151A17] border-t border-[#ded8ca] dark:border-[#2A332E] px-4 py-3 flex items-center justify-between gap-4">
             <div>
-              <p className="text-[12px] text-[#64748B]">{t.checkout.total}</p>
-              <p className="text-[18px] font-bold text-[#0F172A]">${total.toFixed(2)}</p>
+              <p className="font-mono-tech text-[10px] uppercase tracking-[0.06em] text-[#6e6a62]">
+                {t.checkout.total}
+              </p>
+              <p className="font-serif-display text-[20px] font-medium tabular-nums text-[#141312] dark:text-[#f6f3ec]">
+                ${total.toFixed(2)}
+              </p>
             </div>
             <Button
               type="submit"
               loading={submitting}
               success={order?.status === 'verified'}
               disabled={order?.status === 'verified'}
+              rightIcon={<ArrowUpRight className="h-4 w-4" />}
             >
               {submitting ? t.checkout.processing : t.checkout.payNow}
             </Button>
           </div>
         </form>
       </div>
+      </div>
     </div>
   );
 };
-

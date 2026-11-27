@@ -12,20 +12,20 @@ interface AlertProps {
 
 const styles: Record<AlertTone, { wrap: string; icon: React.ReactNode }> = {
   info: {
-    wrap: 'bg-[#ECFEFF] border-[#A5F3FC] text-[#0E7490]',
-    icon: <Info className="h-5 w-5 text-[#0891B2] shrink-0" />,
+    wrap: 'bg-[#e5dfd2]/80 border-[#ded8ca] border-l-[3px] border-l-[#1c5b48] text-[#141312] dark:bg-[#181E1B] dark:border-[#2A332E] dark:border-l-[#2D7A62] dark:text-[#f6f3ec]',
+    icon: <Info className="h-4 w-4 text-[#1c5b48] dark:text-[#7CD4B5] shrink-0 mt-0.5" />,
   },
   success: {
-    wrap: 'bg-[#F0FDF4] border-[#BBF7D0] text-[#15803D]',
-    icon: <CheckCircle2 className="h-5 w-5 text-[#16A34A] shrink-0" />,
+    wrap: 'bg-[#e4ede7] border-[#B8D8C8] border-l-[3px] border-l-[#1c5b48] text-[#15463a] dark:bg-[#1B3028] dark:border-[#2D7A62]/40 dark:text-[#A7E8CE]',
+    icon: <CheckCircle2 className="h-4 w-4 text-[#1c5b48] dark:text-[#7CD4B5] shrink-0 mt-0.5" />,
   },
   warning: {
-    wrap: 'bg-[#FFFBEB] border-[#FDE68A] text-[#B45309]',
-    icon: <AlertTriangle className="h-5 w-5 text-[#D97706] shrink-0" />,
+    wrap: 'bg-[#FEF6EA] border-[#FDE68A] border-l-[3px] border-l-[#8a5008] text-[#78350F] dark:bg-[#8a5008]/15 dark:border-[#8a5008]/40 dark:text-[#FDE68A]',
+    icon: <AlertTriangle className="h-4 w-4 text-[#8a5008] shrink-0 mt-0.5" />,
   },
   error: {
-    wrap: 'bg-[#FEF2F2] border-[#FECACA] text-[#B91C1C]',
-    icon: <AlertCircle className="h-5 w-5 text-[#DC2626] shrink-0" />,
+    wrap: 'bg-[#FEF2F2] border-[#FECACA] border-l-[3px] border-l-[#a5331f] text-[#991B1B] dark:bg-[#a5331f]/15 dark:border-[#a5331f]/40 dark:text-[#FCA5A5]',
+    icon: <AlertCircle className="h-4 w-4 text-[#a5331f] shrink-0 mt-0.5" />,
   },
 };
 
@@ -34,14 +34,13 @@ export const Alert: React.FC<AlertProps> = ({ tone = 'info', title, children, cl
   return (
     <div
       role="alert"
-      className={`flex items-start gap-3 p-4 rounded-[12px] border ${s.wrap} ${className}`}
+      className={`flex items-start gap-3 p-4 rounded-xl border ${s.wrap} ${className}`}
     >
       {s.icon}
       <div className="text-[14px] leading-relaxed">
-        {title && <p className="font-semibold mb-0.5">{title}</p>}
+        {title && <p className="font-semibold mb-0.5 tracking-[-0.01em]">{title}</p>}
         <div>{children}</div>
       </div>
     </div>
   );
 };
-

@@ -15,44 +15,44 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputId = id ?? generatedId;
 
     const borderStyle = error
-      ? 'border-[#DC2626] focus-within:border-[#DC2626] focus-within:ring-2 focus-within:ring-[#DC2626]/20'
+      ? 'border-[#a5331f] focus-within:border-[#a5331f]'
       : success
-        ? 'border-[#16A34A] focus-within:border-[#16A34A] focus-within:ring-2 focus-within:ring-[#16A34A]/20'
-        : 'border-[#E2E8F0] hover:border-[#CBD5E1] focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20';
+        ? 'border-[#1c5b48] focus-within:border-[#1c5b48]'
+        : 'border-[#c2baa8] hover:border-[#AEA595] focus-within:border-[#1c5b48] dark:border-[#2A332E] dark:hover:border-[#5C6B63] dark:focus-within:border-[#2D7A62]';
 
     return (
       <div className="w-full">
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-[14px] font-medium text-[#0F172A] mb-1.5"
+            className="mb-2 block text-[13px] font-medium tracking-[0.02em] text-[#4c4842] dark:text-[#D5D1C8]"
           >
             {label}
           </label>
         )}
         <div
-          className={`flex items-center h-[46px] rounded-[8px] border bg-white transition-colors ${borderStyle} ${
-            props.disabled ? 'bg-[#F8FAFC] opacity-70 cursor-not-allowed' : ''
+          className={`flex items-center h-[52px] rounded-[10px] border bg-[#f6f3ec] dark:bg-[#151A17] transition-colors duration-200 ${borderStyle} ${
+            props.disabled ? 'bg-[#e5dfd2] dark:bg-[#181E1B] opacity-70 cursor-not-allowed' : ''
           }`}
         >
           {leftAddon && (
-            <span className="pl-3.5 text-[#64748B] flex items-center shrink-0">{leftAddon}</span>
+            <span className="pl-4 text-[#6e6a62] flex items-center shrink-0">{leftAddon}</span>
           )}
           <input
             ref={ref}
             id={inputId}
-            className={`w-full h-full bg-transparent px-3.5 text-[15px] text-[#0F172A] placeholder:text-[#94A3B8] outline-none disabled:cursor-not-allowed ${className}`}
+            className={`w-full h-full bg-transparent px-4 text-[16px] sm:text-[17px] text-[#141312] dark:text-[#f6f3ec] placeholder:text-[#6e6a62] outline-none disabled:cursor-not-allowed ${className}`}
             aria-invalid={Boolean(error)}
             {...props}
           />
           {rightAddon && (
-            <span className="pr-3 text-[#64748B] flex items-center shrink-0">{rightAddon}</span>
+            <span className="pr-3 text-[#6e6a62] flex items-center shrink-0">{rightAddon}</span>
           )}
         </div>
-        {error && <p className="mt-1.5 text-[13px] text-[#DC2626]">{error}</p>}
-        {!error && success && <p className="mt-1.5 text-[13px] text-[#16A34A]">{success}</p>}
+        {error && <p className="mt-1.5 text-[12px] text-[#a5331f]">{error}</p>}
+        {!error && success && <p className="mt-1.5 text-[12px] text-[#1c5b48]">{success}</p>}
         {!error && !success && helperText && (
-          <p className="mt-1.5 text-[13px] text-[#64748B]">{helperText}</p>
+          <p className="mt-1.5 text-[12px] text-[#6e6a62]">{helperText}</p>
         )}
       </div>
     );
@@ -60,4 +60,3 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 
 Input.displayName = 'Input';
-
