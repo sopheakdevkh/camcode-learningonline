@@ -33,30 +33,34 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/50 backdrop-blur-[2px]"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#141312]/55 backdrop-blur-[3px]"
       role="dialog"
       aria-modal="true"
       aria-label={title}
       onClick={onClose}
     >
       <div
-        className={`w-full ${maxWidthClass} bg-white rounded-[12px] border border-[#E2E8F0] shadow-lg overflow-hidden`}
+        className={`w-full ${maxWidthClass} bg-[#f6f3ec] dark:bg-[#151A17] rounded-2xl border border-[#ded8ca] dark:border-[#2A332E] shadow-2xl overflow-hidden`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E2E8F0]">
-          <h3 className="text-[18px] font-semibold text-[#0F172A]">{title}</h3>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#181E1B]">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="swiss-dot" aria-hidden="true" />
+            <h3 className="text-[16px] font-semibold tracking-[-0.015em] text-[#141312] dark:text-[#f6f3ec] truncate">
+              {title}
+            </h3>
+          </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close modal"
-            className="p-1.5 rounded-[8px] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] cursor-pointer"
+            className="p-1.5 rounded-full border border-transparent hover:border-[#ded8ca] text-[#6e6a62] hover:text-[#141312] hover:bg-[#e5dfd2] cursor-pointer transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
-        <div className="p-5 max-h-[82vh] overflow-y-auto">{children}</div>
+        <div className="p-6 max-h-[82vh] overflow-y-auto">{children}</div>
       </div>
     </div>
   );
 };
-

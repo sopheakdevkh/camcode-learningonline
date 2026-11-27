@@ -1,6 +1,6 @@
-# CamcodeLearn — Public Website (Port 3000)
+# Camcode — Public Website (Port 3000)
 
-Bilingual (**English + Khmer**) public website for the **CamcodeLearn** Learning & Video Streaming Platform, built with **Vite + React + TypeScript + Tailwind CSS**.
+Bilingual (**English + Khmer**) public website for the **Camcode** Learning & Video Streaming Platform, built with **Vite + React + TypeScript + Tailwind CSS**.
 
 This application implements the **Public Website (Port 3000)** discovery, catalog, pricing, authentication, and checkout flows (`PUB-01` through `PUB-09`), backed by local mock services ready to connect to the Backend API on **Port 4000**.
 

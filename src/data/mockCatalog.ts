@@ -51,7 +51,7 @@ export const MOCK_CATEGORIES: Category[] = [
     icon: 'Briefcase',
     courseCount: 21,
     videoCount: 53,
-    accentColor: '#D97706',
+    accentColor: '#8a5008',
   },
   {
     id: 'cat-5',
@@ -77,7 +77,7 @@ export const MOCK_CATEGORIES: Category[] = [
     icon: 'Film',
     courseCount: 12,
     videoCount: 77,
-    accentColor: '#DC2626',
+    accentColor: '#a5331f',
   },
 ];
 
@@ -132,7 +132,7 @@ export const MOCK_INSTRUCTORS: Instructor[] = [
       en: 'Helps SMEs and founders build clear financial models and team training.',
       km: 'ជួយសហគ្រាសធុនតូច និងមធ្យម រៀបចំផែនការហិរញ្ញវត្ថុ និងការបណ្តុះបណ្តាលបុគ្គលិក។',
     },
-    avatarColor: '#D97706',
+    avatarColor: '#8a5008',
     initials: 'BK',
     rating: 4.7,
     studentsCount: 7600,
