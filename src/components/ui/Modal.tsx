@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -9,9 +9,6 @@ interface ModalProps {
   maxWidthClass?: string;
 }
 
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
 export const Modal: React.FC<ModalProps> = ({
   open,
   onClose,
@@ -19,47 +16,16 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   maxWidthClass = 'max-w-2xl',
 }) => {
-  const titleId = useId();
-  const dialogRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!open) return;
-    const previousFocus = document.activeElement as HTMLElement | null;
-    const dialog = dialogRef.current;
-
-    const focusTimer = window.setTimeout(() => {
-      const firstFocusable = dialog?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-      firstFocusable?.focus();
-    }, 0);
-
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-        return;
-      }
-      if (e.key === 'Tab' && dialog) {
-        const focusables = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
-        if (focusables.length === 0) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
+      if (e.key === 'Escape') onClose();
     };
-
     window.addEventListener('keydown', handleKey);
     document.body.style.overflow = 'hidden';
     return () => {
-      window.clearTimeout(focusTimer);
       window.removeEventListener('keydown', handleKey);
       document.body.style.overflow = '';
-      previousFocus?.focus?.();
     };
   }, [open, onClose]);
 
@@ -67,34 +33,34 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/55 backdrop-blur-[2px]"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#141312]/55 backdrop-blur-[3px]"
       role="dialog"
       aria-modal="true"
-      aria-labelledby={title ? titleId : undefined}
-      aria-label={!title ? 'Modal dialog' : undefined}
+      aria-label={title}
       onClick={onClose}
     >
       <div
-        ref={dialogRef}
-        className={`w-full ${maxWidthClass} bg-white dark:bg-slate-900 rounded-[12px] border border-border dark:border-slate-700/70 shadow-lg overflow-hidden`}
+        className={`w-full ${maxWidthClass} bg-[#f6f3ec] dark:bg-[#151A17] rounded-2xl border border-[#ded8ca] dark:border-[#2A332E] shadow-2xl overflow-hidden`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border dark:border-slate-700/70">
-          <h3 id={titleId} className="text-[18px] font-semibold text-secondary dark:text-slate-100">
-            {title}
-          </h3>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#181E1B]">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="swiss-dot" aria-hidden="true" />
+            <h3 className="text-[16px] font-semibold tracking-[-0.015em] text-[#141312] dark:text-[#f6f3ec] truncate">
+              {title}
+            </h3>
+          </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close modal"
-            className="h-10 w-10 inline-flex items-center justify-center rounded-[8px] text-muted hover:text-secondary dark:hover:text-slate-100 hover:bg-[#F1F5F9] dark:hover:bg-slate-800 cursor-pointer"
+            className="p-1.5 rounded-full border border-transparent hover:border-[#ded8ca] text-[#6e6a62] hover:text-[#141312] hover:bg-[#e5dfd2] cursor-pointer transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
-        <div className="p-5 max-h-[82vh] overflow-y-auto">{children}</div>
+        <div className="p-6 max-h-[82vh] overflow-y-auto">{children}</div>
       </div>
     </div>
   );
 };
-

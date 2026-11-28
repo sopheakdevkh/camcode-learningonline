@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
+  ArrowUpRight,
   Award,
   BookOpen,
   Check,
@@ -35,7 +36,7 @@ const REVIEWS_PER_PAGE = 2;
 export const CourseDetailPage: React.FC = () => {
   const { slug = '' } = useParams();
   const navigate = useNavigate();
-  const { t, pickText, formatNumber, formatCurrency } = useI18n();
+  const { t, pickText, formatNumber } = useI18n();
   const { isAuthenticated, hasCourseAccess, enrollFreeCourse } = useAuth();
 
   const [course, setCourse] = useState<Course | null>(null);
@@ -49,21 +50,14 @@ export const CourseDetailPage: React.FC = () => {
     let active = true;
     setLoading(true);
     setReviewPage(1);
-    catalogService
-      .getCourseBySlug(slug)
-      .then((data) => {
-        if (!active) return;
-        setCourse(data);
-        if (data && data.curriculum.length > 0) {
-          setExpandedSections({ [data.curriculum[0].id]: true });
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        if (!active) return;
-        setCourse(null);
-        setLoading(false);
-      });
+    catalogService.getCourseBySlug(slug).then((data) => {
+      if (!active) return;
+      setCourse(data);
+      if (data && data.curriculum.length > 0) {
+        setExpandedSections({ [data.curriculum[0].id]: true });
+      }
+      setLoading(false);
+    });
     return () => {
       active = false;
     };
@@ -71,16 +65,18 @@ export const CourseDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="container-page py-10 space-y-6">
-        <Skeleton className="h-6 w-64" />
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 space-y-4">
-            <Skeleton className="h-12 w-3/4" />
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-64 w-full" />
-          </div>
-          <div className="lg:col-span-4">
-            <Skeleton className="h-96 w-full" />
+      <div className="surface-mist min-h-screen">
+        <div className="container-page pt-[124px] pb-14 md:pt-[140px] space-y-6">
+          <Skeleton className="h-6 w-64" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8 space-y-4">
+              <Skeleton className="h-12 w-3/4" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-64 w-full" />
+            </div>
+            <div className="lg:col-span-4">
+              <Skeleton className="h-96 w-full" />
+            </div>
           </div>
         </div>
       </div>
@@ -89,11 +85,13 @@ export const CourseDetailPage: React.FC = () => {
 
   if (!course) {
     return (
-      <div className="container-page py-16 text-center space-y-4">
-        <h1 className="text-h2 text-secondary">{t.common.noResults}</h1>
-        <Link to="/courses">
-          <Button variant="outline">{t.common.back}</Button>
-        </Link>
+      <div className="surface-mist min-h-screen">
+        <div className="container-page pt-[140px] pb-16 text-center space-y-4">
+          <h1 className="text-h2 text-[#141312] dark:text-[#f6f3ec]">{t.common.noResults}</h1>
+          <Link to="/courses">
+            <Button variant="outline">{t.common.back}</Button>
+          </Link>
+        </div>
       </div>
     );
   }
@@ -177,28 +175,33 @@ export const CourseDetailPage: React.FC = () => {
 
   return (
     <div className="pb-24 lg:pb-12">
-      {/* Top Light Frosted Header Banner */}
-      <div className="bg-white/75 dark:bg-[#0b1120]/80 backdrop-blur-sm border-b border-border/80 dark:border-slate-800">
-        <div className="container-page py-8">
+      {/* Top Editorial Header Banner — full bleed to viewport top behind fixed header */}
+      <div className="surface-mist relative overflow-hidden border-b border-[#ded8ca] dark:border-[#2A332E] pt-[104px] md:pt-[116px]">
+        <span aria-hidden="true" className="deco-ring left-[-240px] top-[-320px] size-[720px]" />
+        <span aria-hidden="true" className="deco-ring right-[-320px] top-[-220px] size-[640px]" />
+        <div className="relative container-page py-8 md:py-12">
           {/* Breadcrumbs */}
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[13px] text-muted mb-5 flex-wrap">
-            <Link to="/" className="hover:text-primary">
+          <nav
+            aria-label="Breadcrumb"
+            className="font-mono-tech flex items-center gap-2 text-[11px] uppercase tracking-[0.06em] text-[#6e6a62] mb-6 flex-wrap"
+          >
+            <Link to="/" className="hover:text-[#1c5b48]">
               {t.courseDetail.breadcrumbsHome}
             </Link>
             <ChevronRight className="h-3.5 w-3.5" />
-            <Link to="/courses" className="hover:text-primary">
+            <Link to="/courses" className="hover:text-[#1c5b48]">
               {t.courseDetail.breadcrumbsCourses}
             </Link>
             {category && (
               <>
                 <ChevronRight className="h-3.5 w-3.5" />
-                <Link to={`/courses?category=${category.slug}`} className="hover:text-primary">
+                <Link to={`/courses?category=${category.slug}`} className="hover:text-[#1c5b48]">
                   {pickText(category.name)}
                 </Link>
               </>
             )}
             <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-secondary font-medium truncate max-w-full sm:max-w-80 min-w-0">
+            <span className="text-[#141312] dark:text-[#f6f3ec] font-semibold truncate max-w-[260px]">
               {pickText(course.title)}
             </span>
           </nav>
@@ -220,30 +223,32 @@ export const CourseDetailPage: React.FC = () => {
                   )}
                 </div>
 
-                <h1 className="text-h1 text-secondary">{pickText(course.title)}</h1>
-                <p className="text-body text-muted">{pickText(course.subtitle)}</p>
+                <h1 className="text-h1 text-[#141312] dark:text-[#f6f3ec]">
+                  {pickText(course.title)}
+                </h1>
+                <p className="text-body text-[#6e6a62]">{pickText(course.subtitle)}</p>
               </div>
 
-              {/* Metadata strip */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[14px] text-[#475569]">
-                <span className="inline-flex items-center gap-1.5 font-semibold text-secondary">
-                  <Star className="h-4 w-4 fill-warning text-warning" />
+              {/* Metadata Strip */}
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 py-3.5 px-4 bg-[#e5dfd2]/75 dark:bg-[#181E1B] border border-[#ded8ca] dark:border-[#2A332E] rounded-xl font-mono-tech text-[12px] tabular-nums text-[#6e6a62]">
+                <span className="inline-flex items-center gap-1.5 font-semibold text-[#141312] dark:text-[#f6f3ec]">
+                  <Star className="h-4 w-4 fill-[#1c5b48] text-[#1c5b48] dark:fill-[#7CD4B5] dark:text-[#7CD4B5]" />
                   {course.rating.toFixed(1)}
-                  <span className="font-normal text-muted">
+                  <span className="font-normal text-[#6e6a62]">
                     ({course.reviewsCount} {t.courseDetail.reviews})
                   </span>
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Users className="h-4 w-4 text-muted" />
+                  <Users className="h-3.5 w-3.5" />
                   {formatNumber(course.studentsCount)} {t.common.students}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Clock className="h-4 w-4 text-muted" />
+                  <Clock className="h-3.5 w-3.5" />
                   {formatNumber(course.durationHours)} {t.common.hours} ·{' '}
                   {formatNumber(course.lessonsCount)} {t.common.lessons}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Globe className="h-4 w-4 text-muted" />
+                  <Globe className="h-3.5 w-3.5" />
                   {course.language === 'bilingual'
                     ? t.common.bilingual
                     : course.language === 'km'
@@ -254,18 +259,15 @@ export const CourseDetailPage: React.FC = () => {
 
               {/* Instructor Card */}
               {instructor && (
-                <div className="flex items-center gap-3.5 p-4 rounded-[12px] bg-background border border-border">
-                  <span
-                    className="h-11 w-11 rounded-full text-white font-semibold text-[14px] flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: instructor.avatarColor }}
-                  >
+                <div className="flex items-center gap-3.5 p-4 rounded-xl bg-[#f6f3ec] dark:bg-[#151A17] border border-[#ded8ca] dark:border-[#2A332E]">
+                  <span className="font-serif-display h-11 w-11 rounded-lg bg-[#1c5b48] text-white font-medium text-[15px] flex items-center justify-center shrink-0">
                     {instructor.initials}
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[14px] font-semibold text-secondary">
+                    <p className="text-[14px] font-bold text-[#141312] dark:text-[#f6f3ec]">
                       {t.common.by} {instructor.name}
                     </p>
-                    <p className="text-[13px] text-muted truncate">
+                    <p className="font-mono-tech text-[11px] uppercase tracking-[0.06em] text-[#6e6a62] truncate">
                       {pickText(instructor.role)} · {t.common.updated}: {course.lastUpdated}
                     </p>
                   </div>
@@ -277,12 +279,12 @@ export const CourseDetailPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setPreviewOpen(true)}
-                  className={`w-full h-48 rounded-[12px] bg-linear-to-br ${course.thumbnailTheme} border flex flex-col items-center justify-center gap-2 cursor-pointer`}
+                  className="w-full h-48 rounded-xl bg-[#e5dfd2]/80 dark:bg-[#181E1B] swiss-blueprint-bg border border-[#ded8ca] dark:border-[#2A332E] flex flex-col items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span className="h-12 w-12 rounded-full bg-white dark:bg-slate-900 border border-border dark:border-slate-700 flex items-center justify-center text-primary dark:text-blue-400">
+                  <span className="h-12 w-12 rounded-full bg-[#1c5b48] text-white flex items-center justify-center">
                     <Play className="h-5 w-5 fill-current ml-0.5" />
                   </span>
-                  <span className="text-[14px] font-medium text-secondary dark:text-slate-100">
+                  <span className="font-mono-tech text-[11px] uppercase tracking-[0.08em] font-semibold text-[#141312] dark:text-[#f6f3ec]">
                     {t.courseDetail.previewCourse}
                   </span>
                 </button>
@@ -291,16 +293,16 @@ export const CourseDetailPage: React.FC = () => {
 
             {/* Right Column: 30% (4 cols) Sticky Purchase Card */}
             <aside className="hidden lg:block lg:col-span-4">
-              <div className="bg-white dark:bg-slate-900 rounded-[12px] border border-border dark:border-slate-700/80 overflow-hidden sticky top-24">
+              <div className="bg-[#efebe1] dark:bg-[#151A17] rounded-2xl border border-[#ded8ca] dark:border-[#2A332E] shadow-[0_18px_40px_-20px_rgba(23,28,25,0.16)] overflow-hidden sticky top-24">
                 <button
                   type="button"
                   onClick={() => setPreviewOpen(true)}
-                  className={`w-full h-48 bg-linear-to-br ${course.thumbnailTheme} border-b border-border dark:border-slate-700/80 flex flex-col items-center justify-center gap-2.5 group cursor-pointer`}
+                  className="w-full h-48 bg-[#e5dfd2]/80 dark:bg-[#181E1B] swiss-blueprint-bg border-b border-[#ded8ca] dark:border-[#2A332E] flex flex-col items-center justify-center gap-2.5 group cursor-pointer"
                 >
-                  <span className="h-13 w-13 rounded-full bg-white dark:bg-slate-900 border border-border dark:border-slate-700 flex items-center justify-center text-primary dark:text-blue-400 group-hover:bg-primary group-hover:text-white transition-colors">
+                  <span className="h-12 w-12 rounded-full bg-[#1c5b48] text-white flex items-center justify-center group-hover:bg-[#15463a] group-hover:scale-105 transition-all">
                     <Play className="h-5 w-5 fill-current ml-0.5" />
                   </span>
-                  <span className="text-[13px] font-semibold text-secondary dark:text-slate-100">
+                  <span className="font-mono-tech text-[11px] uppercase tracking-[0.08em] font-semibold text-[#141312] dark:text-[#f6f3ec]">
                     {t.courseDetail.previewCourse}
                   </span>
                 </button>
@@ -308,16 +310,16 @@ export const CourseDetailPage: React.FC = () => {
                 <div className="p-6 space-y-5">
                   <div className="flex items-baseline gap-2.5">
                     {course.price === 0 ? (
-                      <span className="text-[28px] font-bold text-success">
+                      <span className="font-serif-display text-[34px] font-medium tracking-[-0.02em] text-[#1c5b48] dark:text-[#7CD4B5]">
                         {t.common.free}
                       </span>
                     ) : (
                       <>
-                        <span className="text-[30px] font-bold tabular-nums text-secondary">
-                          {formatCurrency(course.price)}
+                        <span className="font-serif-display text-[38px] font-medium tracking-[-0.03em] tabular-nums text-[#141312] dark:text-[#f6f3ec]">
+                          ${course.price.toFixed(2)}
                         </span>
                         {course.originalPrice && (
-                          <span className="text-[15px] text-muted line-through">
+                          <span className="font-mono-tech text-[14px] text-[#6e6a62] line-through tabular-nums">
                             ${course.originalPrice.toFixed(2)}
                           </span>
                         )}
@@ -329,36 +331,40 @@ export const CourseDetailPage: React.FC = () => {
                     variant={cta.tone === 'success' ? 'success' : 'primary'}
                     size="lg"
                     fullWidth
+                    rightIcon={<ArrowUpRight className="h-4 w-4" />}
                     onClick={cta.onClick}
                   >
                     {cta.label}
                   </Button>
 
-                  <p className="text-[12px] text-muted text-center">{cta.note}</p>
+                  <p className="font-mono-tech text-[11px] text-[#6e6a62] text-center">
+                    {cta.note}
+                  </p>
 
-                  <div className="pt-4 border-t border-border space-y-2.5">
-                    <p className="text-[13px] font-semibold text-secondary">
-                      {t.courseDetail.benefitsHeading}
+                  <div className="pt-4 border-t border-[#ded8ca] dark:border-[#2A332E] space-y-2.5">
+                    <p className="swiss-eyebrow">
+                      <span className="swiss-dot" aria-hidden="true" />
+                      <span>{t.courseDetail.benefitsHeading}</span>
                     </p>
-                    <ul className="space-y-2 text-[13px] text-[#475569]">
+                    <ul className="space-y-2 text-[13px] text-[#6e6a62]">
                       <li className="flex items-center gap-2">
-                        <PlayCircle className="h-4 w-4 text-primary shrink-0" />
+                        <PlayCircle className="h-4 w-4 text-[#1c5b48] dark:text-[#7CD4B5] shrink-0" />
                         <span>
                           {course.durationHours} {t.courseDetail.benefitDuration}
                         </span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <BookOpen className="h-4 w-4 text-primary shrink-0" />
+                        <BookOpen className="h-4 w-4 text-[#1c5b48] dark:text-[#7CD4B5] shrink-0" />
                         <span>
                           {course.lessonsCount} {t.courseDetail.benefitLessons}
                         </span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Award className="h-4 w-4 text-primary shrink-0" />
+                        <Award className="h-4 w-4 text-[#1c5b48] dark:text-[#7CD4B5] shrink-0" />
                         <span>{t.courseDetail.benefitCertificate}</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Smartphone className="h-4 w-4 text-primary shrink-0" />
+                        <Smartphone className="h-4 w-4 text-[#1c5b48] dark:text-[#7CD4B5] shrink-0" />
                         <span>{t.courseDetail.benefitAccess}</span>
                       </li>
                     </ul>
@@ -371,15 +377,24 @@ export const CourseDetailPage: React.FC = () => {
       </div>
 
       {/* Main Details Content (70% width on desktop) */}
-      <div className="container-page py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-8 space-y-8">
+      <div className="container-page py-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-8 space-y-6">
           {/* Learning Outcomes */}
-          <section className="glass-card rounded-3xl p-6">
-            <h2 className="text-h3 text-secondary mb-4">{t.courseDetail.whatYouLearn}</h2>
+          <section className="swiss-surface p-6">
+            <span className="swiss-eyebrow mb-2">
+              <span className="swiss-dot" aria-hidden="true" />
+              <span>01 / OUTCOMES</span>
+            </span>
+            <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec] mb-4">
+              {t.courseDetail.whatYouLearn}
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {course.outcomes.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-2.5 text-[14px] text-secondary">
-                  <Check className="h-4 w-4 text-success mt-1 shrink-0" />
+                <div
+                  key={idx}
+                  className="flex items-start gap-2.5 text-[14px] text-[#141312] dark:text-[#f6f3ec]"
+                >
+                  <Check className="h-4 w-4 text-[#1c5b48] dark:text-[#7CD4B5] mt-1 shrink-0" />
                   <span>{pickText(item)}</span>
                 </div>
               ))}
@@ -387,48 +402,63 @@ export const CourseDetailPage: React.FC = () => {
           </section>
 
           {/* Description */}
-          <section className="glass-card rounded-3xl p-6 space-y-3">
-            <h2 className="text-h3 text-secondary">{t.common.learnMore}</h2>
-            <p className="text-body text-[#475569]">{pickText(course.description)}</p>
+          <section className="swiss-surface p-6 space-y-3">
+            <span className="swiss-eyebrow">
+              <span className="swiss-dot" aria-hidden="true" />
+              <span>02 / OVERVIEW</span>
+            </span>
+            <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">{t.common.learnMore}</h2>
+            <p className="text-body text-[#6e6a62]">{pickText(course.description)}</p>
           </section>
 
           {/* Curriculum Accordion */}
-          <section className="glass-card rounded-3xl p-6 space-y-4">
+          <section className="swiss-surface p-6 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-h3 text-secondary">{t.courseDetail.curriculum}</h2>
-              <div className="flex items-center gap-3 text-[13px] font-medium text-primary">
+              <div>
+                <span className="swiss-eyebrow mb-1">
+                  <span className="swiss-dot" aria-hidden="true" />
+                  <span>03 / SYLLABUS</span>
+                </span>
+                <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
+                  {t.courseDetail.curriculum}
+                </h2>
+              </div>
+              <div className="font-mono-tech flex items-center gap-3 text-[11px] uppercase tracking-[0.06em] font-medium text-[#141312] dark:text-[#f6f3ec]">
                 <button
                   type="button"
                   onClick={() => setAllSections(true)}
-                  className="hover:underline cursor-pointer"
+                  className="hover:text-[#1c5b48] cursor-pointer"
                 >
                   {t.courseDetail.expandAll}
                 </button>
-                <span className="text-[#CBD5E1]">|</span>
+                <span className="text-[#ded8ca]">|</span>
                 <button
                   type="button"
                   onClick={() => setAllSections(false)}
-                  className="hover:underline cursor-pointer"
+                  className="hover:text-[#1c5b48] cursor-pointer"
                 >
                   {t.courseDetail.collapseAll}
                 </button>
               </div>
             </div>
 
-            <div className="divide-y divide-border border border-border rounded-[10px] overflow-hidden">
-              {course.curriculum.map((section) => {
+            <div className="divide-y divide-[#ded8ca] dark:divide-[#2A332E] border border-[#ded8ca] dark:border-[#2A332E] rounded-xl overflow-hidden">
+              {course.curriculum.map((section, sIdx) => {
                 const isOpen = Boolean(expandedSections[section.id]);
                 return (
                   <div key={section.id}>
                     <button
                       type="button"
                       onClick={() => toggleSection(section.id)}
-                      className="w-full px-4 py-3.5 bg-background dark:bg-slate-900/90 hover:bg-[#F1F5F9] dark:hover:bg-slate-800 flex items-center justify-between gap-3 text-left cursor-pointer transition-colors"
+                      className="w-full px-4 py-3.5 bg-[#e5dfd2]/65 dark:bg-[#181E1B] hover:bg-[#e5dfd2] flex items-center justify-between gap-3 text-left cursor-pointer transition-colors"
                     >
-                      <span className="text-[15px] font-semibold text-secondary">
+                      <span className="text-[15px] font-bold text-[#141312] dark:text-[#f6f3ec]">
+                        <span className="font-mono-tech text-[11px] text-[#1c5b48] dark:text-[#7CD4B5] mr-2">
+                          {String(sIdx + 1).padStart(2, '0')}
+                        </span>
                         {pickText(section.title)}
                       </span>
-                      <div className="flex items-center gap-3 shrink-0 text-[13px] text-muted">
+                      <div className="flex items-center gap-3 shrink-0 font-mono-tech text-[11px] tabular-nums text-[#6e6a62]">
                         <span>
                           {section.lessons.length} {t.common.lessons}
                         </span>
@@ -440,7 +470,7 @@ export const CourseDetailPage: React.FC = () => {
                       </div>
                     </button>
                     {isOpen && (
-                      <ul className="divide-y divide-border bg-white">
+                      <ul className="divide-y divide-[#ded8ca] dark:divide-[#2A332E] bg-[#efebe1] dark:bg-[#151A17]">
                         {section.lessons.map((lesson) => (
                           <li
                             key={lesson.id}
@@ -448,13 +478,13 @@ export const CourseDetailPage: React.FC = () => {
                           >
                             <div className="flex items-center gap-3 min-w-0">
                               {lesson.type === 'video' ? (
-                                <PlayCircle className="h-4 w-4 text-primary shrink-0" />
+                                <PlayCircle className="h-4 w-4 text-[#1c5b48] dark:text-[#7CD4B5] shrink-0" />
                               ) : lesson.type === 'quiz' ? (
-                                <HelpCircle className="h-4 w-4 text-warning shrink-0" />
+                                <HelpCircle className="h-4 w-4 text-[#8a5008] shrink-0" />
                               ) : (
-                                <FileText className="h-4 w-4 text-muted shrink-0" />
+                                <FileText className="h-4 w-4 text-[#6e6a62] shrink-0" />
                               )}
-                              <span className="text-secondary truncate">
+                              <span className="text-[#141312] dark:text-[#f6f3ec] truncate">
                                 {pickText(lesson.title)}
                               </span>
                             </div>
@@ -463,14 +493,14 @@ export const CourseDetailPage: React.FC = () => {
                                 <button
                                   type="button"
                                   onClick={() => setPreviewOpen(true)}
-                                  className="text-[12px] font-medium text-primary hover:underline cursor-pointer"
+                                  className="font-mono-tech text-[11px] uppercase tracking-[0.06em] font-semibold text-[#1c5b48] dark:text-[#7CD4B5] hover:underline cursor-pointer"
                                 >
                                   {t.courseDetail.previewLessonLabel}
                                 </button>
                               ) : access === 'none' ? (
-                                <Lock className="h-3.5 w-3.5 text-[#94A3B8]" />
+                                <Lock className="h-3.5 w-3.5 text-[#6e6a62]" />
                               ) : null}
-                              <span className="text-[12px] text-muted">
+                              <span className="font-mono-tech text-[11px] tabular-nums text-[#6e6a62]">
                                 {lesson.durationMinutes} {t.common.minutes}
                               </span>
                             </div>
@@ -485,9 +515,15 @@ export const CourseDetailPage: React.FC = () => {
           </section>
 
           {/* Requirements */}
-          <section className="glass-card rounded-3xl p-6 space-y-3">
-            <h2 className="text-h3 text-secondary">{t.courseDetail.requirements}</h2>
-            <ul className="list-disc pl-5 space-y-1.5 text-[15px] text-[#475569]">
+          <section className="swiss-surface p-6 space-y-3">
+            <span className="swiss-eyebrow">
+              <span className="swiss-dot" aria-hidden="true" />
+              <span>04 / PREREQUISITES</span>
+            </span>
+            <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
+              {t.courseDetail.requirements}
+            </h2>
+            <ul className="list-disc pl-5 space-y-1.5 text-[15px] text-[#6e6a62]">
               {course.requirements.map((req, idx) => (
                 <li key={idx}>{pickText(req)}</li>
               ))}
@@ -495,17 +531,25 @@ export const CourseDetailPage: React.FC = () => {
           </section>
 
           {/* Paginated Reviews */}
-          <section className="glass-card rounded-3xl p-6 space-y-4">
+          <section className="swiss-surface p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-h3 text-secondary">{t.courseDetail.reviews}</h2>
-              <span className="text-[14px] font-semibold text-secondary inline-flex items-center gap-1">
-                <Star className="h-4 w-4 fill-warning text-warning" />
+              <div>
+                <span className="swiss-eyebrow mb-1">
+                  <span className="swiss-dot" aria-hidden="true" />
+                  <span>05 / REVIEWS</span>
+                </span>
+                <h2 className="text-h3 text-[#141312] dark:text-[#f6f3ec]">
+                  {t.courseDetail.reviews}
+                </h2>
+              </div>
+              <span className="font-mono-tech text-[14px] font-semibold tabular-nums text-[#141312] dark:text-[#f6f3ec] inline-flex items-center gap-1">
+                <Star className="h-4 w-4 fill-[#1c5b48] text-[#1c5b48] dark:fill-[#7CD4B5] dark:text-[#7CD4B5]" />
                 {course.rating.toFixed(1)}
               </span>
             </div>
 
             {course.reviews.length === 0 ? (
-              <p className="text-[14px] text-muted">
+              <p className="text-[14px] text-[#6e6a62]">
                 Verified learner reviews appear here after cohort completion.
               </p>
             ) : (
@@ -514,18 +558,24 @@ export const CourseDetailPage: React.FC = () => {
                   {paginatedReviews.map((rev) => (
                     <div
                       key={rev.id}
-                      className="p-4 rounded-[10px] bg-background border border-border space-y-2"
+                      className="p-4 rounded-xl bg-[#e5dfd2]/65 dark:bg-[#181E1B] border border-[#ded8ca] dark:border-[#2A332E] space-y-2"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div>
-                          <p className="text-[14px] font-semibold text-secondary">
+                          <p className="text-[14px] font-bold text-[#141312] dark:text-[#f6f3ec]">
                             {rev.authorName}
                           </p>
-                          <p className="text-[12px] text-muted">{pickText(rev.authorRole)}</p>
+                          <p className="font-mono-tech text-[11px] text-[#6e6a62]">
+                            {pickText(rev.authorRole)}
+                          </p>
                         </div>
-                        <span className="text-[12px] text-muted">{rev.date}</span>
+                        <span className="font-mono-tech text-[11px] tabular-nums text-[#6e6a62]">
+                          {rev.date}
+                        </span>
                       </div>
-                      <p className="text-[14px] text-secondary">{pickText(rev.comment)}</p>
+                      <p className="text-[14px] text-[#141312] dark:text-[#f6f3ec]">
+                        {pickText(rev.comment)}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -541,17 +591,18 @@ export const CourseDetailPage: React.FC = () => {
       </div>
 
       {/* Mobile Sticky Bottom Purchase Bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-t border-border dark:border-slate-800 px-4 py-3 flex items-center justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <p className="text-[12px] text-muted truncate">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-[#efebe1] dark:bg-[#151A17] border-t border-[#ded8ca] dark:border-[#2A332E] px-4 py-3 flex items-center justify-between gap-4">
+        <div>
+          <p className="font-mono-tech text-[11px] text-[#6e6a62] truncate max-w-[160px]">
             {pickText(course.title)}
           </p>
-          <p className="text-[18px] font-bold tabular-nums text-secondary">
-            {course.price === 0 ? t.common.free : formatCurrency(course.price)}
+          <p className="font-serif-display text-[20px] font-medium tabular-nums text-[#141312] dark:text-[#f6f3ec]">
+            {course.price === 0 ? t.common.free : `$${course.price.toFixed(2)}`}
           </p>
         </div>
         <Button
           variant={cta.tone === 'success' ? 'success' : 'primary'}
+          rightIcon={<ArrowUpRight className="h-4 w-4" />}
           onClick={cta.onClick}
         >
           {cta.label}
@@ -565,11 +616,12 @@ export const CourseDetailPage: React.FC = () => {
         title={`${t.courseDetail.previewModalTitle}: ${pickText(course.title)}`}
       >
         <div className="space-y-4">
-          <div className="aspect-video rounded-[10px] bg-secondary dark:bg-[#060a13] dark:border dark:border-slate-800 text-white flex flex-col items-center justify-center p-6 text-center space-y-3">
-            <PlayCircle className="h-12 w-12 text-[#60A5FA]" />
-            <p className="text-[16px] font-semibold">{pickText(course.title)}</p>
-            <p className="text-[13px] text-[#94A3B8] max-w-md">
-              Sample preview lesson · {course.curriculum[0]?.lessons[0]
+          <div className="aspect-video rounded-xl bg-[#1C2420] text-white flex flex-col items-center justify-center p-6 text-center space-y-3 border border-[#2C3631]">
+            <PlayCircle className="h-12 w-12 text-[#7CD4B5]" />
+            <p className="font-serif-display text-[20px] font-medium">{pickText(course.title)}</p>
+            <p className="font-mono-tech text-[12px] text-[#A3ACA6] max-w-md">
+              Sample preview lesson ·{' '}
+              {course.curriculum[0]?.lessons[0]
                 ? pickText(course.curriculum[0].lessons[0].title)
                 : 'Introduction'}
             </p>
@@ -579,6 +631,7 @@ export const CourseDetailPage: React.FC = () => {
               {t.nav.close}
             </Button>
             <Button
+              rightIcon={<ArrowUpRight className="h-4 w-4" />}
               onClick={() => {
                 setPreviewOpen(false);
                 cta.onClick();
@@ -617,4 +670,3 @@ export const CourseDetailPage: React.FC = () => {
     </div>
   );
 };
-

@@ -29,9 +29,9 @@ export interface DropdownProps<T extends string = string> {
 }
 
 const sizeClasses: Record<DropdownSize, string> = {
-  sm: 'h-9 px-3 text-[13px]',
-  md: 'h-11 px-3.5 text-[14px]',
-  lg: 'h-11.5 px-3.5 text-[15px]',
+  sm: 'h-9 px-3.5 text-[13px]',
+  md: 'h-11 px-4 text-[14px]',
+  lg: 'h-[52px] px-4 text-[16px] sm:text-[17px]',
 };
 
 export function Dropdown<T extends string = string>({
@@ -54,10 +54,8 @@ export function Dropdown<T extends string = string>({
 }: DropdownProps<T>) {
   const generatedId = useId();
   const triggerId = id ?? generatedId;
-  const labelId = `${triggerId}-label`;
   const listboxId = `${triggerId}-listbox`;
   const rootRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -125,10 +123,10 @@ export function Dropdown<T extends string = string>({
   };
 
   const borderStyle = error
-    ? 'border-error dark:border-red-500/80 focus-visible:border-error dark:focus-visible:border-red-400 focus-visible:ring-2 focus-visible:ring-error/20 dark:focus-visible:ring-red-500/25'
+    ? 'border-[#a5331f] focus-visible:border-[#a5331f]'
     : open
-      ? 'border-primary dark:border-blue-400 ring-2 ring-primary/20 dark:ring-blue-400/25'
-      : 'border-[#CBD5E1] dark:border-slate-700 hover:border-[#94A3B8] dark:hover:border-slate-500 focus-visible:border-primary dark:focus-visible:border-blue-400 focus-visible:ring-2 focus-visible:ring-primary/20 dark:focus-visible:ring-blue-400/25';
+      ? 'border-[#1c5b48] dark:border-[#2D7A62]'
+      : 'border-[#c2baa8] hover:border-[#AEA595] focus-visible:border-[#1c5b48] dark:border-[#2A332E]';
 
   return (
     <div
@@ -136,29 +134,24 @@ export function Dropdown<T extends string = string>({
       className={`${fullWidth ? 'w-full' : 'inline-flex flex-col'} relative ${className}`}
     >
       {label && (
-        <span
-          id={labelId}
-          onClick={() => {
-            if (!disabled) triggerRef.current?.focus();
-          }}
-          className="block text-[14px] font-medium text-secondary dark:text-slate-100 mb-1.5 cursor-default"
+        <label
+          htmlFor={triggerId}
+          className="mb-2 block text-[13px] font-medium tracking-[0.02em] text-[#4c4842] dark:text-[#D5D1C8]"
         >
           {label}
-        </span>
+        </label>
       )}
 
       {name && <input type="hidden" name={name} value={value ?? ''} />}
 
       <button
-        ref={triggerRef}
         type="button"
         id={triggerId}
         disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listboxId : undefined}
-        aria-labelledby={label && !ariaLabel ? `${labelId} ${triggerId}` : undefined}
-        aria-label={ariaLabel}
+        aria-label={ariaLabel ?? label}
         aria-invalid={Boolean(error)}
         onClick={() => {
           if (!disabled) setOpen((prev) => !prev);
@@ -194,13 +187,13 @@ export function Dropdown<T extends string = string>({
             if (last !== undefined) setActiveIndex(last);
           }
         }}
-        className={`inline-flex items-center justify-between gap-2 rounded-[8px] border bg-white dark:bg-slate-900/90 text-left font-medium text-secondary dark:text-slate-100 transition-colors outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-background dark:disabled:bg-slate-800/60 ${sizeClasses[size]} ${borderStyle} ${fullWidth ? 'w-full' : 'min-w-[10rem]'} ${buttonClassName}`}
+        className={`inline-flex items-center justify-between gap-2 rounded-[10px] border bg-[#f6f3ec] dark:bg-[#151A17] text-left font-medium text-[#141312] dark:text-[#f6f3ec] transition-colors outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#e5dfd2] ${sizeClasses[size]} ${borderStyle} ${fullWidth ? 'w-full' : 'min-w-[10rem]'} ${buttonClassName}`}
       >
-        <span className={`truncate ${selected ? 'text-secondary dark:text-slate-100' : 'text-muted dark:text-slate-400'}`}>
+        <span className={`truncate ${selected ? 'text-[#141312] dark:text-[#f6f3ec]' : 'text-[#6e6a62]'}`}>
           {selected?.label ?? placeholder}
         </span>
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-[#475569] dark:text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 shrink-0 text-[#6e6a62] transition-transform ${open ? 'rotate-180' : ''}`}
           aria-hidden="true"
         />
       </button>
@@ -211,7 +204,7 @@ export function Dropdown<T extends string = string>({
           id={listboxId}
           role="listbox"
           aria-labelledby={triggerId}
-          className={`absolute z-50 mt-2 max-h-64 min-w-full overflow-auto rounded-[12px] border border-border dark:border-slate-700 bg-white dark:bg-slate-900 p-1.5 shadow-lg ${
+          className={`absolute z-50 mt-1.5 max-h-64 min-w-full overflow-auto rounded-[10px] border border-[#c2baa8] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#151A17] p-1.5 shadow-xl ${
             align === 'end' ? 'right-0' : 'left-0'
           }`}
         >
@@ -225,13 +218,13 @@ export function Dropdown<T extends string = string>({
                 aria-selected={isSelected}
                 aria-disabled={option.disabled || undefined}
                 data-index={index}
-                className={`flex items-center justify-between gap-2 rounded-[8px] px-2.5 py-2 text-[13px] ${
+                className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-[13px] ${
                   option.disabled
-                    ? 'cursor-not-allowed text-[#94A3B8] dark:text-slate-500'
-                    : 'cursor-pointer text-secondary dark:text-slate-100'
-                } ${isActive && !option.disabled ? 'bg-[#EFF6FF] dark:bg-blue-950/70' : ''} ${
-                  isSelected && !isActive ? 'bg-background dark:bg-slate-800/80' : ''
-                } ${!option.disabled && !isActive ? 'hover:bg-background dark:hover:bg-slate-800' : ''}`}
+                    ? 'cursor-not-allowed text-[#6e6a62]/50'
+                    : 'cursor-pointer text-[#141312] dark:text-[#f6f3ec]'
+                } ${isActive && !option.disabled ? 'bg-[#e5dfd2] dark:bg-[#2A332E]' : ''} ${
+                  isSelected && !isActive ? 'bg-[#e4ede7]/70 dark:bg-[#1B3028]' : ''
+                } ${!option.disabled && !isActive ? 'hover:bg-[#e5dfd2] dark:hover:bg-[#2A332E]' : ''}`}
                 onMouseEnter={() => {
                   if (!option.disabled) setActiveIndex(index);
                 }}
@@ -241,15 +234,15 @@ export function Dropdown<T extends string = string>({
                 }}
               >
                 <span className="truncate">{option.label}</span>
-                {isSelected && <Check className="h-4 w-4 shrink-0 text-primary dark:text-blue-400" aria-hidden="true" />}
+                {isSelected && <Check className="h-3.5 w-3.5 shrink-0 text-[#1c5b48]" aria-hidden="true" />}
               </li>
             );
           })}
         </ul>
       )}
 
-      {error && <p className="mt-1.5 text-[13px] font-medium text-[#B91C1C] dark:text-red-400">{error}</p>}
-      {!error && helperText && <p className="mt-1.5 text-[13px] text-[#475569] dark:text-slate-400">{helperText}</p>}
+      {error && <p className="mt-1.5 text-[12px] text-[#a5331f]">{error}</p>}
+      {!error && helperText && <p className="mt-1.5 text-[12px] text-[#6e6a62]">{helperText}</p>}
     </div>
   );
 }

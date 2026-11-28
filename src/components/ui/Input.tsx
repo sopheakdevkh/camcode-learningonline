@@ -15,48 +15,44 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputId = id ?? generatedId;
 
     const borderStyle = error
-      ? 'border-error dark:border-red-500/80 focus-within:border-error dark:focus-within:border-red-400 focus-within:ring-2 focus-within:ring-error/20 dark:focus-within:ring-red-500/25'
+      ? 'border-[#a5331f] focus-within:border-[#a5331f]'
       : success
-        ? 'border-success dark:border-emerald-500/80 focus-within:border-success dark:focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-success/20 dark:focus-within:ring-emerald-500/25'
-        : 'border-[#CBD5E1] dark:border-slate-700 hover:border-[#94A3B8] dark:hover:border-slate-500 focus-within:border-primary dark:focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-primary/20 dark:focus-within:ring-blue-400/25';
+        ? 'border-[#1c5b48] focus-within:border-[#1c5b48]'
+        : 'border-[#c2baa8] hover:border-[#AEA595] focus-within:border-[#1c5b48] dark:border-[#2A332E] dark:hover:border-[#5C6B63] dark:focus-within:border-[#2D7A62]';
 
     return (
       <div className="w-full">
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-[14px] font-medium text-secondary dark:text-slate-100 mb-1.5"
+            className="mb-2 block text-[13px] font-medium tracking-[0.02em] text-[#4c4842] dark:text-[#D5D1C8]"
           >
             {label}
           </label>
         )}
         <div
-          className={`flex items-center h-11.5 rounded-[8px] border bg-white dark:bg-slate-900/90 transition-colors ${borderStyle} ${
-            props.disabled ? 'bg-background dark:bg-slate-800/60 opacity-70 cursor-not-allowed' : ''
+          className={`flex items-center h-[52px] rounded-[10px] border bg-[#f6f3ec] dark:bg-[#151A17] transition-colors duration-200 ${borderStyle} ${
+            props.disabled ? 'bg-[#e5dfd2] dark:bg-[#181E1B] opacity-70 cursor-not-allowed' : ''
           }`}
         >
           {leftAddon && (
-            <span className="pl-3.5 text-[#475569] dark:text-slate-400 flex items-center shrink-0">
-              {leftAddon}
-            </span>
+            <span className="pl-4 text-[#6e6a62] flex items-center shrink-0">{leftAddon}</span>
           )}
           <input
             ref={ref}
             id={inputId}
-            className={`w-full h-full bg-transparent px-3.5 text-[15px] text-secondary dark:text-slate-100 placeholder:text-muted dark:placeholder:text-slate-400 outline-none disabled:cursor-not-allowed ${className}`}
+            className={`w-full h-full bg-transparent px-4 text-[16px] sm:text-[17px] text-[#141312] dark:text-[#f6f3ec] placeholder:text-[#6e6a62] outline-none disabled:cursor-not-allowed ${className}`}
             aria-invalid={Boolean(error)}
             {...props}
           />
           {rightAddon && (
-            <span className="pr-3 text-[#475569] dark:text-slate-400 flex items-center shrink-0">
-              {rightAddon}
-            </span>
+            <span className="pr-3 text-[#6e6a62] flex items-center shrink-0">{rightAddon}</span>
           )}
         </div>
-        {error && <p className="mt-1.5 text-[13px] font-medium text-[#B91C1C] dark:text-red-400">{error}</p>}
-        {!error && success && <p className="mt-1.5 text-[13px] font-medium text-[#15803D] dark:text-emerald-400">{success}</p>}
+        {error && <p className="mt-1.5 text-[12px] text-[#a5331f]">{error}</p>}
+        {!error && success && <p className="mt-1.5 text-[12px] text-[#1c5b48]">{success}</p>}
         {!error && !success && helperText && (
-          <p className="mt-1.5 text-[13px] text-[#475569] dark:text-slate-400">{helperText}</p>
+          <p className="mt-1.5 text-[12px] text-[#6e6a62]">{helperText}</p>
         )}
       </div>
     );
@@ -64,4 +60,3 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 
 Input.displayName = 'Input';
-

@@ -16,7 +16,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, onPage
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <nav aria-label="Pagination" className="flex items-center justify-center gap-2 pt-6">
+    <nav aria-label="Pagination" className="flex items-center justify-center gap-2 pt-8">
       <Button
         variant="outline"
         size="sm"
@@ -27,20 +27,20 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, onPage
         {t.common.previous}
       </Button>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1.5">
         {pages.map((p) => (
           <button
             key={p}
             type="button"
             onClick={() => onPageChange(p)}
             aria-current={p === page ? 'page' : undefined}
-            className={`h-9 min-w-9 px-3 rounded-[8px] text-[14px] font-medium tabular-nums transition-colors cursor-pointer ${
+            className={`font-mono-tech h-9 min-w-9 px-3 rounded-full text-[12px] font-medium tabular-nums transition-colors cursor-pointer border ${
               p === page
-                ? 'bg-primary text-white'
-                : 'bg-white dark:bg-slate-900 text-secondary dark:text-slate-100 border border-border dark:border-slate-700 hover:bg-background dark:hover:bg-slate-800'
+                ? 'bg-[#1c5b48] text-white border-[#1c5b48] dark:bg-[#2D7A62] dark:border-[#2D7A62]'
+                : 'bg-[#efebe1] text-[#141312] border-[#ded8ca] hover:border-[#1c5b48] dark:bg-[#151A17] dark:text-[#f6f3ec] dark:border-[#2A332E]'
             }`}
           >
-            {p}
+            {String(p).padStart(2, '0')}
           </button>
         ))}
       </div>
@@ -57,4 +57,3 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, onPage
     </nav>
   );
 };
-
