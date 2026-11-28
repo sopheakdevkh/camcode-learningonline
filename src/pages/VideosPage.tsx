@@ -229,7 +229,7 @@ const VideoSectionRow: React.FC<{ index: string; title: string; videos: VideoIte
           {index}
         </span>
       </div>
-      <div className="flex lg:grid lg:grid-cols-4 gap-5 overflow-x-auto pb-2 lg:pb-0 no-scrollbar snap-x">
+      <div className="flex lg:grid lg:grid-cols-4 gap-5 overflow-x-auto lg:overflow-visible pt-1.5 pb-3 lg:pt-0 lg:pb-0 no-scrollbar snap-x">
         {videos.slice(0, 4).map((video) => (
           <div key={video.id} className="min-w-[260px] sm:min-w-[290px] lg:min-w-0 snap-start">
             <VideoCard video={video} className="h-full" />

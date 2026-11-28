@@ -7,6 +7,25 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <title>Camcode — Learning & Video Streaming Platform</title>
+    <script>
+      (function () {
+        try {
+          var root = document.documentElement;
+          root.classList.add('preload');
+          var theme = localStorage.getItem('camcodelearn_theme');
+          if (theme === 'dark') {
+            root.classList.add('dark');
+            root.setAttribute('data-theme', 'dark');
+          } else {
+            root.setAttribute('data-theme', 'light');
+          }
+          var locale = localStorage.getItem('camcodelearn_locale');
+          if (locale === 'km' || locale === 'en') {
+            root.lang = locale;
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" href="/siemreap/Siemreap.ttf" as="font" type="font/ttf" crossorigin />

@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n/I18nContext';
+import { API_CONFIG } from '@/services/apiClient';
 import { catalogService } from '@/services/catalogService';
 import type { VideoItem } from '@/types';
 
@@ -116,7 +117,7 @@ export const VideoDetailPage: React.FC = () => {
 
   const handleSaveWatchlist = () => {
     if (!isAuthenticated) {
-      navigate('/login', { state: { from: `/videos/${video.slug}` } });
+      window.location.href = `${API_CONFIG.userAppUrl}/login`;
       return;
     }
     toggleWatchlist(video.id);
@@ -251,13 +252,12 @@ export const VideoDetailPage: React.FC = () => {
           {!isAuthenticated && (
             <Alert tone="info">
               {t.videos.authWatchlistNotice}{' '}
-              <Link
-                to="/login"
-                state={{ from: `/videos/${video.slug}` }}
+              <a
+                href={`${API_CONFIG.userAppUrl}/login`}
                 className="font-semibold underline ml-1"
               >
                 {t.nav.login}
-              </Link>
+              </a>
             </Alert>
           )}
         </div>

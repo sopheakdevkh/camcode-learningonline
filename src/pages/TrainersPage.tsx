@@ -20,23 +20,23 @@ import { CardSkeleton } from '@/components/ui/Skeleton';
 // Subtle architectural plate tones derived strictly from the Havenline canvas palette
 const PORTRAIT_TONES = [
   {
-    canvas: 'bg-gradient-to-b from-[#E3ECE7] via-[#e5dfd2] to-[#efebe1] dark:from-[#1B2B24] dark:via-[#181E1B] dark:to-[#151A17]',
+    canvas: 'bg-gradient-to-b from-[#e4ede7] via-[#efebe1] to-[#f6f3ec] dark:from-[#1B2B24] dark:via-[#181E1B] dark:to-[#151A17]',
     arch: 'bg-[#1c5b48]/10 border-[#1c5b48]/20 dark:bg-[#7CD4B5]/10 dark:border-[#7CD4B5]/20',
     accent: 'text-[#1c5b48] dark:text-[#7CD4B5]',
   },
   {
-    canvas: 'bg-gradient-to-b from-[#EAE3D5] via-[#e5dfd2] to-[#efebe1] dark:from-[#23201B] dark:via-[#191B18] dark:to-[#151A17]',
+    canvas: 'bg-gradient-to-b from-[#e5dfd2] via-[#efebe1] to-[#f6f3ec] dark:from-[#23201B] dark:via-[#191B18] dark:to-[#151A17]',
     arch: 'bg-[#141312]/8 border-[#141312]/15 dark:bg-[#f6f3ec]/8 dark:border-[#f6f3ec]/15',
     accent: 'text-[#141312] dark:text-[#f6f3ec]',
   },
   {
-    canvas: 'bg-gradient-to-b from-[#1C2420] via-[#232D28] to-[#efebe1] dark:from-[#0C100E] dark:via-[#131916] dark:to-[#151A17]',
+    canvas: 'bg-gradient-to-b from-[#1f2622] via-[#27312C] to-[#f6f3ec] dark:from-[#0C100E] dark:via-[#131916] dark:to-[#151A17]',
     arch: 'bg-white/10 border-white/15',
     accent: 'text-white',
     isDarkPlate: true,
   },
   {
-    canvas: 'bg-gradient-to-b from-[#DFE7E2] via-[#E9E4DA] to-[#efebe1] dark:from-[#18241E] dark:via-[#141312] dark:to-[#151A17]',
+    canvas: 'bg-gradient-to-b from-[#e4ede7] via-[#efebe1] to-[#f6f3ec] dark:from-[#18241E] dark:via-[#141312] dark:to-[#151A17]',
     arch: 'bg-[#1c5b48]/12 border-[#1c5b48]/22 dark:bg-[#7CD4B5]/12 dark:border-[#7CD4B5]/20',
     accent: 'text-[#1c5b48] dark:text-[#7CD4B5]',
   },
@@ -205,7 +205,7 @@ export const TrainersPage: React.FC = () => {
                       {/* Smooth bottom gradient fade blending portrait into card body */}
                       <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-24 bg-gradient-to-t from-[#efebe1] via-[#efebe1]/85 to-transparent dark:from-[#151A17] dark:via-[#151A17]/85 dark:to-transparent"
+                        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-24 bg-gradient-to-t from-[#f6f3ec] via-[#f6f3ec]/85 to-transparent dark:from-[#151A17] dark:via-[#151A17]/85 dark:to-transparent"
                       />
                     </div>
 
@@ -248,7 +248,7 @@ export const TrainersPage: React.FC = () => {
                               key={course.id}
                               to={`/courses/${course.slug}`}
                               onClick={(e) => e.stopPropagation()}
-                              className="inline-flex max-w-full items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#101412] px-3 py-[5px] text-[12px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51] hover:!border-[#1c5b48] hover:!text-[#1c5b48] dark:hover:!border-[#7CD4B5] dark:hover:!text-[#7CD4B5]"
+                              className="inline-flex max-w-full items-center rounded-full border border-line bg-surface px-3 py-[5px] text-[12px] font-medium text-body transition-colors duration-[0.22s] group-hover:border-line-strong hover:!border-accent hover:!text-accent dark:border-[#2A332E] dark:bg-[#181E1B] dark:text-[#D5D1C8] dark:group-hover:border-[#495B51] dark:hover:!border-[#7CD4B5] dark:hover:!text-[#7CD4B5]"
                             >
                               <span className="truncate max-w-[200px]">
                                 {pickText(course.title)}
@@ -256,7 +256,7 @@ export const TrainersPage: React.FC = () => {
                             </Link>
                           ))}
                           {taughtCourses.length > 3 && (
-                            <span className="inline-flex items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#e5dfd2] dark:bg-[#1B221E] px-2.5 py-[5px] text-[11px] font-mono text-[#6E746F] dark:text-[#9CA39E] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51]">
+                            <span className="inline-flex items-center rounded-full border border-line bg-surface-strong px-2.5 py-[5px] text-[11px] font-mono text-muted transition-colors duration-[0.22s] group-hover:border-line-strong dark:border-[#2A332E] dark:bg-[#1B221E] dark:text-[#9CA39E] dark:group-hover:border-[#495B51]">
                               +{taughtCourses.length - 3}
                             </span>
                           )}

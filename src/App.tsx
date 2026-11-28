@@ -4,12 +4,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { I18nProvider } from '@/i18n/I18nContext';
-import {
-  ForgotPasswordPage,
-  LoginPage,
-  RegisterPage,
-  ResetPasswordPage,
-} from '@/pages/AuthPages';
+import { API_CONFIG } from '@/services/apiClient';
 import { CategoriesPage } from '@/pages/CategoriesPage';
 import { CheckoutPage } from '@/pages/CheckoutPage';
 import { CourseDetailPage } from '@/pages/CourseDetailPage';
@@ -181,6 +176,14 @@ const SmoothScrollController: React.FC = () => {
   return null;
 };
 
+const ExternalUserAuthRedirect: React.FC<{ path: string }> = ({ path }) => {
+  useEffect(() => {
+    window.location.replace(`${API_CONFIG.userAppUrl}${path}`);
+  }, [path]);
+
+  return null;
+};
+
 export function App() {
   return (
     <ThemeProvider>
@@ -211,11 +214,17 @@ export function App() {
                 {/* PUB-06 Pricing */}
                 <Route path="/pricing" element={<PricingPage />} />
 
-                {/* PUB-07 Authentication */}
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                {/* PUB-07 Auth Routes Delegated to Learner Workspace */}
+                <Route path="/login" element={<ExternalUserAuthRedirect path="/login" />} />
+                <Route path="/register" element={<ExternalUserAuthRedirect path="/register" />} />
+                <Route
+                  path="/forgot-password"
+                  element={<ExternalUserAuthRedirect path="/forgot-password" />}
+                />
+                <Route
+                  path="/reset-password"
+                  element={<ExternalUserAuthRedirect path="/reset-password" />}
+                />
 
                 {/* PUB-08 Checkout */}
                 <Route path="/checkout" element={<CheckoutPage />} />

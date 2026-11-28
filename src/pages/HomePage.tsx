@@ -12,6 +12,7 @@ import {
   Code2,
   Film,
   Globe,
+  Image as ImageIcon,
   Layers,
   Megaphone,
   Palette,
@@ -19,11 +20,14 @@ import {
   PlayCircle,
   Plus,
   ShieldCheck,
+  TrendingUp,
 } from 'lucide-react';
 import { VideoCard } from '@/components/cards/VideoCard';
+import { AnimatedNumber } from '@/components/ui/AnimatedNumber';
 import { Button } from '@/components/ui/Button';
 import { CardSkeleton } from '@/components/ui/Skeleton';
 import { useI18n } from '@/i18n/I18nContext';
+import { API_CONFIG } from '@/services/apiClient';
 import { catalogService } from '@/services/catalogService';
 import { pricingService, type PricingConfiguration } from '@/services/pricingService';
 import type {
@@ -301,6 +305,9 @@ export const HomePage: React.FC = () => {
   const kpiShowcase = [
     {
       label: pickText({ en: 'Learner satisfaction', km: 'ការពេញចិត្តរបស់អ្នកសិក្សា' }),
+      numValue: 98.2,
+      suffix: '%',
+      smallSuffix: false,
       value: '98.2',
       unit: '%',
       sub: pickText({ en: '2026 YTD across tracks', km: 'ឆមាសឆ្នាំ ២០២៦' }),
@@ -308,6 +315,9 @@ export const HomePage: React.FC = () => {
     },
     {
       label: pickText({ en: 'Active learners', km: 'អ្នកសិក្សាសកម្ម' }),
+      numValue: 48000,
+      suffix: '+',
+      smallSuffix: false,
       value: '48,000+',
       unit: '',
       sub: t.home.statsLearners,
@@ -315,6 +325,9 @@ export const HomePage: React.FC = () => {
     },
     {
       label: pickText({ en: 'Structured courses', km: 'វគ្គសិក្សាមានរចនាសម្ព័ន្ធ' }),
+      numValue: 120,
+      suffix: '+ tracks',
+      smallSuffix: true,
       value: '120+',
       unit: 'tracks',
       sub: t.home.statsCourses,
@@ -322,6 +335,9 @@ export const HomePage: React.FC = () => {
     },
     {
       label: pickText({ en: 'Streaming videos', km: 'វីដេអូសិក្សា' }),
+      numValue: 450,
+      suffix: '+ sessions',
+      smallSuffix: true,
       value: '450+',
       unit: 'sessions',
       sub: t.home.statsVideos,
@@ -329,6 +345,9 @@ export const HomePage: React.FC = () => {
     },
     {
       label: pickText({ en: 'Bilingual disciplines', km: 'មុខវិជ្ជាពីរភាសា' }),
+      numValue: null,
+      suffix: '',
+      smallSuffix: false,
       value: categories.length > 0 ? String(categories.length).padStart(2, '0') : '06',
       unit: '',
       sub: locale === 'km' ? 'EN + ខ្មែរ' : 'EN / ខ្មែរ Ready',
@@ -336,6 +355,9 @@ export const HomePage: React.FC = () => {
     },
     {
       label: pickText({ en: 'Support response', km: 'ការឆ្លើយតបជំនួយ' }),
+      numValue: null,
+      suffix: '',
+      smallSuffix: false,
       value: '24/7',
       unit: '',
       sub: pickText({ en: 'Bilingual learner desk', km: 'ក្រុមជំនួយពីរភាសា' }),
@@ -592,8 +614,8 @@ export const HomePage: React.FC = () => {
         <span aria-hidden="true" className="deco-ring bottom-[-620px] right-[-360px] size-[1180px]" />
 
         <div className="mx-auto w-full max-w-[760px] relative px-5 text-center">
-          <span className="font-mono-tech inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] text-[10.5px] uppercase tracking-[0.12em] text-[#6e6a62]">
-            <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-[#1c5b48] dark:bg-[#7CD4B5]" />
+          <span className="t-eyebrow inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-line dark:border-[#2A332E] bg-canvas dark:bg-[#151A17] text-body dark:text-[#D5D1C8]">
+            <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-accent" />
             <span>{t.home.badge}</span>
           </span>
 
@@ -635,7 +657,7 @@ export const HomePage: React.FC = () => {
                   ? 'none'
                   : 'transform 0.55s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
-              className="overflow-hidden rounded-[20px] border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] shadow-[0_28px_70px_-24px_rgba(23,28,25,0.16)] cursor-grab active:cursor-grabbing select-none"
+              className="overflow-hidden rounded-[20px] border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#151A17] shadow-[0_28px_70px_-24px_rgba(23,28,25,0.14)] cursor-grab active:cursor-grabbing select-none"
             >
               {/* Top Record Bar */}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ded8ca] dark:border-[#2A332E] px-5 py-4 md:px-7">
@@ -896,7 +918,7 @@ export const HomePage: React.FC = () => {
       <section className="surface-dots relative py-20 md:py-28 border-b border-[#ded8ca] dark:border-[#2A332E]">
         <div className="mx-auto w-full max-w-[1280px] px-5 md:px-8">
           <h2 className="sr-only">{t.home.benefitsTitle}</h2>
-          <div className="flex md:grid md:grid-cols-4 gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0 snap-x">
+          <div className="flex md:grid md:grid-cols-4 gap-5 overflow-x-auto md:overflow-visible no-scrollbar pt-1.5 pb-3 md:pt-0 md:pb-0 snap-x">
             {benefits.map((b, idx) => {
               const isAccent = idx === 3;
               if (isAccent) {
@@ -905,26 +927,26 @@ export const HomePage: React.FC = () => {
                     key={b.index}
                     data-reveal="true"
                     style={{ '--reveal-delay': `${idx * 70}ms` } as React.CSSProperties}
-                    className="surface-accent rounded-2xl p-6 min-w-[80vw] sm:min-w-[300px] md:min-w-0 snap-start flex flex-col justify-between"
+                    className="card-accent surface-accent rounded-[var(--radius-md)] p-6 md:p-7 min-w-[80vw] sm:min-w-[300px] md:min-w-0 snap-start flex flex-col justify-between"
                   >
                     <div>
                       <span aria-hidden="true" className="icon-box">
                         {b.icon}
                       </span>
-                      <h3 className="font-serif-display text-[22px] font-normal mt-5 text-white">
+                      <h3 className="font-serif-display text-[25px] leading-[1.15] tracking-[-0.015em] font-normal mt-6 text-white">
                         {b.title}
                       </h3>
-                      <p className="mt-2 text-[15px] leading-[1.55] text-white/85">{b.desc}</p>
+                      <p className="mt-2.5 text-[14.5px] leading-[1.6] text-white/85">{b.desc}</p>
                     </div>
-                    <div className="mt-5 pt-3 border-t border-white/15">
+                    <div className="mt-7">
                       <Link
                         to="/contact"
-                        className="font-mono-tech inline-flex items-center gap-2 text-[13px] font-medium text-white underline-offset-[6px] hover:underline"
+                        className="inline-flex items-center gap-2 text-[14.5px] font-semibold tracking-[-0.01em] text-white underline-offset-[6px] hover:underline tabular-nums"
                       >
-                        <Phone className="h-3.5 w-3.5" />
+                        <Phone className="h-3.5 w-3.5 opacity-90" />
                         <span>+855 23 900 123</span>
                       </Link>
-                      <p className="font-mono-tech text-[10.5px] text-white/75 mt-1">
+                      <p className="text-[12.5px] text-white/80 mt-1">
                         {pickText({ en: 'EN / ខ្មែរ · Switch anytime', km: 'EN / ខ្មែរ · ប្តូរបានគ្រប់ពេល' })}
                       </p>
                     </div>
@@ -943,7 +965,7 @@ export const HomePage: React.FC = () => {
                   key={b.index}
                   data-reveal="true"
                   style={{ '--reveal-delay': `${idx * 70}ms` } as React.CSSProperties}
-                  className="card-tile group p-6 min-w-[80vw] sm:min-w-[300px] md:min-w-0 snap-start flex flex-col justify-between"
+                  className="card-tile group p-6 md:p-7 min-w-[80vw] sm:min-w-[300px] md:min-w-0 snap-start flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-start justify-between">
@@ -954,14 +976,16 @@ export const HomePage: React.FC = () => {
                         {b.index}
                       </span>
                     </div>
-                    <h3 className="font-serif-display text-[22px] font-normal mt-5 text-[#141312] dark:text-[#f6f3ec]">
+                    <h3 className="font-serif-display text-[25px] leading-[1.15] tracking-[-0.015em] font-normal mt-6 text-[#141312] dark:text-[#f6f3ec]">
                       {b.title}
                     </h3>
-                    <p className="mt-2 text-[15px] leading-[1.55] text-[#6e6a62]">{b.desc}</p>
+                    <p className="mt-2.5 text-[14.5px] leading-[1.6] text-[#5c5852] dark:text-[#A3ACA6]">
+                      {b.desc}
+                    </p>
                   </div>
                   <Link
                     to={tileRoutes[idx].to}
-                    className="font-mono-tech mt-5 inline-block text-[11.5px] text-[#6e6a62] group-hover:text-[#1c5b48] dark:group-hover:text-[#7CD4B5] transition-colors"
+                    className="font-mono-tech mt-7 inline-block text-[12px] text-[#6e6a62] group-hover:text-[#1c5b48] dark:group-hover:text-[#7CD4B5] transition-colors"
                   >
                     {tileRoutes[idx].label}
                   </Link>
@@ -975,7 +999,7 @@ export const HomePage: React.FC = () => {
           <div className="flex justify-center">
             <Link
               to="/categories"
-              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 border border-[#141312]/30 dark:border-[#f6f3ec]/30 text-[15px] font-semibold text-[#141312] dark:text-[#f6f3ec] hover:border-[#141312] hover:bg-[#efebe1] dark:hover:bg-[#151A17] transition-colors"
+              className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 border border-[#c2baa8] dark:border-[#2A332E] bg-transparent text-[14px] font-medium text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48] hover:bg-[#f6f3ec] dark:hover:bg-[#151A17] transition-colors"
             >
               <span>
                 {pickText({
@@ -983,7 +1007,7 @@ export const HomePage: React.FC = () => {
                   km: 'មើលមុខវិជ្ជាទាំង ៦',
                 })}
               </span>
-              <ArrowUpRight className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              <ArrowUpRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
           </div>
         </div>
@@ -993,8 +1017,8 @@ export const HomePage: React.FC = () => {
       <section className="surface-paper py-20 md:py-28">
         <div className="mx-auto w-full max-w-[1280px] px-5 md:px-8">
           <div className="max-w-2xl">
-            <span className="font-mono-tech inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] text-[10.5px] uppercase tracking-[0.12em] text-[#6e6a62]">
-              <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-[#1c5b48] dark:bg-[#7CD4B5]" />
+            <span className="t-eyebrow inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-line dark:border-[#2A332E] bg-canvas dark:bg-[#151A17] text-body dark:text-[#D5D1C8]">
+              <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-accent" />
               <span>Capability</span>
             </span>
             <h2 className="text-h1 mt-5 text-[#141312] dark:text-[#f6f3ec]">
@@ -1006,14 +1030,14 @@ export const HomePage: React.FC = () => {
           </div>
 
           <div data-reveal="true" className="gradient-frame surface-dots mt-10 grid gap-3 p-3 md:mt-14 md:grid-cols-12 md:grid-rows-[auto_auto_auto] md:gap-4 md:p-5">
-            {/* Top-Left (7 cols, 2 rows): Coverage & Disciplines Network */}
+            {/* Top-Left (7 cols, 2 rows): Coverage & World Map */}
             <article className="card-cell flex flex-col p-5 md:col-span-7 md:col-start-1 md:row-span-2 md:row-start-1">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="font-mono-tech text-[10.5px] uppercase tracking-[0.09em] text-[#141312] dark:text-[#f6f3ec]">
+                  <p className="t-method text-[#141312] dark:text-[#f6f3ec]">
                     Coverage
                   </p>
-                  <p className="mt-1 text-[15px] text-[#6e6a62]">
+                  <p className="mt-1 text-[15px] text-[#4c4842] dark:text-[#A3ACA6]">
                     {pickText({
                       en: 'Six core disciplines across courses & video workshops.',
                       km: 'មុខវិជ្ជាស្នូលទាំង ៦ សម្រាប់វគ្គសិក្សា និងវីដេអូ។',
@@ -1040,10 +1064,10 @@ export const HomePage: React.FC = () => {
                       role="tab"
                       aria-selected={coverageTab === key}
                       onClick={() => setCoverageTab(key)}
-                      className={`inline-flex h-8 shrink-0 items-center justify-center rounded-full px-3 text-[12px] font-semibold transition-colors cursor-pointer ${
+                      className={`inline-flex h-9 shrink-0 items-center justify-center rounded-full px-3.5 text-[13px] font-semibold transition-colors cursor-pointer ${
                         coverageTab === key
-                          ? 'bg-[#efebe1] dark:bg-[#151A17] text-[#141312] dark:text-[#f6f3ec] shadow-xs'
-                          : 'text-[#6e6a62] hover:text-[#141312]'
+                          ? 'bg-[#f6f3ec] dark:bg-[#151A17] text-[#141312] dark:text-[#f6f3ec] shadow-[0_1px_2px_rgba(20,19,18,0.06)]'
+                          : 'text-[#4c4842] dark:text-[#A3ACA6] hover:text-[#141312] dark:hover:text-[#f6f3ec]'
                       }`}
                     >
                       {label}
@@ -1052,50 +1076,124 @@ export const HomePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Stylized Network Map SVG */}
-              <div className="mt-4 flex-1 flex items-center rounded-xl bg-[#f6f3ec]/70 dark:bg-[#181E1B]/70 border border-[#ded8ca] dark:border-[#2A332E] p-3">
-                <svg viewBox="0 0 620 230" className="w-full h-44 sm:h-52" role="img" aria-label="Curriculum network map">
-                  <g stroke="#ded8ca" strokeWidth="1" strokeDasharray="4 4">
-                    <line x1="80" y1="120" x2="220" y2="62" />
-                    <line x1="220" y1="62" x2="380" y2="95" />
-                    <line x1="380" y1="95" x2="535" y2="58" />
-                    <line x1="220" y1="62" x2="265" y2="172" />
-                    <line x1="265" y1="172" x2="455" y2="168" />
-                    <line x1="380" y1="95" x2="455" y2="168" />
+              {/* Havenline World Map SVG (Clean Landmass + Curved Green Routes) */}
+              <div className="mt-4 flex flex-1 items-center">
+                <svg
+                  viewBox="0 0 620 316"
+                  role="img"
+                  aria-label="Global bilingual curriculum network map"
+                  className="w-full"
+                >
+                  <defs>
+                    <clipPath id="camcode-map-clip">
+                      <rect width="620" height="316" />
+                    </clipPath>
+                  </defs>
+                  <path
+                    d="M361.7 225.6l-0.8 0.8l0.6 0.2l-2.4 0.1l2.6-1.1zM298.3 218.2l0.9 4.2l1.3-0.2l1.4 1.2l1.9 7.2l4.1 2.3l1.6 3.9l0.6-0.5l1.1 0.5l0.3 1.9l1.7 1.2l2.3 3.3l0.7 5.1l-1.1 5.2l-2.9 4.1l-1.9 4.4l-0.4 3.3l-3.6 0.8l-2.8 1.6l0.3 0.9l-1.7-1.3l0.1-0.6l-1.3 0.2l0.7-0.5l-0.4-0.3l-2.3 1.8l-3.7-0.9l-2.8-2.2l-0.1-1.8l-1.3-1.5l0.5-0.4l-1.8 0.4l0.5-1.1l-0.7-1.7l-0.7 1.9l-1.4 0.2l0.9-0.6l0.9-2.6l-0.2-1.9l-1 2l-2.7 2.5l-0.9-0.7h0.5l-0.4-1.2l-1.5-1.5l-0.2-1.2l-5.3-2l-9 1.5l-2.9 1.4l-1.2 1.7l-6.3 0.2l-3.4 2.1l-2.4-0.2l-2.6-1.4l0-1.4l0.6 0.2l0.6-0.9l0-2.8l-1.4-4.9l-2.9-5.5l1.1 0.6l-0.6-1.6l1.3 1.2l-1.4-3.4l1-4.6l0.2 1.1l4.5-3.3l7.4-1.9l2.3-2.7l-0.2-1.7l1.2-1.2l1.1 1.9l0.5-1.1l-0.5-1.2l2.1 0.3l-0.7-0.2l0.1-1.4l1.1-0.1l-0.4-0.5l0.9-0.1l-0.3-0.7l0.7-0.8l0.7 0.4l0.1-0.9l0.8 0.4l0.6-0.8l1 0.5l1.3 1.3l-0.3 1l0.9-1l1.8 0.7l0.4-0.6l-0.8-0.7l2.1-3.5l1.2-0.6l2.4 0.1l0-0.8l-1.3-0.9l5.3 1.8l1.6-0.6l-0.4 0.6l0.6 0.4l0.8-0.8l0.7 0.7l-0.8 1.5l-0.9 0.2l-0.9 2.8l6.6 4.3l2.2 0.5l1.5-2.8l0.1-4l0.8-1.8l-0.4-0.7l1.3-2.9l1.1 2.1zM358.7 227.7l0.7 1.3h-2.3l0.3-1l1.2-0.3zM334.5 232.9l4.7 3.7l-2.9-1.4l-2.1-2.5zM271.7 196.1l1.6-1.3l-0.7 1.4l1.1 0.9l-1.8-0.1l0.9 2l-1.2-1.1l-0.5-2.4l1.1-1.8l-0.6 2.3zM170.8 289.6l2.4 0.2l-1.4 0.5l0.6 0.6h-2.2l0.4-2.3v1zM301.5 271.9l2.2 0.8l3.2-0.7l0.2 2.8l-0.2-0.5l-0.4 2.5l-1.2-0.8l-0.7 1.7l-1.4-0.1l0.3-0.5l-1.3-0.8l-0.5-1.4l0.6 0.2l-1.3-1.9l0.1-1.4zM294.9 121.9l1.3 4l-1.8 2.6l-0.6 3.8l0.5 1l-0.9 1l-0.9 0.5l0-1.4l-1.7 2l-0.2-1l-0.9 1.1h-2l0.4-0.4l-0.7 0.1l-0.1-0.6l-0.5 0.7l0.6 0.7l-2 1.6l-1-1l0.5-1.2l-1.2-0.3l-4.2 0.9l-0.2 0.9l-2.2-0.2l0.2-0.8l3.3-2.2l5.1-0.2l1.6-3.5l0.9-0.3l-0.8 0.8l0.6 0.7l1.9-0.9l2.5-3.3l0.3-3.6l0.7-1.2l0.7 0.8l0.7-0.2l0-0.6l-0.6 0.2l0.5-0.6zM530.7 156.9l3.5 0.5l9.8 4.9l-6.2 0.6l0.9-1.4l-1.6-0.3l-1-1.5l-5.4-1.1l0-0.8l-5.2 1.5l1.4-1.5l3.4-0.9zM620 3.7l-3.5 0.7l3.5-0.5v52.6l-1.7 0.7l-2.3-1.1l0.3 1.3l-1.7 1l-2.6 3.5l-0.9 0.6l-1.2-0.6l0.4 0.9l-3.7 1.5l-0.4-0.3l1.3-1.7l-1.5-0.2l0.6 0.3l-0.6 1.1l-0.7-0.3l0.6 0.8l-3.4 0.4l1 0.6l-1.2 0.9l-1.4-0.2l1.6 1.8l-1.1 0.7l-1.3-0.2l1.6 0.4l0.1 1.1l-1.4 1.8l-1.4-0.4l1 0.7l-0.5 0.6l-1.8 0.1l1.4 0.4v1.9l-0.8 0.3l0.4 0.3l-1.2 2.9l-1.5-0.2l1.3 0.7l-0.2 1l-1.9 0.1l0.3-1l-0.7 0.7l-1.3-0.5l1.1-1.2l-1.1 0.6l-1.1-0.5l0.3-1.6l-1.8 1.1l-2.1 0.2l0.6-0.7h-1.1l-1.5-1.5l-0.2-0.8l1-0.5l-1.4 0.2l0.1-0.6l-1.3-0.7l0.9-1.5l-1 0.6l-2-2.6l0-0.6l2.2-0.6l-2.3 0.3l0.3-1l1.6-0.6l0.8 0.6l-0.2-0.7l-1.4-1.4l0.3 1.3h-0.8l-1 1.4l-0.4-0.3l-0.8-2.7l2.5-1.3l-2.2 0.9l-1.5-0.4l-0.2-1.3l3.6-2.3l-4.1 2l0.4-1.4l1.7-0.6l-2.2-0.4l-0.2-1.2l2.2-1l3.3 0.7l-1-0.5l0.4-0.4h-2.4l-2.4 0.8l1-1.9l2.7 0.4l0.7-1l-3.8 0.3l0.6-0.9h3.3l0.6-0.6l-0.8 0.2l0.3-1.2l1.3-0.1l-1.3-0.1l1.3-2.5l-3.3-0.1l-3.9-2l2.9-0.2l3.7 1.1l-1.9-1.9h1.3l-3.4-0.5l0.2-0.9l1.9-0.7l-2.9 0.3l0.5-0.7l-0.8-1.8l-0.5 0.1l0.8 1.4l-0.9 1.4l-2.8-0.3l1.3-2.6l-1.3 0.6l0.5-0.6l-0.5-0.3l1.2-0.4l0.3-1l-1.6-0.4l0.6-1.1l-1.4-0.7l0.5-0.7l-0.7-1.3l-1.7 0.1l1.7-1.4l-4-2.8l0.5-0.6l-0.4-0.6l-8.2-2.4l-3.6 0.8l-3-0.2l0.5 0.8l-2.6-0.4l-2-1.1l2.4-0.9l-2.7-0.3l-0.1-1l-1.5 0.7l-1-1l5.2-1.1l3 0.4l0.2-1l-0.9-0.5l-4.4 0.8l-2.1-0.9l0.8-0.5l-3.5-0.4l-1.1-0.7l0.1-0.8l7.5-2.6l4.4-0.5l1.8-3.2l1-0.4l-4.6 0.1l-0.6-0.6l0.4-0.7l4.3-2.4l1.3-0.2l1.2 0.7l0.1-1.3l2.7 0.3l0.4-2.5l1.3-0.8l2 0.2l4.6 2.1l-4.6-2.6l8.1-1.5l1.5 0.8l0.2 2.1l0.9-0.9l0.1-1.8l3.6 1.7l2.3-0.1l-2.4-2.2l1.6-0.1l9.1 2.9l0.7-2.9l-2.1-1.1l7.2-0.1l-8.2-0.4l-0.6-0.4l0.6-0.5l5.4-0.9l2.9 0.7l1.7-1l3.8 1.5l0.3-0.7l-1.2-1.1l9.8-0.8l5.1 0.1v1.8zM0 3.9l8.4-0.2l1.1 1.2l4.8 0.8l0.1 0.6l-2.5 0.9l-11.7 1.2l0.6 0.5l7.6-0.3l1.4 1.2l1.4-0.3l0.7-0.9l3-0.3l0.2 2l-3.2 3.3l6-3.5l3.7 1l2.3-1.6l3.2-0.1l4.9 1.4l-2.9 1.6l-2.3 0.3l-0.1 1l-3.9 0.7l1.4 0.6l-0.9 0.7h-5.1l-1.2 1l0.1 0.9l1.2 0.1l-0.1 1.5l0.8 0.7l-3.7 2l-1.1 3.5l1.5-0.7l2.4 0.7l0.3 0.5l-2.4-0.2l0.8 1l3.1 0.4l0.2 1.2l-0.5 0.6l-3.2-0.6l-3.7 0.9l1.3 0.3l0.7 1.1l2.8 0.6l0.5 3.2l-1.6-0.4l-2 1l-1-0.3l0.9 0.5l1.2-0.4l0.2 1.5l0.8-1.1h0.7l1.3 2.1l-3.2 0.8l-1.4-0.4l-0.1-1.1l-0.6 1.7l3.4 0.7l-0.5 1.3l-2.9 0.6l-3.1-1.6l-0.9 0.5l-1.5-0.8l1.3 1.1l-2.2 0.9l-2.1-0.6l1.3 0.6l-1.8 0.3l5.9-0.9l3.6 1.7l-0.4 2.6l-3.1-1.3l-1-1.7l-3.4 1l3.1-0.6l0.3 1.1l-0.8 0.7l0.9-0.2l4.5 2.2l-0.8 1.1l1.2-0.3l0.4 3l-1.5 0.2l-0.1-1.2l-0.4 1.3l-1.1-0.1l-2.1-2.4l-4.4-1.3l2.2 0.5l0.1 1l-1.6 0.7l-2.9-0.1l0.5 0.9l-1.7 0.8h4.3l-1.7 1l0.3 0.4l3.2-1.2l5.7 0.8l-2.8 1.2l0.2 0.4h-1l-3.5 2.7l-5.3 1.2h-1l0-52.6zM82.6 81.1h1.1l-2.8 1.7l-1.3 0.1l1.2 0.3l-1.6 5.7l-2.2 0.2l-0.9 1.8l-2.2-0.1l-0.8-2.1l0.6 0.1l0.2-0.9l-2.9-4.3l0.3-1.8l-1-0.3l-0.4-1.5l-0.7 1.9l-1.1-0.2l-2.4 2.4l-2.4 0.2l-2-1.4l0-1l1.3 0.1l-0.8-0.3l0.9-1.1l-2.1 1l0.1-1.1l1.7-0.6l-0.9-0.1l2.2-1.7l-1.4 0.4l-1.8 1.8l0.1-1.1l0.9-0.1l-1-0.8l0.9-0.7l-0.9 0.2l-0.2-1.1l3-0.3l0.5 0.5l1-0.6l-0.3-0.6l-0.3 0.6l-3.4 0.2l-0.6-2h3.1l-2.9-0.4l2.8-1.2l-1 0.2l0.4-0.5l3-0.4l-2.3 0.1l1.4-1.1l1.8 0.7l-0.8-0.8l0.8-0.5l-0.1-0.7l2-0.1l0.5 0.6l2.3-1.1l-0.1-0.7l-2.1 1.5l-0.9-0.5l3.6-3.1l-0.6 0.2l0.4-0.6l2.1-0.7l0.3-0.3l-0.8 0.4l-0.6-0.5l1.6-1.7l-0.4-0.4l2.1-0.6l-1.5 0.2l0.1-1.2l1.3-0.4l-0.5-0.3l0.8-0.6l2.2-0.3l-1.7-0.2l0.9-0.9l1.1 0.7l-0.5-1.2l-0.8-0.2l2-1.2l0.6 1l-0.2-1.3l2.3-0.3l-1.8-0.3l2.7-1.9l0.3-0.9l1 0.4l-0.4-0.5l1.9-1l-0.1 1.2l1.2-1.6l-0.4 1.9l1.1-0.6l-0.2-1.2l2.3 0.3l-1.1-1.3l2.3-0.4l1.2 1.2l2.2-3.2l1.9 0.5l-1.2 2.3l2.5-2.5l0.2 1.6l1.6-1.3l-0.4-0.6l1.4-0.1l0.4 0.5l-0.8 0.6l0.7 0.1l-0.2 1.3l1.1-1.9l3.6 1.4l-1.1 0.9l-2.6-0.1l1.4 0.5l0.2 0.7l3.2 0.2l0.8-0.8l1.7 0.7l-1.4 0.1l0.3 0.6l1.9 0.2l-0.6 1.1l1-0.7l3.7 0.3l8.8 4.4l0.7 1.5l-0.3 1.1l-1.9 1.5l-2.5 0.7l-7.1-1.4l-2.7-1.5l-1.8-0.3l3 2.1l-0.5 0.3l2.3 1.1l-0.5 1.6l1.1 2.7l4.2 1.7l1-0.8l-2.5-1.9l0.5-1.1l4.9 1.7l1.2-0.6l-1.1-2.3l4.2-2.6l3.2 1.5l0.6-2.7l-1.1-0.9l0.7-3l-1.5-1.2l4.4 0.6l1.4 1.8l-2 0.3l-1.1 1l2.7 1.8l2-0.5l0.4-1.8l1.7-0.3l-0.2-0.6l5.6-1.9l0.7 0.5l0.6-0.4l-0.7-0.3l2.5-1.2h1.2l-1.2 0.3l0.2 1.4l-1.1 0.5l2.8 0.2l0.9-1.1h3l3.3-1.3l0.5 0.8l-0.5 0.9l1.1 0.2l0.3-1l1.8-0.9l-1.3-1.8l1.3-0.8l5.6 1l7.4 3.5l1.1-1.8h-1l-1.6-1.9l-1.2 0.1l0.6-3.7l-1-0.2l-0.1-0.8l2.8-1.9l2-4.2l3.6 0.2l2.3 0.7l-0.4 2.2l-1.3 1.8l1.5 1.5l-0.2 6.2l1.7 1.4l-0.9 2.2l-2.9 2.3l0.3 0.8l-1.4 0.5l-0.6-0.2l0.5-0.5l-2.9-0.1l1.7 1.1l3.6 0.5l3-2.2l1.6-2.2l-0.6-2l1.2-1.3l2.3-0.3l1.4 1.5l-0.1 2l3 0.6l-2.3-0.5l0.7-1.5l-0.6-1.9l-2.8-1l-3.9 0.1l-0.3-1.9l1.3-2.4l-2.2-2.7l1-1.3l2.3-0.9l-0.3-2.2l1.4 0.8l-0.6 3.7l0.8 0.5l5.6 1l-4.4-1.9l-0.7-1.2h3.7l-1.3-0.8l1.8-0.7h1.6l3.9 2.2l2.5-0.1l-1.4 1.5l-0.2 2.1l0.1 0.6l0.6-1.5h0.7l-0.5 2.1l0.7 0.4l1.1-1.5l-1-1.7l0.6-1.8l-4.6-2.6l-0.5-3.6l10.9-1l-1.9 1.5l1.5 1l-1.2-1.1l2.8-1.2l-2.7-1.7l2.1-0.2l-2.5-0.9l2.8-1l-0.7-0.8l12.3-2.8l-2.2 0.2l0.7-0.7l4-0.1l0.8 0.2l-0.7 0.7h1.5l3.7-1.3l1.9 0.8l-0.4 0.8l0.5-1.2l-1.7-1.3l4.7 0.2l-1.1-0.4l0.1-1.6l5.2-2.7l3.5 1.3l-3.2 1l5.6 0.7l-1.8 1.5l2.3-0.1l0.8-0.7h5l1.4 0.6l0.1 0.6h1.1l0.1 1.2l1-0.7l0.5 1.3l0.6-0.1l-0.5 1.2l-1.9-1l2.1 1.4l-1.4 1.5l-11.6 5.8l-1.8 1.7l9.9-3.1l-2-0.1l1-0.9h2.2l-0.3 0.7l1.3 0.4l1.5-0.7l0.8 1.9l-0.6 1.7l0.9 0.6l-0.8-0.6l1.2-1.7l-0.6-0.6l0.9-0.2l7.6-0.1l0.8 0.4l-0.8 0.1l-0.1 0.7l0.9 0.4l6.2 0.8l1.9-1l-0.4-1.5l2-0.4l1.8 1l1.1-0.3l0.5 0.7l0.8-0.7l1.3 0.2l2.3 1.2l-0.9 0.7l1.2 0.7l-1.5 0.5l1.5 0.3v1.2l-2.7-1.1l2.1 2.1l0.5-0.5l0.4 0.6l-1 0.2l1.5 1.8l2.2 1.1l1.8-1.5l1-2.2l1.8 1.6l4.1-0.6l3.2 1.5l0.5-1.5l3.1 0.4l-1.1-1.5l1.4-0.8l-1.7 0.1l-0.1-0.5l3.3-0.8l-0.4-1l9.3 1.4l-3.5 0.6l0.5 0.3l4-0.4l-1.2 1.1l0.2-0.6l-0.8-0.3v0.9l-1.2 0.1l0.2 0.7l3.6-2l3.8 0.5l0.9 0.9l-1.8 0.6l2.8 0.6l-0.8 0.9l2.5-0.2l0.9 0.9l-0.6 0.1l1.3 0.4l5.9-0.8l4.8 0.5l2.1 1.4l-0.2 2.2l1.9 0.5l0.7 2.2l-0.8 1.1l1.2-1.1l0-1.5l2.8-1l6.3 0.7l1.8-0.7l0.7 1.4l1.8 0.5l0.5 0.9l1.6-0.1l0.8-0.9l-1.5-1.5l0.6-1.5l4.8 0.9l4.5-0.2l7.1 2.7v11.4l-2.6 1.3l-2.8-1.3l-0.9 0.1l1.4 0.7l-1.9-0.5l-2.6 0.8l2.6-0.6l0.1 0.9l2.2-0.6l0.5 1.3l0.9-0.1l0.8 1.4l-0.4 0.7l1.9 2.2l-0.7 1.2l-3.7-1.2l0.3 0.6l-7.4 2.9l-3.9 2.7l-0.5 1.2l-1.9-1.6l-3.4 0.5l-1.7 1.4l0.2-1.6l-2.4 1.6l-2.1-0.5l-3.1 5l0.7 0.9l0.5-0.6l1 0.4l-0.8 1.4l1 2.4l-0.9 0.4l-0.4-0.4l0.8-0.7l-0.7 0.1l-1 1l-0.6 1.4l0.6 1.8l-3.4 1.3l-0.1 2.5l-2.7 0.3l-0.6 2.8l-2.4 1.9l-2-9.9l0.7-3.6l1.5-1.5l0-1.2l2.5-0.5l6.5-6.3l2.8-1.2l0.9-3.6l2-0.5l-1.7-0.6l-1.8 0.4l-0.5 2.6l-1.2-0.2l-3.8 2.7l0.4-1l-1 0.1l0.9-2.4l-4.9 0.2l-5.5 5.1l-0.3 0.8l1.8 0.9l-6.6 0.8l-0.4-0.5l2-0.4l-4.5-1.4l-1.5 0.6l-0.1 0.7l-3.8-0.5l-0.8 0.7l-0.9-0.6l-5.1 0.5l-8.4 7.7l-4.2 2.9l1 0.8l1.7-0.1l-0.2 2l1.7-1.2l-0.6 0.5l0.8 0.3l-1 1l2.2-1l-0.1 1l0.4-1.9l1.9 0.2l2.7 2.3l-0.9 0.4l1.1 2.1l-1.6 3.2l-0.7 5.3l-4.2 5.7l-4.4 4.9l-1.9 1.2l-1.5 0.5l-2.1-1.3l-1.3 1.4h-0.8v0.7l-1.8 1.5l0.1 1.5l-3.7 2.2l-0.3 1.1l1.6 1.1l1.9 3.2l0.2 2.2l-0.6 1.5l-2.6 0.5l-0.7 0.9l-0.1-0.5l-1.2 0.8l-0.4-1.6l0.8-1.4l-1.1-1.8l1.4-0.3l-0.5-1.7l-1.5-0.4l-0.7 0.5l-1.2-0.8l1.5-1.1l-0.7-0.3l0.4-1.4l-1.3-0.2l-0.5-0.8l-5.5 2.6l1.2-1.3l-1-0.3l1.7-2l-0.7-1l-1.1 0.2l-3.8 3.5h-1.9l-0.4 1.5l2.2 0.8l0.3 1.7h1.1l1.7-1.3l3.3 0.9l-0.5 1.1l-2.7 0.4l-0.3 1l-0.8-0.2l-1.7 2.7l1.9 1.1l1 3.1l1.7 1.6l-3.1-0.2l1.2-0.1l2 2l-2.9 1.3l1.8-0.1l1.4 0.8l-1 0.7h0.8l-0.1 0.7h-0.8l0.3 1.6l-1.5 0.5l-1.1 2.5l-0.9-0.2l0.5 0.8l-1.2 0.4l0.8 0.2v1.1l-0.8-0.1l-0.9 1.5l-1.4 0.3l0.4 0.4l-1.2 1.2l-0.8-0.1l-0.7 1.3l-3.2 0.3l-0.6 0.9l-1.3-1.5v1.6l-5.4 1.6l-0.1 1.9h-0.7l-0.5-1.1l0.5-1h-1.5l-0.8-0.8l-2.5 1.7l-0.8-0.1l-1.8 3.7l5.5 6.3l1.1 4.9l-0.8 2.2l-3 1.6l-1.1-0.1l-0.1 1.1l-0.7-0.7l0.7 1.1l-1.3-0.7l0.6 1.1l-1.8 1.3l-0.6 0.1l0.4-2.6l-2.4-0.8l-0.1-1.1l-0.7 0.4l-0.9-2.2l-3-0.8l0.1-1.4l-1.6 0.2v2l-1.4 3.3l0.1 1.8h1l1 3.6l1.9 0.6l2.9 2.7l0.4 4.1l1.4 2.6l-1.3 0.1l-3.8-2.7l-2-6.1l-2.4-3.1h-0.7l1-6.1l-1.9-5.5l-0.1-3l-0.6 0.1l-0.9-1.6l-0.2 1.3l-1-0.1l0.3 0.5l-1.7 1.3l0-0.6l-1.2 0.3l0.1-1.1l-0.9 0.9l0.7-2.8l-1-3l-0.2 0.7l-0.7-0.9l0.9-0.1l-3-2.4l-0.7-2.8l-0.7-1l-0.9 0.5l-0.6-1.8l-0.6 0.3l0.6 2l-0.6 0.9l-0.5-1.1l-0.7 1.2l-0.1-0.9l-0.2 1l-0.6-0.7l-0.5 1l-0.2-1l-0.1 0.8l-0.8 0.1l-0.3-1.4v1l-1.8 1.1l-0.2 1.6l-2.6 1l-2 2.7l-3 2.1l-0.2 0.9l-3.4 1.5l-0.7 9.5l-0.9 0.1l-0.7 1.2l0.8 0.6l-1.7 0.2l-1.5 1.8l-1.7-1.5l-5.5-13.2l-1.2-6l-0.1-2.9l0.9-0.5l-1 0.1l0.5-1l-1.1-0.1l-0.3 2l-2.2 0.8l-3.1-2.8l2.1-0.5l0.6-1l-1.5 0.6l-1.4-0.5l-0.7-0.9l0.6-0.5l-0.9 0.4l-1.2-0.5l-1.9-3.1l-8.7 0.9l-7-1.3l-1-2.5l-3.4 1.2l-1.8-0.4l-3.8-2.2l-2.5-4.3l-0.9 0.3l-0.7-0.9l-0.5 0.9h-1.5l0.3 0.9l-0.7 0.3l0.5 0.1l1.3 3l2.3 2l-0.1 1.3l1.3 2.1l0.3-2.1l0.9 0.1l-0.4 2.9l1.4 0.6l3.5-0.3l3.9-4l0.4 3.4l1 1l2.7 0.8l1.8 2.3l-2.3 3.3l-0.6-0.3l-0.5 0.6l-0.1 2.2l-1.7 0.4l-0.7 1.4l-1.6 0.3l-0.7 1.4l-4.3 1l-0.6 1.4l-6.1 2.9l-5.2 1.2l-1.1 0.9l-2.6 0.2l-1.5-4.4l0.1-2.7l-3.3-5.4l-2.6-2.1l-1.4-5l-1.6-1l-4-7h-1l0.6-2.8l-1.3 3.4l-3-4.1l0.3 1.9l5.4 9.2l-0.5 0.3l0.3 1.5l2.1 1.7l1 5.7l1.9 1.4l2.1 5.2l0.1-0.6l2.3 1.5l3.7 3.9l-1.4 1.5l1.1-0.1l1.9 1.9l1.2 0.1l8.9-1.9l1.1-0.8l0.8 0.2l-0.3 2.5l0.6 0.1h-0.8l-0.2 1.6l-4.9 8.6l-13.3 12.2l-1.8 3.6l-0.7 2.4l1.3 1.6l-0.4 2.5l0.7 2.7l1.5 1.1l-0.3 4.1l0.7 3.2l-1.7 2.9l-4 2l-1.9 2.1l-3.1 1.7l1.2 4.8l0.4-0.2l-0.1 3.3l-0.9 1l-3.8 1.9l0.1 2.6l-0.9 2.9l-4 5.1l-5 4.2l-3.9 1.2l-3.9-0.3l-4.4 1.5l-2.8-1.1l-0.9-2.7l0.8-0.6l-0.2-1.4l-5.6-10.2l-0.8-7.1l-4.7-8l0-3.8l1.4-4.2l1.9-2.3l0.3-1.9l-1.4-3.5l0.6-1.1l-1.9-3.9l1.4-0.5l-1.5-0.1l-0.7-2.1l-3.8-3.8l-1-1.8l0.8 0.4l-1.3-1.7l1-0.4l0.1-1.2l1.1 0.3l-1.2-0.6l0.5-0.1l-0.4-1l1-3.3l-0.4-1.7h-1.2l-1.3-1.5v0.7l-2-0.3l-0.3 0.5l-0.3-0.5l0.2 0.6l-1.4 0.1l-1-0.9l0-1.4l-1.8-1.2l-1.7-0.2l0.5-0.3l-4.2 0.8l-5.7 2.4l-2-1l-3.6 0.2l-3.9 1.5l-1.3-0.4l-7.2-4.8l-1.4-1.8l0.7-0.4l-0.5 0.1l-0.9-2.3l-2.9-2.3l0.5-0.7l-0.7-0.3l0.7-0.3l-1.5 0.3l-1.4-1.2l0.5-0.2l-0.5-0.1l0-1.3l2.3-0.1l-1.7 0.2l-0.4-1.2l-1.5-1.3l1.6-1.7l0.9-3.2l-0.8-3.2l0.5-1.6l-1.1-1.5l-0.4 0.4l2.1-5.4l1.7-1.6l0.7-2.7l1.6-1l1.1-2.2l2.4-0.8l2.3-2l0.9-1.3l-0.2-2.5l0.9-2.2l4.1-2.7l1.7-3.6l1.1-0.2l1.1 1.4l2.8-0.4l1.9 0.6l5.4-2.8l4.4-0.7l2.6 0.4l2-0.8l2.5 0.4l3.1-0.9l1.2 1.2l1.2-0.3l-1.1 1.2l1.1 2l-1.8 2l0.4 0.9l3.4 1.7l5 0.9l0.9 1.9l5.6 2.1l1.8-0.9l0.2-2.7l2.6-1.4l5.6 1.8l0.6 0.9l6.6 1.3l3.5-1.5l2.6 1l2.3-0.2l1-0.8l2.5-5.6l-0.3-3.5l0.7-1l-1.4 0.5l-1.2-0.5l-3.3 1.6l-2.6-1.6l-1.1-0.1l-0.3 1.2l-1.3 0.2l-1.2-1.1l-2.5 0.1l1.2-0.7l-1.7 0.1l0.5-0.4l-0.8-1l0.3-0.6l-1.7-0.6l0.3-0.7l0.4 0.6l0.8-0.2l-0.6-0.6l0.2-1.7l-1.4 0.2l0.2-1l0.9-0.9h3.9l-0.4-0.3l1.9-0.4l-1.3-0.4l0.1-0.6l3.6 0.3l3.7-1.9l2.8-0.1l2.4 1.6l3.4 0.7h3.2l2-1l0.6-1.1l-0.6-1.6l-8.3-5.1l0.5-0.6l1.3 0.1l0.5-1.3l1-0.2l-1.3-1.2h1.3l1.2-1.3l-5.8 1.4l-1.4 1.1l0.3-0.7l-0.6 0.5l0.3 1l0.7 0.9l2-0.2l-0.4 0.7l-1.5-0.1l-2.7 1.5l-0.8-0.3l0.2-1.2l-1.8-0.6l1.8-1.5l-3-0.4l-0.5-0.6l1.8-0.1l-0.9-0.1l-0.5-1.2l0.2 1.2l-1.9 0.2l-2 1.8l-0.1 1.9l-1.1-0.3l-0.6 3.1l-1.9 2.2l2.5 3h-2.5l-2.2 1.9l1-1.1l-2.9-0.8l-2.3 0.5l1 1.2l-1.1-0.3l0.4 0.7l-2.3-1.1l1.2 2.7l-0.7-0.3l0.3 0.6l-0.9 0.3l2.5 1.5v0.9l-0.9-0.7l-0.8 0.3l0.8 0.9l-1.3-0.2l0.8 2.1l-0.8-0.6l-0.5 0.6l-0.6-1.1l-0.3 0.6l-1.4-2.3l1.3-0.9l1.8 0.7l0.4-0.4l-3.5-0.4l-0.6-1l0.6-0.3l-1.4-0.6l-1.5-1.9l0.3-3.1l-4.4-2.6l1.2 0.4l-1.4-1.2l-1.6-0.2l-2.5-3.8l-1.2 1l-0.4-2l-2.3 0.7l0.2 2.6l2 1.4l1.7 2.7l2.8 0.8l-0.4 0.7l4.4 2.7l-0.2 0.8l-2.5-1.3l-0.7 1.4l1.1 1.6l-1.9 2.1l-0.7-0.2l1-1.8l-0.9-2.1l-7.8-5l-1.7-3.2l-2.4-1l-4.6 2.8l-3.6-1.1l-1.3 0.9v2.6l-4.4 2.3l-1.8 2.6l0.9 1.5l-1.2 0.9l-0.4 1.4l-1.6 0.5l-0.8 1.2l-3.9 0.1l-2.1 1.4l-2.2-2.5l-3.6 0.5l0.5-2.8l-1-0.5l0.8-0.8l-1.2 0.6l1.4-4l0-3.1l-0.8-1.9l2.5-1.2l9.8 0.8l0.9-0.4l0.7-4.2l0.9 1.1l-1.1-1.5l0.1-1.3l-1.6-1.2l-0.1-0.7h0.7l-4.5-1.4l-0.6-0.4l0.8-0.6l-0.9-0.5l2.6-0.7l0.9 0.7l2.3-0.3l-0.8-2.3h1l0.2 0.7l2.7-0.2l-0.4-0.5l2.1-0.9l0.6-1.9l4.2-1l-1.3-0.4l1.4 0.2l-0.4-1.1l1.3-2.3l1.3-0.8h2.9l0-0.9l0.7-0.1l1.5 0.7l0.2-1.1l2 0.7l-1.9-1.7l0.5-0.6l-0.6-2.1l-0.8-0.4l0-2.5l1.8-0.2l-0.1-0.8l-1.5 0.7l0.6-0.9l3.4-1.6l-0.5 2.8l1.1 0.4l-2.3 2.3l0.5 2.5l1.9 0.2l-0.2 0.9l0.9 0.1l2.8-1.1l2.7 1.8l-1.3-1.1l0.9 0.5l6.4-2.2l1.2 0.4l-0.6-0.2l0.7 0.9h1l2.9-3l-0.9 1.6l1.1 0.1l-0.3-4.1l1.2-2.3l1.4-0.4l1.9 1.8l1.3-0.7l0.2-2.7h-1.3l-0.5-2.1l3.5-1.2l4.1 0.6l0.3-0.9l3.6-0.5l-2.6-1.1l-0.2-0.7l-3.4 0.6l0-0.5l-6.1 2.1l-0.2-1l-0.7 0.4l0.2-0.9l-2-0.5l0.3-2.6l-0.9-2.8l0.8-1.5l1.3-0.3l3.9-4.1l1.4-0.6l-0.1-1.3l-1.2-1.1h-3.9l-1.7 1.5l-0.4 1.4l0.6 1l-1.3 1.6l-3.7 1.9l-0.2 0.8h-1l0.2 0.8l-1.1 0.3l0.4 0.7l-0.8 1.7l0.2 2.3l1.2 0.3l1.8 2l-1.8 1.2zM138.9 110.2l-2.2 0.9l-1.1 1.3l-2.2 0.5l-1.3 2.6l1.3 1.9l0.3-0.7l0.2 2.5l4.5 5l-1.4 0.1l-1 2.3l0.2 2.8l4.6 2.1l3.8-0.4l-0.2-4.2l-1.2-0.7l0.2-0.7l0.6 0.2l-0.2-0.8l-0.8 0.3l-0.5-1.3l0.3-1.3l1.6 0.8l1.5-0.9l-1.7-2.1l-1.3 0.3l-0.2 1.6l-0.7-1.4l0.2-1.8l-2.2-0.9l-0.8-2.1l-1-0.5l2.2-0.3l-0.9-0.8l0.7-0.9h3.1l-0.7-0.5l0.6-2.3l-0.4-0.7h-3.8z"
+                    fill="var(--color-surface-strong)"
+                  />
+                  <g clipPath="url(#camcode-map-clip)">
+                    <path
+                      d="M254.0 162.0 Q338.0 110.0 468.0 137.0"
+                      fill="none"
+                      stroke="var(--color-accent)"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      opacity={coverageTab === 'videos' ? 0.28 : 1}
+                      className="transition-opacity duration-300"
+                      data-draw="true"
+                      style={{ '--draw-length': '230' } as React.CSSProperties}
+                    />
+                    <path
+                      d="M254.0 162.0 Q242.0 184.0 230.5 195.3"
+                      fill="none"
+                      stroke="var(--color-accent)"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      opacity={coverageTab === 'courses' ? 0.28 : 1}
+                      className="transition-opacity duration-300"
+                      data-draw="true"
+                      style={{ '--draw-length': '60' } as React.CSSProperties}
+                    />
+                    <path
+                      d="M230.5 195.3 Q145.0 104.0 59.4 99.0"
+                      fill="none"
+                      stroke="var(--color-accent)"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      opacity={coverageTab === 'videos' ? 0.28 : 1}
+                      className="transition-opacity duration-300"
+                      data-draw="true"
+                      style={{ '--draw-length': '210' } as React.CSSProperties}
+                    />
+                    <path
+                      d="M230.5 195.3 Q271.3 204.1 312.1 258.1"
+                      fill="none"
+                      stroke="var(--color-accent)"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      opacity={coverageTab === 'courses' ? 0.28 : 1}
+                      className="transition-opacity duration-300"
+                      data-draw="true"
+                      style={{ '--draw-length': '110' } as React.CSSProperties}
+                    />
+                    <path
+                      d="M276.0 140.0 Q372.0 95.0 520.7 120.9"
+                      fill="none"
+                      stroke="var(--color-accent)"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      opacity={coverageTab === 'bilingual' ? 1 : 0.85}
+                      className="transition-opacity duration-300"
+                      data-draw="true"
+                      style={{ '--draw-length': '260' } as React.CSSProperties}
+                    />
+                    <path
+                      d="M254.0 162.0 Q156.0 112.0 59.4 99.0"
+                      fill="none"
+                      stroke="var(--color-accent)"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      opacity={coverageTab === 'bilingual' ? 1 : 0.85}
+                      className="transition-opacity duration-300"
+                      data-draw="true"
+                      style={{ '--draw-length': '220' } as React.CSSProperties}
+                    />
                   </g>
-                  <path
-                    d="M80 120 Q150 45 220 62 T380 95 T535 58"
-                    fill="none"
-                    stroke="#1c5b48"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M220 62 Q240 140 265 172 T455 168"
-                    fill="none"
-                    stroke="#1c5b48"
-                    strokeOpacity="0.65"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
                   {[
-                    { x: 80, y: 120, label: 'Marketing' },
-                    { x: 220, y: 62, label: 'Software' },
-                    { x: 380, y: 95, label: 'UI/UX' },
-                    { x: 535, y: 58, label: 'Data & AI' },
-                    { x: 265, y: 172, label: 'Business' },
-                    { x: 455, y: 168, label: 'Video Studio' },
-                  ].map((node) => (
-                    <g key={node.label}>
-                      <circle cx={node.x} cy={node.y} r="7" fill="none" stroke="#1c5b48" strokeOpacity="0.3" />
-                      <circle cx={node.x} cy={node.y} r="3.5" fill="#1c5b48" />
+                    { x: 254.0, y: 162.0, label: 'Phnom Penh', anchor: 'start' as const, dx: 9, dy: 4 },
+                    { x: 230.5, y: 195.3, label: 'Singapore', anchor: 'middle' as const, dx: 0, dy: 19 },
+                    { x: 276.0, y: 140.0, label: 'Tokyo', anchor: 'start' as const, dx: 9, dy: 3 },
+                    { x: 312.1, y: 258.1, label: 'Sydney', anchor: 'middle' as const, dx: 0, dy: 19 },
+                    { x: 59.4, y: 99.0, label: 'London', anchor: 'middle' as const, dx: 0, dy: -10 },
+                    { x: 468.0, y: 137.0, label: 'San Francisco', anchor: 'end' as const, dx: -9, dy: 4 },
+                    { x: 520.7, y: 120.9, label: 'New York', anchor: 'middle' as const, dx: 0, dy: -10 },
+                  ].map((hub) => (
+                    <g key={hub.label}>
+                      <circle cx={hub.x} cy={hub.y} r="3.5" fill="var(--color-accent)" />
+                      <circle
+                        cx={hub.x}
+                        cy={hub.y}
+                        r="6.5"
+                        fill="none"
+                        stroke="var(--color-accent)"
+                        strokeOpacity="0.3"
+                        strokeWidth="1"
+                      />
                       <text
-                        x={node.x}
-                        y={node.y + 18}
-                        textAnchor="middle"
-                        className="fill-[#6e6a62] text-[11px] font-medium"
+                        x={hub.x + hub.dx}
+                        y={hub.y + hub.dy}
+                        textAnchor={hub.anchor}
+                        className="text-[16px] md:text-[11.5px]"
+                        fill="var(--color-body)"
+                        fontFamily="var(--font-body)"
+                        paintOrder="stroke"
+                        stroke="var(--color-surface)"
+                        strokeWidth="3"
+                        strokeLinejoin="round"
                       >
-                        {node.label}
+                        {hub.label}
                       </text>
                     </g>
                   ))}
@@ -1108,11 +1206,11 @@ export const HomePage: React.FC = () => {
                   <li key={cat.id} className="flex items-baseline justify-between gap-2">
                     <Link
                       to={`/courses?category=${cat.slug}`}
-                      className="font-mono-tech text-[12px] truncate text-[#141312] dark:text-[#f6f3ec] hover:text-[#1c5b48]"
+                      className="text-[13px] font-medium truncate text-[#141312] dark:text-[#f6f3ec] hover:text-[#1c5b48] dark:hover:text-[#7CD4B5] transition-colors"
                     >
                       {pickText(cat.name)}
                     </Link>
-                    <span className="font-mono-tech text-[11px] text-[#6e6a62] shrink-0 tabular-nums">
+                    <span className="t-method shrink-0 tabular-nums">
                       {coverageTab === 'videos'
                         ? `${cat.videoCount} ${t.nav.videos}`
                         : coverageTab === 'bilingual'
@@ -1124,52 +1222,73 @@ export const HomePage: React.FC = () => {
               </ul>
             </article>
 
-            {/* Top-Right (5 cols, row 1): Engagement Trace */}
+            {/* Top-Right (5 cols, row 1): Weekly Cadence Trace (Havenline Cold Chain Style) */}
             <article className="card-cell p-5 md:col-span-5 md:col-start-8 md:row-start-1">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="font-mono-tech text-[10.5px] uppercase tracking-[0.09em] text-[#141312] dark:text-[#f6f3ec]">
+                  <p className="t-method text-[#141312] dark:text-[#f6f3ec]">
                     Weekly cadence
                   </p>
-                  <p className="t-number-md mt-2 text-[#141312] dark:text-[#f6f3ec]">48,000+</p>
-                  <p className="mt-2 max-w-[18rem] text-[14px] leading-[1.5] text-[#6e6a62]">
+                  <AnimatedNumber
+                    value={48000}
+                    suffix="+"
+                    className="t-number-md mt-2 block text-[#141312] dark:text-[#f6f3ec]"
+                  />
+                  <p className="mt-2 max-w-[18rem] text-[15px] leading-[1.5] text-[#4c4842] dark:text-[#A3ACA6]">
                     {pickText({
                       en: 'Consistent weekly lesson completions across EN & Khmer tracks.',
                       km: 'ការបញ្ចប់មេរៀនប្រចាំសប្តាហ៍ជាប់លាប់លើកម្មវិធីទាំងពីរភាសា។',
                     })}
                   </p>
+                  <p className="t-method mt-2">
+                    {pickText({ en: '14-week active learner trace', km: 'វឌ្ឍនភាពសិក្សា ១៤ សប្តាហ៍' })}
+                  </p>
                 </div>
+                <TrendingUp className="h-5 w-5 shrink-0 text-[#1c5b48] dark:text-[#7CD4B5]" aria-hidden="true" />
               </div>
               <div className="mt-4">
-                <svg viewBox="0 0 280 120" className="w-full" role="img" aria-label="Engagement trend chart">
-                  <rect x="12" y="34" width="256" height="40" fill="#e4ede7" rx="6" />
-                  <line x1="12" y1="54" x2="268" y2="54" stroke="#9CA39D" strokeWidth="1" strokeDasharray="3 4" />
+                <svg viewBox="0 0 280 185" className="w-full" role="img" aria-label="14-week learner engagement trend chart">
+                  <rect x="34" y="72" width="234" height="52" fill="var(--color-accent-soft)" rx="4" />
+                  <line x1="34" y1="98" x2="268" y2="98" stroke="var(--color-line-strong)" strokeWidth="1" strokeDasharray="3 4" />
+                  <line x1="34" y1="26" x2="34" y2="150" stroke="var(--color-line)" strokeWidth="1" />
+                  <line x1="34" y1="150" x2="268" y2="150" stroke="var(--color-line)" strokeWidth="1" />
                   <path
-                    d="M12 64 L48 56 L84 60 L120 44 L156 50 L192 38 L228 43 L268 32"
+                    d="M34 108 L52 100 L70 105 L88 94 L106 99 L124 89 L142 93 L160 85 L178 90 L196 81 L214 86 L232 78 L250 82 L268 75"
                     fill="none"
-                    stroke="#1c5b48"
-                    strokeWidth="2.2"
+                    stroke="var(--color-accent)"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     data-draw="true"
-                    strokeDasharray="320"
-                    strokeDashoffset="0"
-                    style={{ '--draw-length': '320' } as React.CSSProperties}
+                    style={{ '--draw-length': '280' } as React.CSSProperties}
                   />
-                  <text x="12" y="106" fontSize="10.5" fill="#6e6a62">Week 1</text>
-                  <text x="268" y="106" fontSize="10.5" textAnchor="end" fill="#6e6a62">Week 14</text>
+                  <text x="4" y="76" fontSize="11" fill="var(--color-muted)" fontFamily="var(--font-body)">50k</text>
+                  <text x="4" y="102" fontSize="11" fill="var(--color-body)" fontFamily="var(--font-body)">40k</text>
+                  <text x="4" y="128" fontSize="11" fill="var(--color-muted)" fontFamily="var(--font-body)">30k</text>
+                  <text x="34" y="168" fontSize="11" fill="var(--color-muted)" fontFamily="var(--font-body)">Week 1</text>
+                  <text x="268" y="168" fontSize="11" textAnchor="end" fill="var(--color-muted)" fontFamily="var(--font-body)">Week 14</text>
                 </svg>
               </div>
             </article>
 
-            {/* Middle-Right (5 cols, row 2): Dark Workspace Highlight */}
-            <article className="relative overflow-hidden rounded-2xl bg-[#1C2420] text-white md:col-span-5 md:col-start-8 md:row-start-2 min-h-[168px] flex flex-col justify-end p-5">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(45,122,98,0.35),transparent_60%)]" />
-              <div className="relative z-10">
-                <p className="font-mono-tech text-[11px] uppercase tracking-[0.08em] text-[#A7E8CE]">
-                  Learner Workspace · Port 3001
+            {/* Middle-Right (5 cols, row 2): Diagonal Textured Stone Workspace Card (Havenline ph-scene) */}
+            <article className="relative overflow-hidden rounded-[var(--radius-md)] border border-[#ded8ca] dark:border-[#2A332E] md:col-span-5 md:col-start-8 md:row-start-2">
+              <div
+                role="img"
+                aria-label="Camcode Learner Workspace synced across devices"
+                className="ph-scene h-56 w-full md:h-full md:min-h-[200px]"
+              >
+                <span aria-hidden="true" className="ph-caption">
+                  <ImageIcon className="size-3.5 shrink-0" />
+                  <span className="truncate">Learner Workspace · Live</span>
+                  <span className="ph-size">640 × 360</span>
+                </span>
+              </div>
+              <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,rgb(23_32_28/0.86))] p-4">
+                <p className="text-[14px] font-medium text-[#f6f3ec]">
+                  Workspace, Port 3001
                 </p>
-                <p className="mt-1.5 text-[14px] text-white/85">
+                <p className="mt-1 text-[13px] text-[rgb(255_255_255/0.84)]">
                   {pickText({
                     en: 'Synced course progress, assessments, and watchlists across devices.',
                     km: 'រក្សាទុកវឌ្ឍនភាពសិក្សា តេស្ត និងបញ្ជីវីដេអូដោយស្វ័យប្រវត្តិ។',
@@ -1180,44 +1299,47 @@ export const HomePage: React.FC = () => {
 
             {/* Bottom-Left (3 cols, row 3): Circular Ring Gauge */}
             <article className="card-cell p-5 md:col-span-3 md:col-start-1 md:row-start-3">
-              <p className="font-mono-tech text-[10.5px] uppercase tracking-[0.09em] text-[#141312] dark:text-[#f6f3ec]">
+              <p className="t-method text-[#141312] dark:text-[#f6f3ec]">
                 Completion
               </p>
               <div className="mt-3 flex items-center gap-4">
-                <div className="relative size-[76px] shrink-0">
+                <div className="relative size-[84px] shrink-0">
                   <svg viewBox="0 0 160 160" className="size-full" role="img" aria-label="98.2 percent satisfaction">
-                    <circle cx="80" cy="80" r="68" fill="none" stroke="#e5dfd2" strokeWidth="11" />
+                    <circle cx="80" cy="80" r="70" fill="none" stroke="var(--color-surface-strong)" strokeWidth="10" />
                     <circle
                       cx="80"
                       cy="80"
-                      r="68"
+                      r="70"
                       fill="none"
-                      stroke="#1c5b48"
-                      strokeWidth="11"
+                      stroke="var(--color-accent)"
+                      strokeWidth="10"
                       strokeLinecap="round"
-                      strokeDasharray="419 427"
-                      strokeDashoffset="0"
+                      strokeDasharray="431.9 439.8"
                       transform="rotate(-90 80 80)"
                       data-draw="true"
-                      style={{ '--draw-length': '419' } as React.CSSProperties}
+                      style={{ '--draw-length': '432' } as React.CSSProperties}
                     />
                   </svg>
                 </div>
                 <div>
-                  <span className="t-number-md text-[#141312] dark:text-[#f6f3ec]">98.2 %</span>
-                  <p className="font-mono-tech text-[10.5px] text-[#6e6a62] mt-1">2026 YTD</p>
+                  <AnimatedNumber
+                    value={98.2}
+                    suffix=" %"
+                    className="t-number-md text-[#141312] dark:text-[#f6f3ec]"
+                  />
+                  <p className="t-method mt-1">2026 YTD, all tracks</p>
                 </div>
               </div>
             </article>
 
-            {/* Bottom-Center (4 cols, row 3): Verified Standards */}
+            {/* Bottom-Center (4 cols, row 3): Verified Standards (Havenline Accredited Style) */}
             <article className="card-cell p-5 md:col-span-4 md:col-start-4 md:row-start-3">
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="font-mono-tech text-[10.5px] uppercase tracking-[0.09em] text-[#141312] dark:text-[#f6f3ec]">
+                  <p className="t-method text-[#141312] dark:text-[#f6f3ec]">
                     Verified
                   </p>
-                  <p className="mt-1 text-[14.5px] text-[#6e6a62]">
+                  <p className="mt-1 text-[15px] text-[#4c4842] dark:text-[#A3ACA6]">
                     {pickText({
                       en: 'Built for structured credentials & transparent billing.',
                       km: 'វិញ្ញាបនបត្រផ្លូវការ និងការទូទាត់តម្លាភាព។',
@@ -1226,36 +1348,56 @@ export const HomePage: React.FC = () => {
                 </div>
                 <ShieldCheck className="h-5 w-5 text-[#1c5b48] dark:text-[#7CD4B5] shrink-0" />
               </div>
-              <ul className="mt-4 grid grid-cols-2 gap-2.5 text-[13px] font-medium text-[#141312] dark:text-[#f6f3ec]">
-                <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#1c5b48] dark:text-[#7CD4B5]" />
+              <ul className="mt-4 grid grid-cols-2 gap-3 text-[13px] font-medium text-[#141312] dark:text-[#f6f3ec]">
+                <li className="flex items-center gap-2.5">
+                  <svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true" className="shrink-0">
+                    <path d="M20 5 33 10v10c0 8-6 13-13 15-7-2-13-7-13-15V10z" fill="none" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M14 20l4.5 4.5L27 16" fill="none" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                   <span>Certificates</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#1c5b48] dark:text-[#7CD4B5]" />
-                  <span>KHQR & Card</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#1c5b48] dark:text-[#7CD4B5]" />
+                <li className="flex items-center gap-2.5">
+                  <svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true" className="shrink-0">
+                    <circle cx="20" cy="20" r="14" fill="none" stroke="var(--color-accent)" strokeWidth="1.6" />
+                    <circle cx="20" cy="11" r="1.4" fill="var(--color-accent)" />
+                    <circle cx="26.4" cy="13.6" r="1.4" fill="var(--color-accent)" />
+                    <circle cx="29" cy="20" r="1.4" fill="var(--color-accent)" />
+                    <circle cx="26.4" cy="26.4" r="1.4" fill="var(--color-accent)" />
+                    <circle cx="20" cy="29" r="1.4" fill="var(--color-accent)" />
+                    <circle cx="13.6" cy="26.4" r="1.4" fill="var(--color-accent)" />
+                    <circle cx="11" cy="20" r="1.4" fill="var(--color-accent)" />
+                    <circle cx="13.6" cy="13.6" r="1.4" fill="var(--color-accent)" />
+                  </svg>
                   <span>EN / ខ្មែរ UI</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#1c5b48] dark:text-[#7CD4B5]" />
+                <li className="flex items-center gap-2.5">
+                  <svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true" className="shrink-0">
+                    <rect x="8" y="11" width="24" height="18" rx="3" fill="none" stroke="var(--color-accent)" strokeWidth="1.6" />
+                    <path d="M8 17h24" fill="none" stroke="var(--color-accent)" strokeWidth="1.6" />
+                    <path d="M14 23h6" fill="none" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" />
+                  </svg>
+                  <span>KHQR & Card</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true" className="shrink-0">
+                    <path d="M20 5l3.6 2.6 4.4-.6 1.3 4.3 3.8 2.3-1.9 4 1.9 4-3.8 2.3-1.3 4.3-4.4-.6L20 30.2l-3.6-2.6-4.4.6-1.3-4.3L6.9 21.6l1.9-4-1.9-4 3.8-2.3 1.3-4.3 4.4.6z" fill="none" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M15.5 17.5l3.3 3.3 6-6" fill="none" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                   <span>Webhook Safe</span>
                 </li>
               </ul>
             </article>
 
             {/* Bottom-Right (5 cols, row 3): Pine Green CTA Card */}
-            <article className="surface-accent flex flex-col justify-between rounded-2xl p-5 md:col-span-5 md:col-start-8 md:row-start-3">
+            <article className="surface-accent flex flex-col justify-between rounded-[var(--radius-md)] p-5 md:col-span-5 md:col-start-8 md:row-start-3">
               <div>
-                <h3 className="font-serif-display text-[22px] font-normal text-white">
+                <h3 className="font-serif-display text-[24px] font-normal text-white">
                   {pickText({
                     en: 'Start a structured track',
                     km: 'ចាប់ផ្តើមមុខវិជ្ជាមានរចនាសម្ព័ន្ធ',
                   })}
                 </h3>
-                <p className="mt-2 max-w-[22rem] text-[14.5px] leading-[1.55] text-white/85">
+                <p className="mt-2 max-w-[22rem] text-[15px] leading-[1.55] text-[rgb(255_255_255/0.86)]">
                   {pickText({
                     en: 'Enroll in an individual course or explore the streaming catalog.',
                     km: 'ចុះឈ្មោះរៀនវគ្គសិក្សា ឬទស្សនាបណ្ណាល័យវីដេអូភ្លាមៗ។',
@@ -1265,10 +1407,10 @@ export const HomePage: React.FC = () => {
               <div className="mt-5">
                 <Link
                   to="/courses"
-                  className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#efebe1] px-6 text-[14px] font-semibold text-[#15463a] hover:bg-white transition-colors"
+                  className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f6f3ec] px-6 text-[15px] font-semibold text-[#15463a] hover:bg-white active:translate-y-px transition-all"
                 >
                   <span>{t.home.exploreCourses}</span>
-                  <ArrowUpRight className="h-4 w-4 swiss-arrow-shift" />
+                  <ArrowUpRight className="h-5 w-5 swiss-arrow-shift" />
                 </Link>
               </div>
             </article>
@@ -1408,18 +1550,26 @@ export const HomePage: React.FC = () => {
                         {kpi.label}
                       </p>
                       <div>
-                        <span
-                          className={`t-number-xl block ${
-                            kpi.variant === 'accent' ? 'text-white' : 'text-[#141312] dark:text-[#f6f3ec]'
-                          }`}
-                        >
-                          {kpi.value}
-                          {kpi.unit && (
-                            <span className="ml-1.5 text-[0.38em] font-medium tracking-normal">
-                              {kpi.unit}
-                            </span>
-                          )}
-                        </span>
+                        {kpi.numValue !== null ? (
+                          <AnimatedNumber
+                            value={kpi.numValue}
+                            suffix={kpi.suffix}
+                            smallSuffix={kpi.smallSuffix}
+                            inverse={kpi.variant === 'accent'}
+                            className={`t-number-xl block ${
+                              kpi.variant === 'accent' ? 'text-white' : 'text-[#141312] dark:text-[#f6f3ec]'
+                            }`}
+                          />
+                        ) : (
+                          <span className="t-number-xl block text-[#141312] dark:text-[#f6f3ec]">
+                            {kpi.value}
+                            {kpi.unit && (
+                              <span className="ml-1.5 text-[0.38em] font-medium tracking-normal">
+                                {kpi.unit}
+                              </span>
+                            )}
+                          </span>
+                        )}
                         <p
                           className={`font-mono-tech text-[11px] mt-2 ${
                             kpi.variant === 'accent' ? 'text-white/75' : 'text-[#6e6a62]'
@@ -1473,7 +1623,7 @@ export const HomePage: React.FC = () => {
                 aria-roledescription="carousel"
                 aria-label={t.home.featuredCoursesTitle}
               >
-                <div className="overflow-hidden">
+                <div className="overflow-hidden py-2 -my-2">
                   <div
                     ref={featuredTrackRef}
                     className="flex items-stretch gap-6 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
@@ -1502,9 +1652,9 @@ export const HomePage: React.FC = () => {
                           onClick={() => {
                             if (!isActive) setFeaturedCourseIdx(idx);
                           }}
-                          className={`shrink-0 w-full md:w-[680px] lg:w-[740px] grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-[22px] border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                          className={`shrink-0 w-full md:w-[680px] lg:w-[740px] grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-[22px] border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#151A17] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                             isActive
-                              ? 'opacity-100 shadow-[0_18px_42px_-24px_rgba(23,28,25,0.16)]'
+                              ? 'opacity-100 shadow-[0_18px_42px_-24px_rgba(23,28,25,0.14)]'
                               : 'opacity-45 scale-[0.97] hover:opacity-75 cursor-pointer'
                           }`}
                         >
@@ -1579,7 +1729,7 @@ export const HomePage: React.FC = () => {
                               aria-hidden="true"
                               className="pointer-events-none absolute -right-14 -bottom-14 size-44 rounded-full border border-[#1c5b48]/15 dark:border-[#7CD4B5]/15"
                             />
-                            <div className="relative inline-flex items-center gap-2 rounded-lg border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1]/92 dark:bg-[#151A17]/92 px-3.5 py-2 text-[12px] font-medium text-[#4c4842] dark:text-[#D5D1C8] shadow-xs backdrop-blur-xs">
+                            <div className="relative inline-flex items-center gap-2 rounded-lg border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec]/92 dark:bg-[#151A17]/92 px-3.5 py-2 text-[12px] font-medium text-[#4c4842] dark:text-[#D5D1C8] shadow-xs backdrop-blur-xs">
                               <span className="text-[#1c5b48] dark:text-[#7CD4B5]">
                                 {cat?.icon && categoryIcons[cat.icon] ? (
                                   categoryIcons[cat.icon]
@@ -1612,7 +1762,7 @@ export const HomePage: React.FC = () => {
                           (i) => (i - 1 + featuredCourses.length) % featuredCourses.length,
                         )
                       }
-                      className="grid size-10 place-items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48] dark:hover:border-[#7CD4B5] cursor-pointer transition-colors"
+                      className="grid size-10 place-items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#151A17] text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48] dark:hover:border-[#7CD4B5] cursor-pointer transition-colors"
                     >
                       <ArrowLeft className="h-4 w-4" />
                     </button>
@@ -1622,7 +1772,7 @@ export const HomePage: React.FC = () => {
                       onClick={() =>
                         setFeaturedCourseIdx((i) => (i + 1) % featuredCourses.length)
                       }
-                      className="grid size-10 place-items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48] dark:hover:border-[#7CD4B5] cursor-pointer transition-colors"
+                      className="grid size-10 place-items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#151A17] text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48] dark:hover:border-[#7CD4B5] cursor-pointer transition-colors"
                     >
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -1654,7 +1804,7 @@ export const HomePage: React.FC = () => {
               </Link>
             </div>
 
-            <div className="flex md:grid md:grid-cols-3 gap-5 overflow-x-auto pb-2 md:pb-0 no-scrollbar snap-x">
+            <div className="flex md:grid md:grid-cols-3 gap-5 overflow-x-auto md:overflow-visible pt-1.5 pb-3 md:pt-0 md:pb-0 no-scrollbar snap-x">
               {popularVideos.map((video) => (
                 <div key={video.id} className="min-w-[280px] sm:min-w-[310px] md:min-w-0 snap-start">
                   <VideoCard video={video} className="h-full" />
@@ -1741,65 +1891,66 @@ export const HomePage: React.FC = () => {
       )}
 
       {/* 9. MEMBERSHIP BASIS — Horizontal Stacked Plan Rows (Havenline "Two ways to buy freight") */}
-      <section className="surface-lanes py-20 md:py-28">
+      <section className="surface-lanes py-20 md:py-28 border-t border-[#ded8ca] dark:border-[#2A332E]">
         <div className="mx-auto w-full max-w-[1280px] px-5 md:px-8">
           <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
             <div className="max-w-xl">
-              <span className="font-mono-tech inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] text-[10.5px] uppercase tracking-[0.12em] text-[#6e6a62]">
-                <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-[#1c5b48] dark:bg-[#7CD4B5]" />
+              <span
+                data-reveal="true"
+                className="t-eyebrow inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-line dark:border-[#2A332E] bg-canvas dark:bg-[#151A17] text-body dark:text-[#D5D1C8]"
+              >
+                <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-accent" />
                 <span>Membership basis</span>
               </span>
-              <h2 className="text-h1 mt-5 text-[#141312] dark:text-[#f6f3ec]">
+              <h2 data-reveal="true" className="text-h1 mt-5 text-[#141312] dark:text-[#f6f3ec]">
                 {t.home.pricingPreviewTitle}
               </h2>
-              <p className="mt-4 text-[18px] leading-[1.6] text-[#6e6a62]">
+              <p data-reveal="true" className="mt-4 text-[18px] leading-[1.6] text-[#4c4842] dark:text-[#A3ACA6]">
                 {t.home.pricingPreviewSub}
               </p>
             </div>
 
             {/* Havenline Switch Control (Monthly <-> Yearly) */}
-            <div className="inline-flex items-center gap-4">
-              <span
-                className={`text-[15px] ${
-                  homeBilling === 'monthly'
-                    ? 'font-semibold text-[#141312] dark:text-[#f6f3ec]'
-                    : 'text-[#6e6a62]'
-                }`}
-              >
-                {t.pricing.monthly}
-              </span>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={homeBilling === 'yearly'}
-                aria-label="Toggle billing cycle"
-                onClick={() =>
-                  setHomeBilling((b) => (b === 'monthly' ? 'yearly' : 'monthly'))
-                }
-                className={`relative h-[30px] w-14 shrink-0 rounded-full transition-colors duration-300 cursor-pointer ${
-                  homeBilling === 'yearly'
-                    ? 'bg-[#1c5b48] dark:bg-[#2D7A62]'
-                    : 'bg-[#D6D0C4] dark:bg-[#2A332E]'
-                }`}
-              >
+            <div data-reveal="true" className="w-full md:w-auto">
+              <div className="inline-flex items-center gap-4">
                 <span
-                  aria-hidden="true"
-                  className="absolute left-[3px] top-1/2 -mt-3 size-6 rounded-full bg-[#efebe1] shadow-sm transition-transform duration-300"
-                  style={{
-                    transform:
-                      homeBilling === 'yearly' ? 'translateX(26px)' : 'translateX(0px)',
-                  }}
-                />
-              </button>
-              <span
-                className={`text-[15px] ${
-                  homeBilling === 'yearly'
-                    ? 'font-semibold text-[#141312] dark:text-[#f6f3ec]'
-                    : 'text-[#6e6a62]'
-                }`}
-              >
-                {t.pricing.yearly} · {t.pricing.saveYearly}
-              </span>
+                  className={`text-[15px] ${
+                    homeBilling === 'monthly'
+                      ? 'font-semibold text-[#141312] dark:text-[#f6f3ec]'
+                      : 'font-normal text-[#6e6a62]'
+                  }`}
+                >
+                  {t.pricing.monthly}
+                </span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={homeBilling === 'yearly'}
+                  aria-label="Toggle billing cycle"
+                  onClick={() =>
+                    setHomeBilling((b) => (b === 'monthly' ? 'yearly' : 'monthly'))
+                  }
+                  className="relative h-[30px] w-14 shrink-0 rounded-full bg-[#e5dfd2] dark:bg-[#2A332E] transition-colors duration-300 cursor-pointer"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-[3px] top-1/2 -mt-3 size-6 rounded-full bg-[#f6f3ec] shadow-[0_1px_2px_rgba(20,19,18,0.12)] transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    style={{
+                      transform:
+                        homeBilling === 'yearly' ? 'translateX(26px)' : 'translateX(0px)',
+                    }}
+                  />
+                </button>
+                <span
+                  className={`text-[15px] ${
+                    homeBilling === 'yearly'
+                      ? 'font-semibold text-[#141312] dark:text-[#f6f3ec]'
+                      : 'font-normal text-[#6e6a62]'
+                  }`}
+                >
+                  {t.pricing.yearly} · {t.pricing.saveYearly}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -1813,27 +1964,27 @@ export const HomePage: React.FC = () => {
                   key={plan.id}
                   data-reveal="true"
                   style={{ '--reveal-delay': `${idx * 70}ms` } as React.CSSProperties}
-                  className={`grid items-center gap-6 rounded-[20px] bg-[#efebe1] dark:bg-[#151A17] p-6 md:grid-cols-[1.05fr_1.3fr_auto] md:gap-10 md:p-8 border ${
+                  className={`grid items-center gap-6 rounded-[var(--radius-lg)] bg-[#f6f3ec] dark:bg-[#151A17] p-6 md:grid-cols-[1.05fr_1.3fr_auto] md:gap-10 md:p-8 border transition-colors duration-200 ${
                     plan.highlighted
-                      ? 'border-[#1c5b48] dark:border-[#2D7A62] ring-1 ring-[#1c5b48]/20'
-                      : 'border-[#ded8ca] dark:border-[#2A332E]'
+                      ? 'border-[#1c5b48] dark:border-[#2D7A62]'
+                      : 'border-[#ded8ca] dark:border-[#2A332E] hover:border-[#c2baa8]'
                   }`}
                 >
                   <div className="flex items-start gap-5">
                     {/* Geometric Line-Art Plan Icon */}
                     <svg
-                      width="52"
-                      height="52"
+                      width="56"
+                      height="56"
                       viewBox="0 0 64 64"
                       aria-hidden="true"
-                      className="shrink-0 text-[#6e6a62]"
+                      className="shrink-0"
                     >
                       {idx === 0 ? (
                         <>
                           <path
                             d="M12 22 32 12l20 10v20L32 52 12 42z"
                             fill="none"
-                            stroke="currentColor"
+                            stroke="var(--color-line-strong)"
                             strokeWidth="1.5"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -1841,7 +1992,7 @@ export const HomePage: React.FC = () => {
                           <path
                             d="M12 22l20 10 20-10M32 32v20"
                             fill="none"
-                            stroke="currentColor"
+                            stroke="var(--color-line-strong)"
                             strokeWidth="1.5"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -1852,7 +2003,7 @@ export const HomePage: React.FC = () => {
                           <path
                             d="M10 40 32 30l22 10-22 10z"
                             fill="none"
-                            stroke="currentColor"
+                            stroke="var(--color-line-strong)"
                             strokeWidth="1.5"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -1860,7 +2011,7 @@ export const HomePage: React.FC = () => {
                           <path
                             d="M10 30 32 20l22 10"
                             fill="none"
-                            stroke="currentColor"
+                            stroke="var(--color-line-strong)"
                             strokeWidth="1.5"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -1868,7 +2019,7 @@ export const HomePage: React.FC = () => {
                           <path
                             d="M10 20 32 10l22 10"
                             fill="none"
-                            stroke="currentColor"
+                            stroke="var(--color-line-strong)"
                             strokeWidth="1.5"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -1876,42 +2027,47 @@ export const HomePage: React.FC = () => {
                         </>
                       ) : (
                         <>
-                          <line x1="14" y1="16" x2="32" y2="32" stroke="currentColor" strokeWidth="1.5" />
-                          <line x1="48" y1="14" x2="32" y2="32" stroke="currentColor" strokeWidth="1.5" />
-                          <line x1="32" y1="32" x2="14" y2="46" stroke="currentColor" strokeWidth="1.5" />
-                          <line x1="32" y1="32" x2="50" y2="44" stroke="currentColor" strokeWidth="1.5" />
-                          <circle cx="14" cy="16" r="3" fill="var(--surface)" stroke="currentColor" strokeWidth="1.5" />
-                          <circle cx="48" cy="14" r="3" fill="var(--surface)" stroke="currentColor" strokeWidth="1.5" />
-                          <circle cx="32" cy="32" r="3.5" fill="var(--surface)" stroke="currentColor" strokeWidth="1.5" />
-                          <circle cx="14" cy="46" r="3" fill="var(--surface)" stroke="currentColor" strokeWidth="1.5" />
-                          <circle cx="50" cy="44" r="3" fill="var(--surface)" stroke="currentColor" strokeWidth="1.5" />
+                          <line x1="14" y1="16" x2="32" y2="32" fill="none" stroke="var(--color-line-strong)" strokeWidth="1.5" strokeLinecap="round" />
+                          <line x1="48" y1="13" x2="32" y2="32" fill="none" stroke="var(--color-line-strong)" strokeWidth="1.5" strokeLinecap="round" />
+                          <line x1="32" y1="32" x2="12" y2="46" fill="none" stroke="var(--color-line-strong)" strokeWidth="1.5" strokeLinecap="round" />
+                          <line x1="32" y1="32" x2="50" y2="44" fill="none" stroke="var(--color-line-strong)" strokeWidth="1.5" strokeLinecap="round" />
+                          <line x1="12" y1="46" x2="33" y2="54" fill="none" stroke="var(--color-line-strong)" strokeWidth="1.5" strokeLinecap="round" />
+                          <line x1="50" y1="44" x2="33" y2="54" fill="none" stroke="var(--color-line-strong)" strokeWidth="1.5" strokeLinecap="round" />
+                          <line x1="14" y1="16" x2="12" y2="46" fill="none" stroke="var(--color-line-strong)" strokeWidth="1.5" strokeLinecap="round" />
+                          <line x1="48" y1="13" x2="50" y2="44" fill="none" stroke="var(--color-line-strong)" strokeWidth="1.5" strokeLinecap="round" />
+                          <circle cx="14" cy="16" r="3" fill="var(--color-canvas)" stroke="var(--color-line-strong)" strokeWidth="1.5" />
+                          <circle cx="48" cy="13" r="3" fill="var(--color-canvas)" stroke="var(--color-line-strong)" strokeWidth="1.5" />
+                          <circle cx="32" cy="32" r="3" fill="var(--color-canvas)" stroke="var(--color-line-strong)" strokeWidth="1.5" />
+                          <circle cx="12" cy="46" r="3" fill="var(--color-canvas)" stroke="var(--color-line-strong)" strokeWidth="1.5" />
+                          <circle cx="50" cy="44" r="3" fill="var(--color-canvas)" stroke="var(--color-line-strong)" strokeWidth="1.5" />
+                          <circle cx="33" cy="54" r="3" fill="var(--color-canvas)" stroke="var(--color-line-strong)" strokeWidth="1.5" />
                         </>
                       )}
                     </svg>
 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-3">
-                        <h3 className="font-serif-display text-[24px] font-normal text-[#141312] dark:text-[#f6f3ec]">
+                        <h3 className="font-serif-display text-[23px] font-normal text-[#141312] dark:text-[#f6f3ec]">
                           {pickText(plan.name)}
                         </h3>
                         {plan.highlighted && (
-                          <span className="inline-flex items-center rounded-full bg-[#e4ede7] dark:bg-[#1B3028] px-3 py-1 font-mono-tech text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[#1c5b48] dark:text-[#7CD4B5]">
+                          <span className="inline-flex items-center rounded-full bg-[#e4ede7] dark:bg-[#1B3028] px-3 py-1 font-mono-tech text-[11px] font-semibold uppercase tracking-[0.12em] text-[#1c5b48] dark:text-[#7CD4B5]">
                             {t.pricing.mostPopular}
                           </span>
                         )}
                       </div>
-                      <div className="mt-2">
+                      <div className="mt-2 min-h-[56px]">
                         <p className="text-[19px] font-semibold tabular-nums text-[#141312] dark:text-[#f6f3ec]">
-                          ${displayPrice.toFixed(2)}
+                          {displayPrice === 0 ? t.common.free : `$${displayPrice.toFixed(2)}`}
                           {displayPrice > 0 && (
-                            <span className="text-[13px] font-normal text-[#6e6a62] ml-1">
-                              {homeBilling === 'monthly'
-                                ? t.pricing.perMonth
-                                : t.pricing.perYear}
+                            <span className="text-[14px] font-normal text-[#6e6a62] ml-1">
+                              / {homeBilling === 'monthly'
+                                ? t.pricing.perMonth.replace(/^\//, '').trim()
+                                : t.pricing.perYear.replace(/^\//, '').trim()}
                             </span>
                           )}
                         </p>
-                        <p className="font-mono-tech text-[11px] text-[#6e6a62] mt-1">
+                        <p className="t-method mt-1">
                           {pickText(plan.tagline)}
                         </p>
                       </div>
@@ -1922,8 +2078,8 @@ export const HomePage: React.FC = () => {
                     {plan.features.slice(0, 4).map((f, fIdx) => (
                       <li
                         key={fIdx}
-                        className={`flex items-start gap-2 text-[14.5px] leading-[1.5] ${
-                          f.included ? 'text-[#6e6a62]' : 'text-[#6e6a62]/45 line-through'
+                        className={`flex items-start gap-2 text-[15px] leading-[1.5] ${
+                          f.included ? 'text-[#4c4842] dark:text-[#D5D1C8]' : 'text-[#6e6a62]/45 line-through'
                         }`}
                       >
                         <Check
@@ -1939,24 +2095,27 @@ export const HomePage: React.FC = () => {
                   </ul>
 
                   <div className="md:justify-self-end">
-                    <Link
-                      to={
-                        plan.tier === 'free'
-                          ? '/register'
-                          : `/checkout?type=subscription&plan=${plan.tier}&billing=${homeBilling}`
-                      }
-                      className="block"
-                    >
-                      <Button
-                        variant={plan.highlighted ? 'primary' : 'outline'}
-                        className="w-full md:w-auto min-h-12 px-6"
-                        rightIcon={<ArrowUpRight className="h-4 w-4" />}
+                    {plan.tier === 'free' ? (
+                      <a
+                        href={`${API_CONFIG.userAppUrl}/register`}
+                        className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full text-[15px] font-semibold transition-all duration-200 px-6 w-full md:w-auto whitespace-nowrap border border-[#c2baa8] dark:border-[#2A332E] bg-transparent text-[#141312] dark:text-[#f6f3ec] hover:border-[#141312] hover:bg-[#efebe1] dark:hover:bg-[#181E1B]"
                       >
-                        {plan.tier === 'free'
-                          ? t.pricing.getStartedFree
-                          : t.pricing.subscribeNow}
-                      </Button>
-                    </Link>
+                        <span>{t.pricing.getStartedFree}</span>
+                        <ArrowUpRight className="h-4 w-4 swiss-arrow-shift" />
+                      </a>
+                    ) : (
+                      <Link
+                        to={`/checkout?type=subscription&plan=${plan.tier}&billing=${homeBilling}`}
+                        className={`group inline-flex min-h-12 items-center justify-center gap-2 rounded-full text-[15px] font-semibold transition-all duration-200 px-6 w-full md:w-auto whitespace-nowrap ${
+                          plan.highlighted
+                            ? 'bg-[#1c5b48] text-white hover:bg-[#15463a] dark:bg-[#2D7A62] dark:hover:bg-[#23634F] active:translate-y-px'
+                            : 'border border-[#c2baa8] dark:border-[#2A332E] bg-transparent text-[#141312] dark:text-[#f6f3ec] hover:border-[#141312] hover:bg-[#efebe1] dark:hover:bg-[#181E1B]'
+                        }`}
+                      >
+                        <span>{t.pricing.subscribeNow}</span>
+                        <ArrowUpRight className="h-4 w-4 swiss-arrow-shift" />
+                      </Link>
+                    )}
                   </div>
                 </article>
               );
@@ -1971,8 +2130,8 @@ export const HomePage: React.FC = () => {
           <div className="mx-auto w-full max-w-[1280px] px-5 md:px-8">
             <div className="surface-dots rounded-[24px] border border-[#ded8ca] dark:border-[#2A332E] p-6 md:p-12">
               <div className="max-w-2xl">
-                <span className="font-mono-tech inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] text-[10.5px] uppercase tracking-[0.12em] text-[#6e6a62]">
-                  <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-[#1c5b48] dark:bg-[#7CD4B5]" />
+                <span className="t-eyebrow inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-line dark:border-[#2A332E] bg-canvas dark:bg-[#151A17] text-body dark:text-[#D5D1C8]">
+                  <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-accent" />
                   <span>Questions</span>
                 </span>
                 <h2 className="text-h1 mt-5 text-[#141312] dark:text-[#f6f3ec]">
@@ -2117,7 +2276,7 @@ export const HomePage: React.FC = () => {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   to="/courses"
-                  className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#efebe1] px-6 text-[15px] font-semibold text-[#15463a] hover:bg-white transition-colors w-full sm:w-auto"
+                  className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f6f3ec] px-6 text-[15px] font-semibold text-[#1c5b48] hover:bg-white transition-colors w-full sm:w-auto"
                 >
                   <span>{t.home.exploreCourses}</span>
                   <ArrowUpRight className="h-5 w-5 swiss-arrow-shift" />

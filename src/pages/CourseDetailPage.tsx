@@ -138,7 +138,7 @@ export const CourseDetailPage: React.FC = () => {
         label: t.courseDetail.enrollFree,
         onClick: () => {
           if (!isAuthenticated) {
-            navigate('/login', { state: { from: `/courses/${course.slug}` } });
+            window.location.href = `${API_CONFIG.userAppUrl}/login`;
             return;
           }
           enrollFreeCourse(course.id);
@@ -152,9 +152,7 @@ export const CourseDetailPage: React.FC = () => {
       label: t.courseDetail.buyCourse,
       onClick: () => {
         if (!isAuthenticated) {
-          navigate('/login', {
-            state: { from: `/checkout?type=course&slug=${course.slug}` },
-          });
+          window.location.href = `${API_CONFIG.userAppUrl}/login`;
           return;
         }
         navigate(`/checkout?type=course&slug=${course.slug}`);

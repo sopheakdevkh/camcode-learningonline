@@ -67,7 +67,7 @@ export const PublicFooter: React.FC = () => {
   };
 
   return (
-    <footer className="relative z-10 border-t border-[#ded8ca] dark:border-[#2A332E] bg-[#EFECE5] dark:bg-[#141916] pt-16 md:pt-20 transition-colors">
+    <footer className="relative z-10 border-t border-line dark:border-[#2A332E] bg-surface dark:bg-[#141916] pt-16 md:pt-20 transition-colors">
       <div className="mx-auto w-full max-w-[1280px] px-5 md:px-8">
         {/* 4-Column Top Grid: Col 1 (2fr) Brand+Newsletter | Col 2-4 (1fr each) Sitemap | Row 2 Col 1 Get in Touch */}
         <div className="grid gap-x-8 gap-y-10 md:grid-cols-[2fr_1fr_1fr_1fr]">

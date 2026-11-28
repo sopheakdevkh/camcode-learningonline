@@ -16,17 +16,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#1c5b48] text-white border border-[#1c5b48] hover:bg-[#15463a] hover:border-[#15463a] active:bg-[#0F2E24] dark:bg-[#2D7A62] dark:border-[#2D7A62] dark:hover:bg-[#23634F] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/40 focus-visible:ring-offset-2',
+    'bg-[#1c5b48] text-white border border-[#1c5b48] hover:bg-[#15463a] hover:border-[#15463a] active:bg-[#11382e] dark:bg-[#2D7A62] dark:border-[#2D7A62] dark:hover:bg-[#23634F] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/40 focus-visible:ring-offset-2',
   secondary:
-    'bg-[#e5dfd2] text-[#141312] border border-[#ded8ca] hover:border-[#1c5b48] hover:bg-[#E2DDD1] dark:bg-[#181E1B] dark:text-[#f6f3ec] dark:border-[#2A332E] dark:hover:border-[#2D7A62] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/30',
+    'bg-[#e5dfd2] text-[#141312] border border-[#ded8ca] hover:border-[#1c5b48] hover:bg-[#ddd6c7] dark:bg-[#181E1B] dark:text-[#f6f3ec] dark:border-[#2A332E] dark:hover:border-[#2D7A62] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/30',
   outline:
-    'bg-[#efebe1] text-[#141312] border border-[#ded8ca] hover:border-[#1c5b48] hover:bg-[#e5dfd2]/55 dark:bg-[#151A17] dark:text-[#f6f3ec] dark:border-[#2A332E] dark:hover:border-[#2D7A62] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/30',
+    'bg-[#f6f3ec] text-[#141312] border border-[#ded8ca] hover:border-[#1c5b48] hover:bg-[#efebe1] dark:bg-[#151A17] dark:text-[#f6f3ec] dark:border-[#2A332E] dark:hover:border-[#2D7A62] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/30',
   ghost:
-    'bg-transparent text-[#141312] border border-transparent hover:bg-[#e5dfd2]/70 dark:text-[#f6f3ec] dark:hover:bg-[#181E1B] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/25',
+    'bg-transparent text-[#141312] border border-transparent hover:bg-[#efebe1] dark:text-[#f6f3ec] dark:hover:bg-[#181E1B] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/25',
   danger:
     'bg-[#a5331f] text-white border border-[#a5331f] hover:bg-[#991B1B] active:bg-[#7F1D1D] focus-visible:ring-2 focus-visible:ring-[#a5331f]/40 focus-visible:ring-offset-2',
   success:
-    'bg-[#1c5b48] text-white border border-[#1c5b48] hover:bg-[#15463a] active:bg-[#0F2E24] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/40 focus-visible:ring-offset-2',
+    'bg-[#1c5b48] text-white border border-[#1c5b48] hover:bg-[#15463a] active:bg-[#11382e] focus-visible:ring-2 focus-visible:ring-[#1c5b48]/40 focus-visible:ring-offset-2',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -34,6 +34,20 @@ const sizeClasses: Record<ButtonSize, string> = {
   md: 'h-11 px-5 text-[14px]',
   lg: 'h-12 px-6 text-[14px]',
 };
+
+export function buttonClasses({
+  variant = 'primary',
+  size = 'md',
+  fullWidth = false,
+  className = '',
+}: {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  fullWidth?: boolean;
+  className?: string;
+} = {}): string {
+  return `group swiss-btn inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-[-0.01em] whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${variantClasses[variant]} ${sizeClasses[size]} ${fullWidth ? 'w-full' : ''} ${className}`;
+}
 
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',

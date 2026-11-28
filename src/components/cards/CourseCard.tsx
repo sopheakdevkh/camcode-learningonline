@@ -65,9 +65,9 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
       <article className="card-note group flex h-full flex-col justify-between p-5 md:p-6">
         <div>
           {/* Inset Warm-Stone Blueprint Frame */}
-          <div className="relative h-40 w-full rounded-xl bg-[#e5dfd2]/75 dark:bg-[#181E1B] border border-[#ded8ca] dark:border-[#2A332E] swiss-blueprint-bg overflow-hidden p-3.5 flex flex-col justify-between transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#3E4D45]">
+          <div className="relative h-40 w-full rounded-xl bg-[#e5dfd2]/75 dark:bg-[#181E1B] border border-[#ded8ca] dark:border-[#2A332E] swiss-blueprint-bg overflow-hidden p-3.5 flex flex-col justify-between transition-colors duration-[0.22s] group-hover:border-[#c2baa8] dark:group-hover:border-[#3E4D45]">
             <div className="flex items-center justify-between gap-2">
-              <span className="font-mono-tech inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#efebe1] dark:bg-[#151A17] border border-[#ded8ca] dark:border-[#2A332E] text-[10px] font-medium uppercase tracking-[0.06em] text-[#141312] dark:text-[#f6f3ec] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6]">
+              <span className="font-mono-tech inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#efebe1] dark:bg-[#151A17] border border-[#ded8ca] dark:border-[#2A332E] text-[10px] font-medium uppercase tracking-[0.06em] text-[#141312] dark:text-[#f6f3ec] transition-colors duration-[0.22s] group-hover:border-[#c2baa8]">
                 <span className="swiss-dot" aria-hidden="true" />
                 {category ? pickText(category.name) : course.thumbnailLabel}
               </span>
@@ -78,7 +78,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
                     : t.marketplace.enrolledBadge}
                 </Badge>
               ) : (
-                <span className="font-mono-tech inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#efebe1] dark:bg-[#151A17] border border-[#ded8ca] dark:border-[#2A332E] text-[11px] font-semibold tabular-nums text-[#141312] dark:text-[#f6f3ec] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6]">
+                <span className="font-mono-tech inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#efebe1] dark:bg-[#151A17] border border-[#ded8ca] dark:border-[#2A332E] text-[11px] font-semibold tabular-nums text-[#141312] dark:text-[#f6f3ec] transition-colors duration-[0.22s] group-hover:border-[#c2baa8]">
                   <Star className="h-3 w-3 fill-[#1c5b48] text-[#1c5b48] dark:fill-[#7CD4B5] dark:text-[#7CD4B5]" />
                   {course.rating.toFixed(1)}
                 </span>
@@ -92,10 +92,10 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
             </div>
 
             <div className="flex items-center justify-between font-mono-tech text-[10px] uppercase tracking-[0.08em] text-[#6e6a62] dark:text-[#A3ACA6]">
-              <span className="px-2.5 py-0.5 rounded-full bg-[#efebe1]/95 dark:bg-[#151A17]/95 border border-[#ded8ca] dark:border-[#2A332E] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6]">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#efebe1]/95 dark:bg-[#151A17]/95 border border-[#ded8ca] dark:border-[#2A332E] transition-colors duration-[0.22s] group-hover:border-[#c2baa8]">
                 {difficultyLabel}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#efebe1]/95 dark:bg-[#151A17]/95 border border-[#ded8ca] dark:border-[#2A332E] tabular-nums transition-colors duration-[0.22s] group-hover:border-[#B9B3A6]">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#efebe1]/95 dark:bg-[#151A17]/95 border border-[#ded8ca] dark:border-[#2A332E] tabular-nums transition-colors duration-[0.22s] group-hover:border-[#c2baa8]">
                 {formatNumber(course.durationHours)} {t.common.hours}
               </span>
             </div>
@@ -112,27 +112,27 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
           </div>
 
           {/* Short Editorial Subtitle / Instructor */}
-          <p className="mt-2.5 text-[14.5px] leading-[1.6] text-[#6e6a62] dark:text-[#A3ACA6] line-clamp-2">
+          <p className="mt-2.5 text-[14.5px] leading-[1.6] text-[#4c4842] dark:text-[#A3ACA6] line-clamp-2">
             {pickText(course.subtitle)}
           </p>
 
-          {/* Rounded-full Metadata Pills with group-hover border transition */}
+          {/* Rounded-full Metadata Pills (bg-surface inside bg-canvas card-note) */}
           <ul className="mt-4 flex flex-wrap gap-2">
             <li>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#101412] px-3 py-[5px] text-[12.5px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51]">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-[5px] text-[12.5px] font-medium text-body transition-colors duration-[0.22s] group-hover:border-line-strong dark:border-[#2A332E] dark:bg-[#181E1B] dark:text-[#D5D1C8] dark:group-hover:border-[#495B51]">
                 <FileText className="h-3 w-3 opacity-75" />
                 {formatNumber(course.lessonsCount)} {t.marketplace.lessonLabel}
               </span>
             </li>
             <li>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#101412] px-3 py-[5px] text-[12.5px] font-medium text-[#4c4842] dark:text-[#D5D1C8] tabular-nums transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51]">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-[5px] text-[12.5px] font-medium text-body tabular-nums transition-colors duration-[0.22s] group-hover:border-line-strong dark:border-[#2A332E] dark:bg-[#181E1B] dark:text-[#D5D1C8] dark:group-hover:border-[#495B51]">
                 <Users className="h-3 w-3 opacity-75" />
                 {formatCompactStudents(course.studentsCount)}
               </span>
             </li>
             {instructor && (
               <li>
-                <span className="inline-flex items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#101412] px-3 py-[5px] text-[12.5px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51]">
+                <span className="inline-flex items-center rounded-full border border-line bg-surface px-3 py-[5px] text-[12.5px] font-medium text-body transition-colors duration-[0.22s] group-hover:border-line-strong dark:border-[#2A332E] dark:bg-[#181E1B] dark:text-[#D5D1C8] dark:group-hover:border-[#495B51]">
                   {instructor.name}
                 </span>
               </li>
@@ -141,7 +141,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, className = '' }
         </div>
 
         {/* Footer Price + Action Row */}
-        <div className="mt-5 pt-4 border-t border-[#ded8ca] dark:border-[#2A332E] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#3E4D45] flex items-center justify-between gap-3">
+        <div className="mt-5 pt-4 border-t border-[#ded8ca] dark:border-[#2A332E] transition-colors duration-[0.22s] group-hover:border-[#c2baa8] dark:group-hover:border-[#3E4D45] flex items-center justify-between gap-3">
           <div className="flex items-baseline gap-2">
             {course.price === 0 ? (
               <span className="font-serif-display text-[22px] font-medium text-[#1c5b48] dark:text-[#7CD4B5]">

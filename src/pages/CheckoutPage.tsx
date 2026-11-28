@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n/I18nContext';
+import { calculateOrderTotals } from '@/lib/pricingMath';
 import { catalogService } from '@/services/catalogService';
 import { checkoutService } from '@/services/checkoutService';
 import { pricingService } from '@/services/pricingService';
@@ -108,15 +109,10 @@ export const CheckoutPage: React.FC = () => {
           : plan.yearlyPrice
         : 0;
 
-  const discount = appliedCoupon
-    ? appliedCoupon.discountType === 'percent'
-      ? Number(((subtotal * appliedCoupon.value) / 100).toFixed(2))
-      : Math.min(subtotal, appliedCoupon.value)
-    : 0;
-
-  const taxableBase = Math.max(0, subtotal - discount);
-  const tax = Number((taxableBase * 0.1).toFixed(2));
-  const total = Number((taxableBase + tax).toFixed(2));
+  const { discount, tax, total } = calculateOrderTotals({
+    subtotal,
+    coupon: appliedCoupon,
+  });
 
   const handleApplyCoupon = async () => {
     setCouponError('');
