@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
+import { AnimatedNumber } from '@/components/ui/AnimatedNumber';
 import { useI18n } from '@/i18n/I18nContext';
 
 export { ContactPage } from './ContactPage';
@@ -28,23 +29,27 @@ export const AboutPage: React.FC = () => {
           <span className="font-mono-tech text-[10.5px] uppercase tracking-[0.08em] text-[#6e6a62]">
             LEARNERS
           </span>
-          <p className="font-serif-display text-[42px] font-medium tabular-nums text-[#141312] dark:text-[#f6f3ec]">
-            48,000+
-          </p>
+          <AnimatedNumber
+            value={48000}
+            suffix="+"
+            className="t-number-md block text-[#141312] dark:text-[#f6f3ec]"
+          />
         </div>
         <div className="swiss-surface p-6 space-y-2">
           <span className="font-mono-tech text-[10.5px] uppercase tracking-[0.08em] text-[#6e6a62]">
             COURSES & VIDEOS
           </span>
-          <p className="font-serif-display text-[42px] font-medium tabular-nums text-[#1c5b48] dark:text-[#7CD4B5]">
-            570+
-          </p>
+          <AnimatedNumber
+            value={570}
+            suffix="+"
+            className="t-number-md block !text-[#1c5b48] dark:!text-[#7CD4B5]"
+          />
         </div>
         <div className="swiss-surface p-6 space-y-2">
           <span className="font-mono-tech text-[10.5px] uppercase tracking-[0.08em] text-[#6e6a62]">
             BILINGUAL TRACKS
           </span>
-          <p className="font-serif-display text-[42px] font-medium tabular-nums text-[#141312] dark:text-[#f6f3ec]">
+          <p className="t-number-md text-[#141312] dark:text-[#f6f3ec]">
             06
           </p>
         </div>
@@ -236,7 +241,7 @@ export const FaqPage: React.FC = () => {
           return (
             <article
               key={idx}
-              className="rounded-xl border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] overflow-hidden"
+              className="rounded-xl border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#151A17] overflow-hidden"
             >
               <button
                 type="button"

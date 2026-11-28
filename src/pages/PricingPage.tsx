@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArrowUpRight, Check, ChevronDown, Info, X } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
 import { Alert } from '@/components/ui/Alert';
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n/I18nContext';
+import { API_CONFIG } from '@/services/apiClient';
 import { pricingService, type PricingConfiguration } from '@/services/pricingService';
 import type { BillingCycle } from '@/types';
 
@@ -122,13 +123,13 @@ export const PricingPage: React.FC = () => {
                       )}
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">
-                      <span className="inline-flex items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#101412] px-3 py-[4px] text-[12px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51]">
+                      <span className="inline-flex items-center rounded-full border border-line bg-surface px-3 py-[4px] text-[12px] font-medium text-body transition-colors duration-[0.22s] group-hover:border-line-strong dark:border-[#2A332E] dark:bg-[#181E1B] dark:text-[#D5D1C8] dark:group-hover:border-[#495B51]">
                         {price === 0
                           ? pickText(plan.autoRenewNotice)
                           : `${billing === 'monthly' ? t.pricing.billedMonthly : t.pricing.billedYearly}`}
                       </span>
                       {price > 0 && (
-                        <span className="inline-flex items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#101412] px-3 py-[4px] text-[12px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#B9B3A6] dark:group-hover:border-[#495B51]">
+                        <span className="inline-flex items-center rounded-full border border-line bg-surface px-3 py-[4px] text-[12px] font-medium text-body transition-colors duration-[0.22s] group-hover:border-line-strong dark:border-[#2A332E] dark:bg-[#181E1B] dark:text-[#D5D1C8] dark:group-hover:border-[#495B51]">
                           {pickText(plan.autoRenewNotice)}
                         </span>
                       )}
@@ -167,7 +168,7 @@ export const PricingPage: React.FC = () => {
                     {t.pricing.currentPlan}
                   </Button>
                 ) : plan.tier === 'free' ? (
-                  <Link to="/register">
+                  <a href={`${API_CONFIG.userAppUrl}/register`} className="block">
                     <Button
                       variant="outline"
                       fullWidth
@@ -175,7 +176,7 @@ export const PricingPage: React.FC = () => {
                     >
                       {t.pricing.getStartedFree}
                     </Button>
-                  </Link>
+                  </a>
                 ) : (
                   <Button
                     variant={plan.highlighted ? 'primary' : 'secondary'}
@@ -280,7 +281,7 @@ export const PricingPage: React.FC = () => {
               return (
                 <article
                   key={faq.id}
-                  className="rounded-xl border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#151A17] overflow-hidden"
+                  className="rounded-xl border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#151A17] overflow-hidden"
                 >
                   <button
                     type="button"

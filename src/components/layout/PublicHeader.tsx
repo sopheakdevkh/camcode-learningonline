@@ -10,19 +10,27 @@ import {
 import { FlagIcon } from '@/components/ui/FlagIcon';
 import { useTheme } from '@/context/ThemeContext';
 import { useI18n } from '@/i18n/I18nContext';
+import { API_CONFIG } from '@/services/apiClient';
 
 export const BrandMark: React.FC<{ className?: string }> = ({ className = '' }) => (
   <span
-    className={`inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#1c5b48] dark:bg-[#2D7A62] text-white shrink-0 shadow-xs ${className}`}
+    className={`inline-flex h-7 w-7 items-center justify-center rounded-[8px] bg-[#1c5b48] dark:bg-[#2D7A62] text-white shrink-0 shadow-xs ${className}`}
     aria-hidden="true"
   >
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
       <path
-        d="M3 5.5H13M3 10.5C5.2 8.9 6.8 12.1 9 10.5C10.5 9.4 11.7 9.6 13 10.5"
+        d="M6.5 11.25h15"
         stroke="currentColor"
-        strokeWidth="1.65"
+        strokeWidth="2"
         strokeLinecap="round"
-        strokeLinejoin="round"
+      />
+      <path
+        d="M6.5 17.5c2.4 0 2.4 2 4.8 2s2.4-2 4.8-2 2.4 2 4.4 2"
+        fill="none"
+        stroke="currentColor"
+        strokeOpacity="0.72"
+        strokeWidth="2"
+        strokeLinecap="round"
       />
     </svg>
   </span>
@@ -91,8 +99,8 @@ export const PublicHeader: React.FC = () => {
           aria-label="Main"
           className={`pointer-events-auto mx-auto rounded-full [backdrop-filter:blur(14px)] border px-4 md:px-5 flex items-center justify-between gap-4 transition-[max-width,height,border-color,box-shadow,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             scrolled
-              ? 'max-w-[980px] h-[56px] md:h-[60px] bg-[rgb(246_243_236/0.94)] dark:bg-[rgb(21_26_23/0.94)] border-[#c2baa8] dark:border-[#3A4740] shadow-[0_14px_34px_-12px_rgba(23,28,25,0.16)]'
-              : 'max-w-[1100px] h-[60px] md:h-[68px] bg-[rgb(246_243_236/0.82)] dark:bg-[rgb(21_26_23/0.82)] border-[#ded8ca] dark:border-[#2A332E] shadow-[0_10px_30px_-12px_rgba(23,28,25,0.1)]'
+              ? 'max-w-[980px] h-14 bg-[rgb(246_243_236/0.88)] dark:bg-[rgb(21_26_23/0.92)] border-[#c2baa8] dark:border-[#3A4740] shadow-[0_14px_34px_-12px_rgba(23,28,25,0.16)]'
+              : 'max-w-[1100px] h-[60px] md:h-[68px] bg-[rgb(246_243_236/0.82)] dark:bg-[rgb(21_26_23/0.82)] border-[#ded8ca] dark:border-[#2A332E] shadow-[0_10px_30px_-12px_rgba(23,28,25,0.08)]'
           }`}
         >
           {/* Left: Havenline-inspired Rounded Pine Emblem + Editorial Serif Wordmark */}
@@ -107,7 +115,7 @@ export const PublicHeader: React.FC = () => {
             </span>
           </Link>
 
-          {/* Center: Clean Horizontal Nav Links */}
+          {/* Center: Clean Horizontal Nav Links with Havenline Active Dot */}
           <ul className="hidden lg:flex items-center gap-4 xl:gap-6">
             {navItems.map((item) => (
               <li key={item.to}>
@@ -115,14 +123,24 @@ export const PublicHeader: React.FC = () => {
                   to={item.to}
                   end={item.end}
                   className={({ isActive }) =>
-                    `relative inline-flex min-h-11 items-center text-[15px] whitespace-nowrap transition-colors duration-[0.22s] ${
+                    `relative inline-flex min-h-11 items-center text-[15px] whitespace-nowrap transition-colors duration-[0.22s] hover:text-[#1c5b48] dark:hover:text-[#7CD4B5] ${
                       isActive
-                        ? 'text-[#141312] dark:text-[#f6f3ec] font-semibold'
-                        : 'text-[#6e6a62] hover:text-[#1c5b48] dark:hover:text-[#7CD4B5]'
+                        ? 'font-medium text-[#141312] dark:text-[#f6f3ec]'
+                        : 'text-[#4c4842] dark:text-[#A3ACA6]'
                     }`
                   }
                 >
-                  {item.label}
+                  {({ isActive }) => (
+                    <>
+                      <span>{item.label}</span>
+                      {isActive && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute bottom-2 left-1/2 size-1 -translate-x-1/2 rounded-full bg-[#1c5b48] dark:bg-[#7CD4B5]"
+                        />
+                      )}
+                    </>
+                  )}
                 </NavLink>
               </li>
             ))}
@@ -136,7 +154,7 @@ export const PublicHeader: React.FC = () => {
               onClick={toggleTheme}
               aria-label={isDark ? t.nav.switchToLight : t.nav.switchToDark}
               title={isDark ? t.nav.switchToLight : t.nav.switchToDark}
-              className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec]/70 dark:bg-[#181E1B] text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48] dark:hover:border-[#2D7A62] cursor-pointer transition-colors shrink-0"
+              className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec]/80 dark:bg-[#181E1B] text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48] dark:hover:border-[#2D7A62] cursor-pointer transition-colors shrink-0"
             >
               {isDark ? (
                 <Sun className="h-3.5 w-3.5 text-[#7CD4B5]" />
@@ -151,20 +169,20 @@ export const PublicHeader: React.FC = () => {
               onClick={() => handleLanguageChange(locale === 'en' ? 'km' : 'en')}
               aria-label="Switch language (EN / ខ្មែរ)"
               title={locale === 'en' ? 'Switch to Khmer (ខ្មែរ)' : 'Switch to English (EN)'}
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec]/70 dark:bg-[#181E1B] font-mono-tech text-[11px] font-semibold uppercase tracking-[0.06em] text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48] cursor-pointer transition-colors shrink-0 whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec]/80 dark:bg-[#181E1B] font-mono-tech text-[11px] font-semibold uppercase tracking-[0.06em] text-[#141312] dark:text-[#f6f3ec] hover:border-[#1c5b48] cursor-pointer transition-colors shrink-0 whitespace-nowrap"
             >
               <FlagIcon lang={locale} className="h-4 w-4" />
               <span>{locale === 'en' ? 'EN' : 'ខ្មែរ'}</span>
             </button>
 
             {/* Primary Green CTA after Language */}
-            <Link
-              to="/login"
-              className="group inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[#1c5b48] hover:bg-[#15463a] dark:bg-[#2D7A62] dark:hover:bg-[#23634F] text-white text-[13px] font-semibold whitespace-nowrap transition-colors shrink-0"
+            <a
+              href={`${API_CONFIG.userAppUrl}/login`}
+              className="group inline-flex items-center gap-1.5 h-10 px-4 rounded-full bg-[#1c5b48] hover:bg-[#15463a] dark:bg-[#2D7A62] dark:hover:bg-[#23634F] text-white text-[13.5px] font-semibold whitespace-nowrap transition-colors shrink-0"
             >
               <span>{t.nav.getStart}</span>
               <ArrowUpRight className="h-3.5 w-3.5 swiss-arrow-shift" />
-            </Link>
+            </a>
           </div>
 
           {/* Mobile & Tablet Header Controls (< 1024px) */}
@@ -330,14 +348,14 @@ export const PublicHeader: React.FC = () => {
           </div>
 
           <div className="relative z-10 pt-5 mt-6 border-t border-[#ded8ca] dark:border-[#2A332E]">
-            <Link
-              to="/login"
+            <a
+              href={`${API_CONFIG.userAppUrl}/login`}
               onClick={() => setMobileMenuOpen(false)}
               className="group w-full inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#1c5b48] hover:bg-[#15463a] dark:bg-[#2D7A62] dark:hover:bg-[#23634F] px-5 text-[14px] font-semibold text-white transition-colors"
             >
               <span>{t.nav.getStart}</span>
               <ArrowUpRight className="h-4 w-4 swiss-arrow-shift" />
-            </Link>
+            </a>
           </div>
         </div>
       </div>

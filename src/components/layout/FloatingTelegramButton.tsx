@@ -21,7 +21,7 @@ export const FloatingTelegramButton: React.FC = () => {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={locale === 'km' ? 'ចូលរួមក្រុម Telegram ឥតគិតថ្លៃ' : 'Join free Telegram group'}
-      className={`group floating-telegram-enter fixed right-4 sm:right-6 z-40 inline-flex items-center sm:gap-3 rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[rgb(250_248_244/0.9)] dark:bg-[rgb(21_26_23/0.92)] p-1.5 sm:py-2 sm:pl-2.5 sm:pr-4 text-[#141312] dark:text-[#f6f3ec] [backdrop-filter:blur(14px)] shadow-[0_14px_34px_-12px_rgba(23,28,25,0.16)] transition-[transform,border-color,box-shadow,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-[#1c5b48]/60 dark:hover:border-[#7CD4B5]/55 hover:bg-[#efebe1] dark:hover:bg-[#151A17] hover:shadow-[0_18px_40px_-14px_rgba(27,77,62,0.24)] active:translate-y-px ${
+      className={`group floating-telegram-enter fixed right-4 sm:right-6 z-40 inline-flex items-center sm:gap-3 rounded-full border border-line dark:border-[#2A332E] bg-[rgb(246_243_236/0.9)] dark:bg-[rgb(21_26_23/0.92)] p-1.5 sm:py-2 sm:pl-2.5 sm:pr-4 text-[#141312] dark:text-[#f6f3ec] [backdrop-filter:blur(14px)] shadow-[0_14px_34px_-12px_rgba(23,28,25,0.16)] transition-[transform,border-color,box-shadow,background-color] duration-300 ease-[var(--x-ease)] hover:-translate-y-0.5 hover:border-[#1c5b48]/60 dark:hover:border-[#7CD4B5]/55 hover:bg-[#efebe1] dark:hover:bg-[#151A17] hover:shadow-[0_18px_40px_-14px_rgba(27,77,62,0.24)] active:translate-y-px ${
         hasMobileStickyBar ? 'bottom-20 lg:bottom-6' : 'bottom-4 sm:bottom-6'
       }`}
     >

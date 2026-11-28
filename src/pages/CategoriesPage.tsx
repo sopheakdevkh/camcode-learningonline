@@ -7,6 +7,7 @@ import {
   Minus,
 } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
+import { AnimatedNumber } from '@/components/ui/AnimatedNumber';
 import { useI18n } from '@/i18n/I18nContext';
 import { catalogService } from '@/services/catalogService';
 import type { Category } from '@/types';
@@ -114,24 +115,24 @@ export const CategoriesPage: React.FC = () => {
         description={t.home.categoriesSub}
       />
 
-      {/* 2. Sticky Left Overview + Stacked Discipline / Service Cards */}
-      <section className="surface-paper py-16 md:py-24">
-        <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
+      {/* 2. Sticky Left Overview + Stacked Discipline / Service Cards (Exact /services layout & card colors) */}
+      <section className="surface-paper py-[var(--spacing-section)]">
+        <div className="mx-auto w-full max-w-[1280px] px-5 md:px-8">
           <div className="grid gap-10 md:grid-cols-[0.9fr_1.3fr] md:gap-16">
             <div className="md:sticky md:top-[120px] md:self-start">
-              <span className="inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#151A17] text-[#4c4842] dark:text-[#D5D1C8] font-mono text-[10.5px] uppercase tracking-[0.12em]">
-                <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-[#1c5b48]" />
+              <span className="t-eyebrow inline-flex h-7 items-center gap-2 rounded-full px-3.5 border border-line bg-canvas text-body dark:border-[#2A332E] dark:bg-[#151A17] dark:text-[#D5D1C8]">
+                <span aria-hidden="true" className="size-[5px] rounded-[1px] bg-accent" />
                 {pickText({ en: 'Discipline tracks', km: 'ជំនាញសិក្សាស្នូល' })}
               </span>
 
-              <h2 className="mt-5 font-serif-display text-[36px] sm:text-[46px] leading-[1.06] tracking-[-0.02em] text-[#141312] dark:text-[#f6f3ec]">
+              <h2 className="t-h2 mt-5">
                 {pickText({
                   en: 'Six disciplines, one workspace',
                   km: 'ជំនាញទាំង ៦ ក្នុងកម្មវិធីសិក្សាតែមួយ',
                 })}
               </h2>
 
-              <p className="mt-4 max-w-md text-[17px] leading-[1.65] text-[#4c4842] dark:text-[#D5D1C8]">
+              <p className="mt-4 max-w-md text-[17px] leading-[1.65] text-body">
                 {pickText({
                   en: 'Each discipline is taught by industry practitioners and connected seamlessly inside your learner workspace.',
                   km: 'ជំនាញនីមួយៗបង្រៀនដោយអ្នកជំនាញអនុវត្តផ្ទាល់ និងរៀបចំរចនាសម្ព័ន្ធច្បាស់លាស់ក្នុងប្រព័ន្ធសិក្សាតែមួយ។',
@@ -141,11 +142,11 @@ export const CategoriesPage: React.FC = () => {
               <div className="mt-8 hidden md:block">
                 <Link
                   to="/contact"
-                  className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full font-body text-[15px] font-semibold transition-colors duration-[0.22s] px-6 bg-[#1c5b48] text-white hover:bg-[#15463a]"
+                  className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full font-body text-[15px] font-semibold transition-[background-color,border-color,color,translate] duration-[0.22s] ease-[var(--x-ease)] px-6 bg-accent text-on-accent hover:bg-accent-deep active:translate-y-px"
                 >
                   <span>{pickText({ en: 'Request guidance', km: 'ស្នើសុំការណែនាំ' })}</span>
                   <ArrowUpRight
-                    className="h-5 w-5 shrink-0 transition-transform duration-[0.22s] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    className="h-5 w-5 shrink-0 transition-transform duration-[0.22s] ease-[var(--x-ease)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                     aria-hidden="true"
                   />
                 </Link>
@@ -157,7 +158,7 @@ export const CategoriesPage: React.FC = () => {
                 <li key={cat.id}>
                   <article className="card-note group p-6 md:p-7">
                     <div className="flex items-start justify-between gap-4">
-                      <h3 className="font-serif-display text-[25px] sm:text-[28px] font-normal leading-[1.15] tracking-[-0.02em] text-[#141312] dark:text-[#f6f3ec] transition-colors group-hover:text-[#1c5b48] dark:group-hover:text-[#7CD4B5]">
+                      <h3 className="t-h3">
                         {pickText(cat.name)}
                       </h3>
                       <span aria-hidden="true" className="index-number mt-1.5 shrink-0">
@@ -165,23 +166,23 @@ export const CategoriesPage: React.FC = () => {
                       </span>
                     </div>
 
-                    <p className="mt-3 text-[15px] leading-[1.6] text-[#4c4842] dark:text-[#D5D1C8]">
+                    <p className="mt-3 text-[15px] leading-[1.6] text-body">
                       {pickText(cat.description)}
                     </p>
 
                     <ul className="mt-5 flex flex-wrap gap-2">
                       <li>
-                        <span className="inline-flex items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#181E1B] px-3 py-[5px] text-[13px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#c2baa8]">
+                        <span className="inline-flex items-center rounded-full border border-line bg-surface px-3 py-[5px] text-[13px] font-medium text-body transition-colors duration-[0.22s] group-hover:border-line-strong dark:border-[#2A332E] dark:bg-[#181E1B] dark:text-[#D5D1C8] dark:group-hover:border-[#42524A]">
                           {cat.courseCount} {t.nav.courses}
                         </span>
                       </li>
                       <li>
-                        <span className="inline-flex items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#181E1B] px-3 py-[5px] text-[13px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#c2baa8]">
+                        <span className="inline-flex items-center rounded-full border border-line bg-surface px-3 py-[5px] text-[13px] font-medium text-body transition-colors duration-[0.22s] group-hover:border-line-strong dark:border-[#2A332E] dark:bg-[#181E1B] dark:text-[#D5D1C8] dark:group-hover:border-[#42524A]">
                           {cat.videoCount} {t.nav.videos}
                         </span>
                       </li>
                       <li>
-                        <span className="inline-flex items-center rounded-full border border-[#ded8ca] dark:border-[#2A332E] bg-[#efebe1] dark:bg-[#181E1B] px-3 py-[5px] text-[13px] font-medium text-[#4c4842] dark:text-[#D5D1C8] transition-colors duration-[0.22s] group-hover:border-[#c2baa8]">
+                        <span className="inline-flex items-center rounded-full border border-line bg-surface px-3 py-[5px] text-[13px] font-medium text-body transition-colors duration-[0.22s] group-hover:border-line-strong dark:border-[#2A332E] dark:bg-[#181E1B] dark:text-[#D5D1C8] dark:group-hover:border-[#42524A]">
                           EN · ខ្មែរ
                         </span>
                       </li>
@@ -189,7 +190,7 @@ export const CategoriesPage: React.FC = () => {
 
                     <Link
                       to={`/courses?category=${cat.slug}`}
-                      className="group/link mt-4 inline-flex min-h-11 items-center gap-2 font-body text-[15px] font-semibold text-[#141312] dark:text-[#f6f3ec] underline-offset-[6px] transition-colors duration-[0.22s] hover:text-[#1c5b48] dark:hover:text-[#7CD4B5] hover:underline"
+                      className="group inline-flex min-h-11 items-center gap-2 font-body text-[15px] font-semibold underline-offset-[6px] transition-colors duration-[0.22s] hover:underline text-ink hover:text-accent mt-4"
                     >
                       <span>
                         {pickText({
@@ -198,7 +199,7 @@ export const CategoriesPage: React.FC = () => {
                         })}
                       </span>
                       <ArrowUpRight
-                        className="h-4.5 w-4.5 shrink-0 transition-transform duration-[0.22s] group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                        className="h-[18px] w-[18px] shrink-0 transition-transform duration-[0.22s] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                         aria-hidden="true"
                       />
                     </Link>
@@ -210,11 +211,11 @@ export const CategoriesPage: React.FC = () => {
             <div className="md:hidden">
               <Link
                 to="/contact"
-                className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full font-body text-[15px] font-semibold transition-colors duration-[0.22s] px-6 bg-[#1c5b48] text-white hover:bg-[#15463a]"
+                className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full font-body text-[15px] font-semibold transition-[background-color,border-color,color,translate] duration-[0.22s] ease-[var(--x-ease)] px-6 bg-accent text-on-accent hover:bg-accent-deep active:translate-y-px"
               >
                 <span>{pickText({ en: 'Request guidance', km: 'ស្នើសុំការណែនាំ' })}</span>
                 <ArrowUpRight
-                  className="h-5 w-5 shrink-0 transition-transform duration-[0.22s] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  className="h-5 w-5 shrink-0 transition-transform duration-[0.22s] ease-[var(--x-ease)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                   aria-hidden="true"
                 />
               </Link>
@@ -312,9 +313,11 @@ export const CategoriesPage: React.FC = () => {
             <div className="grid min-w-0 gap-4">
               <div className="grid min-w-0 grid-cols-2 rounded-[18px] border border-[#ded8ca] dark:border-[#2A332E] bg-[#f6f3ec] dark:bg-[#151A17]">
                 <div className="p-6 border-r border-[#ded8ca] dark:border-[#2A332E]">
-                  <span className="font-serif-display text-[36px] sm:text-[44px] leading-none tabular-nums text-[#141312] dark:text-[#f6f3ec] block">
-                    120+
-                  </span>
+                  <AnimatedNumber
+                    value={120}
+                    suffix="+"
+                    className="t-number-md block text-[#141312] dark:text-[#f6f3ec]"
+                  />
                   <p className="mt-2 text-[15px] font-medium text-[#141312] dark:text-[#f6f3ec]">
                     {pickText({ en: 'Structured courses', km: 'វគ្គសិក្សាមានរចនាសម្ព័ន្ធ' })}
                   </p>
@@ -322,9 +325,11 @@ export const CategoriesPage: React.FC = () => {
                 </div>
 
                 <div className="p-6">
-                  <span className="font-serif-display text-[36px] sm:text-[44px] leading-none tabular-nums text-[#141312] dark:text-[#f6f3ec] block">
-                    450+
-                  </span>
+                  <AnimatedNumber
+                    value={450}
+                    suffix="+"
+                    className="t-number-md block text-[#141312] dark:text-[#f6f3ec]"
+                  />
                   <p className="mt-2 text-[15px] font-medium text-[#141312] dark:text-[#f6f3ec]">
                     {pickText({ en: 'Streaming lessons', km: 'មេរៀនវីដេអូស៊ីជម្រៅ' })}
                   </p>
@@ -506,21 +511,24 @@ export const CategoriesPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. Dark Ink Social Proof Band */}
-      <section className="surface-ink py-20 md:py-32">
-        <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
+      {/* 5. Dark Ink Social Proof Band (Exact /services surface-ink + AnimatedNumber + ph-portrait) */}
+      <section className="surface-ink py-[96px] md:py-[160px]">
+        <div className="mx-auto w-full max-w-[1280px] px-5 md:px-8">
           <div className="grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
             <div>
-              <span className="block font-serif-display text-[clamp(56px,7vw,108px)] font-normal leading-[0.9] tracking-[-0.02em] tabular-nums text-[#f6f3ec]">
-                48,000+
-              </span>
+              <AnimatedNumber
+                value={48000}
+                suffix="+"
+                inverse
+                className="block text-[clamp(56px,7vw,112px)] font-semibold leading-[0.9] tracking-[-0.02em] tabular-nums"
+              />
               <p className="mt-4 text-[19px] font-medium text-[#f6f3ec]">
                 {pickText({
                   en: 'Learners enrolled across Cambodia',
                   km: 'អ្នកសិក្សាដែលបានចុះឈ្មោះទូទាំងប្រទេស',
                 })}
               </p>
-              <p className="t-method mt-1 text-[#A3ACA6]">
+              <p className="t-method mt-1">
                 {pickText({
                   en: 'Verified progress & certificates issued',
                   km: 'តាមដានវឌ្ឍនភាព និងវិញ្ញាបនបត្រផ្លូវការ',
@@ -530,15 +538,24 @@ export const CategoriesPage: React.FC = () => {
               <ul aria-label="Featured graduates" className="mt-6 flex items-center">
                 {avatars.map((initials, i) => (
                   <li key={initials} className={i > 0 ? '-ml-3' : ''}>
-                    <div className="h-10 w-10 rounded-full bg-[#1c5b48] text-white text-[12px] font-semibold flex items-center justify-center ring-2 ring-[#141312]">
-                      {initials}
+                    <div
+                      role="img"
+                      aria-label={`Portrait of graduate ${initials}`}
+                      className="ph-portrait shrink-0 rounded-full size-10 ring-2 ring-[var(--x-ink)]"
+                    >
+                      <span aria-hidden="true" className="ph-initials">
+                        {initials}
+                      </span>
                     </div>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <p className="text-[19px] leading-[1.6] text-[#B8B4AC] md:justify-self-end md:text-right max-w-md">
+            <p
+              data-reveal="true"
+              className="text-[19px] leading-[1.6] text-[var(--x-muted-on-dark)] md:justify-self-end md:text-right"
+            >
               {pickText({
                 en: 'Three learners who switched from scattered tutorials, and what changed in their first quarter.',
                 km: 'អ្នកសិក្សា ៣ នាក់ដែលបានផ្លាស់ប្តូរពីការរៀនរាយប៉ាយ និងលទ្ធផលក្នុងត្រីមាសដំបូង។',
@@ -548,15 +565,15 @@ export const CategoriesPage: React.FC = () => {
 
           <ul className="mt-12 grid gap-4 md:mt-16 md:grid-cols-3">
             {testimonials.map((item) => (
-              <li key={item.author}>
-                <figure className="h-full rounded-[18px] border border-white/12 bg-white/6 p-6 flex flex-col justify-between">
+              <li key={item.author} data-reveal="true">
+                <figure className="h-full rounded-[var(--radius-lg)] border border-[rgb(255_255_255/0.12)] bg-[rgb(255_255_255/0.06)] p-6 flex flex-col justify-between">
                   <blockquote>
                     <p className="text-[17px] leading-[1.6] text-[#f6f3ec]">{item.quote}</p>
                   </blockquote>
-                  <figcaption className="mt-5 border-t border-white/12 pt-4">
+                  <figcaption className="mt-5 border-t border-[rgb(255_255_255/0.12)] pt-4">
                     <p className="text-[15px] font-semibold text-[#f6f3ec]">{item.author}</p>
-                    <p className="mt-0.5 text-[13px] text-[#B8B4AC]">{item.role}</p>
-                    <span className="mt-3 block font-mono text-[11.5px] text-[#8FA89B]">
+                    <p className="mt-0.5 text-[13px] text-[var(--x-muted-on-dark)]">{item.role}</p>
+                    <span className="t-data mt-3 block text-[var(--x-muted-on-dark)]">
                       {item.track}
                     </span>
                   </figcaption>
